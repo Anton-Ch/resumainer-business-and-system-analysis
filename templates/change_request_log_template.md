@@ -81,7 +81,7 @@ It helps keep the project baseline controlled and explains why meaningful change
 
 ## 4. Details
 
-## CR-001 [Change Title]
+### CR-001 [Change Title]
 
 *   **Date:** YYYY-MM-DD
 *   **Type:** Documentation

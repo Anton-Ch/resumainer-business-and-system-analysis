@@ -58,7 +58,7 @@ This document should be maintained as a lightweight but professional project art
 
 ## 4. Details
 
-## XXX-001 [Example Title]
+### XXX-001 [Example Title]
 
 *   **Date:** YYYY-MM-DD
 *   **Type / Category:** [Controlled value]

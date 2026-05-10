@@ -67,7 +67,7 @@ The goal is to ensure that project scope remains controlled and that each import
 
 ## 4. Details
 
-## TR-001 [Trace Item Title]
+### TR-001 [Trace Item Title]
 
 *   **Business Objective:** BO-XXX
 *   **Requirement ID:** FR-XXX

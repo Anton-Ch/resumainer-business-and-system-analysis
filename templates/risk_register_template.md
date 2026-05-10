@@ -96,7 +96,7 @@ The purpose is to make risks visible early and define practical mitigation strat
 
 ## 4. Details
 
-## RISK-001 [Risk Short Title]
+### RISK-001 [Risk Short Title]
 
 *   **Date Identified:** YYYY-MM-DD
 *   **Category:** Scope

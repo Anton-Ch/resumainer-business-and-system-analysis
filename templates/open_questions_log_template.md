@@ -69,7 +69,7 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
 
 ## 4. Details
 
-## OQ-001 [Question Short Title]
+### OQ-001 [Question Short Title]
 
 *   **Date:** YYYY-MM-DD
 *   **Category:** Scope

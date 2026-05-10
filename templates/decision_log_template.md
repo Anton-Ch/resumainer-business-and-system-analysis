@@ -60,7 +60,7 @@ The purpose is to make important decisions transparent, auditable, and reusable 
 
 ## 4. Details
 
-## DEC-001 [Decision Title]
+### DEC-001 [Decision Title]
 
 *   **Date:** YYYY-MM-DD
 *   **Type:** Architecture

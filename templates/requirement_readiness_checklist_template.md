@@ -64,7 +64,7 @@ The purpose is to prevent vague, untestable, technically infeasible, or poorly s
 
 ## 4. Details
 
-## FR-XXX [Requirement Title]
+### FR-XXX [Requirement Title]
 
 *   **Scope Category:** MVP
 *   **Readiness Status:** Needs Clarification
