@@ -93,7 +93,10 @@ The purpose is to make risks visible early and define practical mitigation strat
 | Risk ID | Date | Risk | Category | Probability | Impact | Severity | Response Strategy | Owner | Status |
 |---|---|---|---|---|---|---|---|---|---|
 | RISK-001 | 2026-05-10 | MVP may become too large because of AI, PDF, public links, admin panel, ATS JSON, and future monetization ideas | Scope | High | High | Critical | Mitigate | BA | Open |
-| RISK-002 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
+| RISK-002 | 2026-05-11 | UI/UX questionnaire may become too broad and difficult to analyze | UX | Medium | Medium | Medium | Mitigate | BA | Open |
+| RISK-003 | 2026-05-11 | UI requirements may focus on visual preferences instead of functional screen-level decisions | UX | Medium | High | High | Mitigate | BA | Open |
+| RISK-004 | 2026-05-11 | UI ideas may be accepted without checking implementation feasibility | Technical | Medium | High | High | Mitigate | BA / Developer | Open |
+| RISK-005 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
 
 ## 4. Details
 
@@ -114,7 +117,58 @@ The purpose is to make risks visible early and define practical mitigation strat
 *   **Trigger / Early Warning:** More than three MVP features remain unclear before development starts, or new features are added without removing/postponing existing ones.
 *   **Contingency Plan:** Freeze MVP around the core flow: profile data → vacancy input → generated draft → review/edit → saved resume → public link → PDF download.
 
-### RISK-002 [Risk Short Title Template]
+### RISK-002 UI/UX Questionnaire Scope Becomes Too Broad
+
+*   **Date Identified:** 2026-05-11
+*   **Category:** UX
+*   **Probability:** Medium
+*   **Impact:** Medium
+*   **Severity:** Medium
+*   **Response Strategy:** Mitigate
+*   **Owner:** BA
+*   **Status:** Open
+*   **Risk Description:** The UI/UX questionnaire may become too broad and generate answers that are difficult to analyze or convert into practical UI requirements.
+*   **Cause:** The product includes many possible pages, user roles, actions, states, and future features.
+*   **Impact if Occurs:** Elicitation results may become noisy, making it harder to identify MVP screens and page-level requirements.
+*   **Mitigation Plan:** Keep questions grouped by respondent role and screen. Use controlled answer values such as MVP, MVP Stretch, Post-MVP, Future Scope, Must Have, Should Have, and Not Needed.
+*   **Trigger / Early Warning:** Respondents provide vague feedback or many answers cannot be converted into concrete UI decisions.
+*   **Contingency Plan:** Reduce the questionnaire to the core MVP screens and move secondary questions to a follow-up review.
+
+### RISK-003 UI Feedback Focuses on Visual Preferences Instead of Functional Decisions
+
+*   **Date Identified:** 2026-05-11
+*   **Category:** UX
+*   **Probability:** Medium
+*   **Impact:** High
+*   **Severity:** High
+*   **Response Strategy:** Mitigate
+*   **Owner:** BA
+*   **Status:** Open
+*   **Risk Description:** Respondents may focus on colors, style, and general interface preferences instead of identifying required pages, blocks, actions, errors, empty states, and guidance.
+*   **Cause:** UI/UX discussions often drift toward visual design instead of functional usability.
+*   **Impact if Occurs:** Questionnaire results may not provide enough useful input for sitemap, wireframes, UI requirements, and acceptance criteria.
+*   **Mitigation Plan:** Structure the questionnaire screen-by-screen and ask about page necessity, required blocks, key actions, errors, empty states, and user guidance before asking about visual preferences.
+*   **Trigger / Early Warning:** Most feedback mentions visual style but does not clarify required functionality.
+*   **Contingency Plan:** Conduct a follow-up review focused only on screen structure, workflow, and MVP actions.
+
+### RISK-004 UI Requirements Are Not Checked for Implementation Feasibility
+
+*   **Date Identified:** 2026-05-11
+*   **Category:** Technical
+*   **Probability:** Medium
+*   **Impact:** High
+*   **Severity:** High
+*   **Response Strategy:** Mitigate
+*   **Owner:** BA / Developer
+*   **Status:** Open
+*   **Risk Description:** UI ideas may be accepted into MVP without checking whether they are realistic within the selected architecture, timeline, and technical constraints.
+*   **Cause:** User-facing features such as tabs, comparison views, PDF download, public pages, admin statistics, and ATS JSON may increase implementation complexity.
+*   **Impact if Occurs:** MVP scope may become too difficult to implement, causing delays or unfinished features.
+*   **Mitigation Plan:** Include Developer / Technical Reviewer questions in the questionnaire and check each significant UI requirement against complexity, data impact, validation, security, and deployment constraints.
+*   **Trigger / Early Warning:** Several UI requirements are marked as MVP but have High or Critical implementation complexity.
+*   **Contingency Plan:** Move complex UI features to MVP Stretch, Post-MVP, or Future Scope.
+
+### RISK-005 [Risk Short Title Template]
 
 *   **Date Identified:** YYYY-MM-DD
 *   **Category:** [Scope / Technical / Data / Security / UX / Integration / Deployment / Schedule / Quality / Compliance]
