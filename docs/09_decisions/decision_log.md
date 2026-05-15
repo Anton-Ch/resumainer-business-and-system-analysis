@@ -6,7 +6,7 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-13
+**Last Updated:** 2026-05-15
 **Author:** Anton
 **Version:** 2.0
 **Status:** Active
@@ -70,7 +70,7 @@ Each decision includes context, selected option, rejected alternatives, rational
 | DEC-011 | 2026-05-13 | UI/UX | Use card list + Add/Edit form for repeatable profile sections | Clear and reusable pattern for profile records | Affects Work Experience, Projects, Education, Courses | Approved |
 | DEC-012 | 2026-05-13 | UI/UX | Use automatic sorting for repeatable profile sections | Reduces manual ordering effort and keeps resumes logical | Affects profile list display and query ordering | Approved |
 | DEC-013 | 2026-05-13 | Data Model | Use simplified Additional Info table for MVP | Keeps profile data manageable within MVP timeline | Affects profile data model and My Profile scope | Approved |
-| DEC-999 | YYYY-MM-DD | [Type] | [Decision title] | [Brief rationale] | [Scope/Data/Implementation impact] | Proposed |
+| DEC-014 | 2026-05-15 | Scope | Remove Resume Details pages (user and admin) | Pages add no value; PDF actions belong in list views and post-save flow | Eliminates user and admin Resume Details pages; PDF actions from User Home and Resumes table | Approved |
 
 ## 4. Details
 
@@ -229,6 +229,22 @@ Each decision includes context, selected option, rejected alternatives, rational
 **Rationale:** Simplifies MVP implementation while preserving useful AI context.  
 **Impact:** Affects profile data model and My Profile scope.  
 **Follow-up Actions:** Keep fields clear and migrate to normalized structures only if needed later.
+
+### DEC-014 Remove Resume Details Pages (User and Admin)
+
+**Date:** 2026-05-15
+**Type:** Scope
+**Status:** Approved
+**Context:** Wireframe review revealed that neither user nor admin Resume Details pages provide standalone value. All functions — PDF preview, download, public link copying — can be performed directly from table-level actions (User Home for users, Resumes table for admin) or the post-save success flow after Resume Review.
+**Selected Option:** Remove both user and admin Resume Details pages. PDF viewing, download, and public link actions are available from User Home table and the admin Resumes table. Post-save flow offers immediate PDF preview and link copy.
+**Rejected Alternatives:** Keeping dedicated Resume Details pages for user or admin.
+**Rationale:** Eliminates unnecessary pages that add navigation complexity and implementation effort without incremental value. Admin can view any generated and saved resume PDF the same way as a user — from the list view.
+**Impact:**
+- **Scope:** Eliminates both user and admin Resume Details pages from MVP.
+- **Requirements:** FR-009 is superseded; FR-008 covers PDF and public link actions from User Home.
+- **Data Model:** No data model change; SavedResume and PdfFile remain.
+- **UI/UX:** User Home table and admin Resumes table provide direct PDF actions; post-save flow shows PDF preview and link copy.
+- **Risks:** Reduces UI scope and implementation effort.
 
 ### DEC-999 [Decision Title Template]
  

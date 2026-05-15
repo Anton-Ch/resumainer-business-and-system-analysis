@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-13  
-**Last Updated:** 2026-05-13  
+**Last Updated:** 2026-05-15  
 **Author:** Anton  
-**Version:** 1.0  
+**Version:** 3.0  
 **Status:** Active  
 **Related BABOK Area:** 5.1 Trace Requirements / 5.3 Prioritize Requirements / 6.2 Specify and Model Requirements  
 
@@ -124,7 +124,7 @@ Note: BABOK defines Solution Requirements as a major requirement class. In this 
 | FR-006  | Functional         | Manage courses and certificates                  | Wireframe Review     | Medium     | MVP     | Approved | Ready                   |
 | FR-007  | Functional         | Manage additional profile info and settings      | Wireframe Review     | Medium     | MVP     | Approved | Needs Clarification     |
 | FR-008  | Functional         | View saved resumes on User Home                  | Elicitation Results  | High       | MVP     | Approved | Ready                   |
-| FR-009  | Functional         | View resume details and PDF actions              | Elicitation Results  | High       | MVP     | Approved | Needs Clarification     |
+| FR-009  | Functional         | View resume details and PDF actions (superseded) | Governance Decision  | Low        | Post-MVP | Superseded | N/A       |
 | FR-010  | Functional         | Admin manages AI model details                   | Elicitation Results  | Medium     | MVP     | Approved | Ready                   |
 | NFR-001 | Non-Functional     | Mask and protect saved API keys                  | Security Review      | High       | MVP     | Approved | Ready                   |
 | TRN-001 | Transition         | Prepare initial active AI model configuration    | Technical Constraint | Medium     | MVP     | Draft    | Needs Clarification     |
@@ -154,7 +154,7 @@ This is the core reason for the product. The system should help users generate r
 - User can review, edit, save, and download the final resume.
 
 **Affected UI:**  
-User Home, My Profile, Generate Resume, Resume Review, Resume Details.
+User Home, My Profile, Generate Resume, Resume Review.
 
 **Affected Data:**  
 Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume, PdfFile.
@@ -531,7 +531,9 @@ Users need quick access to all generated resumes without a separate Resume Histo
 - User Home shows saved resumes in a table.
 - User can search resumes.
 - User can sort table columns.
-- User can open Resume Details for a selected resume.
+- User can open resume details view or access PDF actions directly from table.
+- User can download PDF directly from User Home.
+- User can copy public recruiter link directly from User Home.
 - Empty state is shown when no resumes exist.
 - No-results state is shown when search returns no matches.
 
@@ -553,50 +555,45 @@ Confirmed Elicitation Results, Decision Log, Change Request Log, Traceability Ma
 - Testable: Yes
 
 **Notes:**  
-This replaces a separate Resume History page.
+This requirement replaced a separate Resume History page and now also absorbs PDF actions (download, public link copy) from the superseded FR-009. Resume Details page is removed per DEC-014 / CR-013.
 
-### FR-009 View Resume Details and PDF Actions
+### FR-009 View Resume Details and PDF Actions (Superseded)
 
 **Type:** Functional Requirement  
-**Source:** Elicitation Results  
-**Priority:** High  
-**Scope:** MVP  
-**Status:** Approved  
-**Readiness:** Needs Clarification  
+**Source:** Governance Decision  
+**Priority:** Low  
+**Scope:** Post-MVP  
+**Status:** Superseded  
+**Readiness:** N/A  
 
 **Description:**  
-The system shall allow a registered user to open Resume Details for a saved resume and access PDF-related actions.
+This requirement is superseded. The Resume Details page was removed. PDF viewing, download, and public link copying are handled directly from User Home (FR-008) and the post-save flow after Resume Review.
 
 **Business Value:**  
-Resume Details gives the user a focused place to view the final resume, download PDF, and copy recruiter link.
+N/A — requirement is superseded.
 
 **Acceptance Criteria:**
-- User can open Resume Details from User Home.
-- User can view resume metadata.
-- User can view or open PDF.
-- User can download PDF.
-- User can copy public recruiter link.
-- User can return to User Home.
+- N/A. Requirement is superseded by FR-008.
 
 **Affected UI:**  
-Resume Details.
+N/A.
 
 **Affected Data:**  
-SavedResume, PdfFile, public code/link.
+N/A.
 
 **Related Artifacts:**  
-Confirmed Elicitation Results, Traceability Matrix, Risk Register.
+Decision Log — DEC-014; Change Request Log — CR-013.
 
 **Readiness Check:**
-- Business value clear: Yes
-- Acceptance criteria clear: Partial
-- Technically feasible: Partial
-- UI/workflow identified: Yes
-- Data impact identified: Yes
-- Testable: Partial
+- Business value clear: N/A
+- Acceptance criteria clear: N/A
+- Technically feasible: N/A
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: N/A
 
 **Notes:**  
-PDF generation approach must be selected before implementation.
+Superseded by DEC-014 / CR-013 (2026-05-15). Resume Details page removed from MVP. PDF and public link actions are provided by FR-008 (User Home) and the post-save success flow.
 
 ### FR-010 Admin Manages AI Model Details
 

@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-12  
-**Last Updated:** 2026-05-13  
+**Last Updated:** 2026-05-15  
 **Author:** Anton  
-**Version:** 2.0  
+**Version:** 3.0  
 **Status:** Approved  
 **Related BABOK Area:** 4.2 Conduct Elicitation / 4.3 Confirm Elicitation Results  
 
@@ -56,14 +56,15 @@ Confirmation Basis:
 2. My Profile
 3. Generate Resume
 4. Resume Review
-5. Resume Details
 
-Confirmed change:
+Confirmed changes:
 
 - Separate `Resume History` page is removed.
 - Resume listing is integrated into `User Home`.
 - Separate `User Settings` page is removed.
 - User settings are integrated into `My Profile`.
+- Separate `Resume Details` page is removed.
+- PDF actions (download, public link copy) are available from User Home table and post-save flow.
 
 ### 3.3 Administrator Pages
 
@@ -71,9 +72,13 @@ Confirmed change:
 2. Users
 3. User Details
 4. Resumes
-5. Resume Details (admin view)
-6. AI Models
-7. AI Model Details
+5. AI Models
+6. AI Model Details
+
+Confirmed changes:
+
+- Separate `Resume Details (admin view)` page is removed.
+- Admin can view generated and saved resume PDFs from the Resumes table.
 
 ### 3.4 Recruiter / External Viewer Access
 
@@ -91,14 +96,12 @@ Recruiters do not need an account or separate portal in MVP.
 - My Profile with core profile sections and settings
 - Generate Resume
 - Resume Review
-- Resume Details
+- PDF download (from User Home and post-save flow)
 - Public PDF resume link
-- PDF download
 - Admin Home
 - Users
 - User Details
-- Resumes
-- Resume Details for admin
+- Resumes (with PDF preview and download actions)
 - AI Models
 - AI Model Details
 - Token usage logging when provider data is available
@@ -194,8 +197,7 @@ Recruiters do not need an account or separate portal in MVP.
 - open Generate Resume;
 - search resumes;
 - sort resume table columns;
-- open Resume Details;
-- download PDF;
+- download PDF directly from table;
 - copy public resume link if available.
 
 **Empty states:**
@@ -368,30 +370,10 @@ Recruiters do not need an account or separate portal in MVP.
 - download PDF before saving;
 - copy public link before final save.
 
-## 5.7 Resume Details
+## 5.7 Resume Details — Removed from MVP
 
-**Purpose:** Show details for selected resume opened from User Home resume table.
-
-**MVP blocks:**
-
-- resume metadata;
-- generated resume preview or embedded PDF preview;
-- public recruiter link;
-- PDF preview/access;
-- Download PDF button;
-- Copy recruiter link button;
-- language and adaptation level;
-- created date;
-- vacancy and company context;
-- additional AI comment context if provided.
-
-**MVP actions:**
-
-- view PDF;
-- download PDF;
-- copy recruiter link;
-- open public PDF link;
-- return to User Home.
+**Status:** Removed per DEC-014 / CR-013.
+**Reason:** Page did not provide standalone value. All functions — PDF viewing, download, and public link copying — are available from User Home (resume listing row actions) and the post-save success flow after Resume Review.
 
 ## 5.8 Public Resume Access
 
@@ -499,20 +481,14 @@ Recruiters do not need an account or separate portal in MVP.
 - created date;
 - public/private status.
 
-## 6.5 Resume Details for Admin
+**MVP actions:**
+- open resume details — removed (per DEC-014 / CR-013).
+- Admin can view generated resume PDF directly from the Resumes table.
 
-**Purpose:** Show selected resume details for admin review.
+## 6.5 Resume Details for Admin — Removed
 
-**MVP blocks/actions:**
-
-- resume metadata;
-- owner information;
-- generated content preview or PDF preview;
-- public link;
-- PDF download link;
-- AI model used;
-- token usage details;
-- generation status/error details.
+**Status:** Removed per DEC-014 / CR-013.
+**Reason:** Admin can view generated and saved resume PDFs directly from the Resumes table. A separate detail page did not provide standalone value.
 
 ## 6.6 AI Models
 
@@ -583,11 +559,10 @@ Recruiters do not need an account or separate portal in MVP.
 4. Generate draft using mock AI provider.
 5. Review and edit generated draft.
 6. Save final resume.
-7. Display resume in User Home table.
-8. Open Resume Details.
-9. Download PDF.
-10. Open public PDF link.
-11. Admin can view users, resumes, usage, and AI models.
+7. Display resume in User Home table with PDF actions.
+8. Download PDF from User Home table or post-save flow.
+9. Open public PDF link.
+10. Admin can view users, resumes, usage, and AI models.
 
 ## 8. Open Questions
 
@@ -632,8 +607,7 @@ The main product flow is:
 4. User completes profile and settings in My Profile.
 5. User generates resume.
 6. User reviews and saves final resume.
-7. Saved resume appears in User Home table.
-8. User opens Resume Details.
-9. User downloads PDF or copies public recruiter link.
-10. Recruiter opens public PDF link directly.
-11. Admin monitors users, resumes, AI models, and usage.
+7. Saved resume appears in User Home table with PDF actions.
+8. User downloads PDF or copies public recruiter link directly from User Home table or post-save flow.
+9. Recruiter opens public PDF link directly.
+10. Admin monitors users, resumes, AI models, and usage.

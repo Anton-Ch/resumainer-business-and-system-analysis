@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-13  
+**Last Updated:** 2026-05-15 
 **Author:** Anton  
-**Version:** 2.0  
+**Version:** 4.0  
 **Status:** Active  
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance  
 
@@ -89,6 +89,7 @@ It helps keep the project baseline controlled and explains why meaningful change
 | CR-010 | 2026-05-13 | Update Generate Resume fields from wireframe findings      | UI/UX         | BA          | Generate Resume, generation request | Medium                     | Approved | Implemented |
 | CR-011 | 2026-05-13 | Replace full API key visibility with masked key handling   | Security      | BA          | AI Model Details, logging, admin UI | High                       | Approved | Implemented |
 | CR-012 | 2026-05-13 | Clean validation inconsistencies from wireframe notes      | Requirement   | BA          | Validation rules, error messages    | Medium                     | Approved | Implemented |
+| CR-013 | 2026-05-15 | Remove Resume Details pages (user and admin)                | Scope         | BA          | User and admin page maps, FR-009    | Medium                     | Approved | Implemented |
 | CR-999 | YYYY-MM-DD | [Change title]                                             | [Type]        | [Requester] | [Affected area]                     | [Low/Medium/High/Critical] | Pending  | Draft       |
 
 ## 4. Details
@@ -239,6 +240,20 @@ It helps keep the project baseline controlled and explains why meaningful change
 **Decision:** Approved  
 **Resolution Date:** 2026-05-13
 **Follow-up Actions:** Use the cleaned validation rules as the source of truth for UI validation, error message design, QA checks, and acceptance criteria.
+
+### CR-013 Remove Resume Details Pages from MVP (User and Admin)
+
+**Date:** 2026-05-15  
+**Type:** Scope  
+**Requester:** Business Analyst  
+**Status:** Implemented  
+**Description:** Remove both user and admin Resume Details pages from MVP. PDF viewing, download, and public link copying are handled directly from User Home table and the post-save flow after Resume Review for users. Admin can view generated and saved resume PDFs the same way — from the Resumes table without a separate detail page.  
+**Reason:** Neither page provides standalone value. All functions (PDF preview, download, public link access) are accessible from list/table views — User Home for users, Resumes table for admin.  
+**Affected Artifacts:** `requirements_log.md`, `confirmed_elicitation_results.md`, `decision_log.md`, `traceability_matrix.md`, `risk_register.md`, `sitemap.md`  
+**Impact Assessment:** Medium. Eliminates two pages from MVP but all functions remain available through table-level actions.  
+**Decision:** Approved  
+**Resolution Date:** 2026-05-15
+**Follow-up Actions:** Mark FR-009 as Superseded. Remove Resume Details from user and admin page maps in Confirmed Elicitation Results. Update sitemap to remove both user and admin Resume Details entries. Supersede TR-011.
 
 ### CR-999 [Change Title Template]
 

@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-12
+**Last Updated:** 2026-05-15
 **Author:** Anton
-**Version:** 2.0
+**Version:** 3.0
 **Status:** Active
 **Related BABOK Area:** 3.1 Plan Business Analysis Approach / 3.3 Plan Business Analysis Governance
 
@@ -177,18 +177,19 @@ The purpose is to make risks visible early and define practical mitigation strat
 
 **Date Identified:** 2026-05-13  
 **Category:** Scope / UX  
-**Probability:** Medium  
-**Impact:** Medium  
-**Severity:** Medium  
-**Response Strategy:** Mitigate  
+**Probability:** Low  
+**Impact:** Low  
+**Severity:** Low  
+**Response Strategy:** Monitor  
 **Owner:** BA  
-**Status:** Open  
+**Status:** Monitoring  
 **Risk Description:** Confirmed page map includes several user and admin pages.  
 **Cause:** The confirmed elicitation results show numerous pages and sections for both user and admin roles that could expand scope.  
 **Impact if Occurs:** Development timeline may extend, core features may receive less attention, and integration complexity may increase.  
 **Mitigation Plan:** Keep pages simple, prioritize tables/forms over advanced UI, and implement vertical slices.  
 **Trigger / Early Warning:** More than the agreed number of UI elements are marked as MVP during detailed design.  
 **Contingency Plan:** Reduce admin analytics and advanced filters first if schedule pressure appears.
+**Update (2026-05-15):** Risk reduced. Resume Details page removed from MVP per DEC-014 / CR-013. User page count decreased, lowering overall scope risk.
  
 ### RISK-006 PDF Generation May Become Technically Difficult
  

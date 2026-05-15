@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-14  
+**Last Updated:** 2026-05-15  
 **Author:** Anton  
-**Version:** 2.0  
+**Version:** 3.0  
 **Status:** Active  
 **Related BABOK Area:** 3.4 Plan Business Analysis Information Management  
 
@@ -63,7 +63,7 @@ The goal is to ensure that project scope remains controlled and that each import
 
 | Trace ID | Business Objective | Requirement ID | Requirement Type | Use Case / Workflow | UI Screen | Data Entity | Service / Component | Test Case | Test Coverage | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
-| TR-001 | BO-001 | BR-001 | BR | End-to-end resume adaptation workflow | User Home, My Profile, Generate Resume, Resume Review, Resume Details | Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume, PdfFile | ProfileService, ResumeGenerationService, SavedResumeService, PdfService | TC-001 | Planned | Approved |
+| TR-001 | BO-001 | BR-001 | BR | End-to-end resume adaptation workflow | User Home, My Profile, Generate Resume, Resume Review | Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume, PdfFile | ProfileService, ResumeGenerationService, SavedResumeService, PdfService | TC-001 | Planned | Approved |
 | TR-002 | BO-004 | STK-001 | STK | Recruiter opens public resume link | Public PDF Resume Link | SavedResume, PdfFile, PublicCode | PublicResumeService, PdfService | TC-002 | Planned | Approved |
 | TR-003 | BO-001 | FR-001 | FR | Generate AI-assisted resume draft | Generate Resume, Resume Review | ResumeGenerationRequest, GeneratedResumeDraft, AiModel, AiUsageLog | ResumeGenerationService, AiClient, AiUsageLogService | TC-003 | Planned | Draft |
 | TR-004 | BO-002 | FR-002 | FR | Complete contact profile | My Profile / Contact Details | ContactDetails | ProfileService, ContactDetailsDao | TC-004 | Planned | Approved |
@@ -73,7 +73,7 @@ The goal is to ensure that project scope remains controlled and that each import
 | TR-008 | BO-002 | FR-006 | FR | Manage courses and certificates | My Profile / Courses & Certificates | CourseCertificate | ProfileService, CourseCertificateDao | TC-008 | Planned | Approved |
 | TR-009 | BO-002 | FR-007 | FR | Manage additional profile info and settings | My Profile / Additional Info | AdditionalProfileInfo | ProfileService, AdditionalInfoDao | TC-009 | Planned | Draft |
 | TR-010 | BO-003 | FR-008 | FR | View saved resumes on User Home | User Home | SavedResume, PdfFile | SavedResumeService, PdfService | TC-010 | Planned | Approved |
-| TR-011 | BO-003 | FR-009 | FR | View resume details and PDF actions | Resume Details | SavedResume, PdfFile, PublicCode | SavedResumeService, PdfService, PublicResumeService | TC-011 | Planned | Draft |
+| TR-011 | BO-003 | FR-009 | FR | View resume PDF and actions from User Home (superseded) | User Home | SavedResume, PdfFile, PublicCode | SavedResumeService, PdfService, PublicResumeService | TC-011 | Not Applicable | Superseded |
 | TR-012 | BO-005 | FR-010 | FR | Admin manages AI model details | AI Model Details | AiModel | AiModelService, AiModelDao | TC-012 | Planned | Approved |
 | TR-013 | BO-005 | NFR-001 | NFR | Protect saved API keys | AI Model Details | AiModel | AiModelService, Security/Logging Components | TC-013 | Planned | Approved |
 | TR-014 | BO-005 | TRN-001 | TRN | Prepare initial active AI model configuration | AI Models, AI Model Details | AiModel | AiModelService, Migration/Seed Script | TC-014 | Not Started | Draft |
@@ -87,12 +87,12 @@ The goal is to ensure that project scope remains controlled and that each import
 **Requirement ID:** BR-001  
 **Requirement Type:** BR  
 **Use Case / Workflow:** End-to-end resume adaptation workflow  
-**UI Screen:** User Home, My Profile, Generate Resume, Resume Review, Resume Details  
+**UI Screen:** User Home, My Profile, Generate Resume, Resume Review  
 **Data Entity:** Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume, PdfFile  
 **Service / Component:** ProfileService, ResumeGenerationService, SavedResumeService, PdfService  
 **Test Case:** TC-001  
 **Status:** Approved  
-**Traceability Notes:** This trace connects the main business requirement with the complete MVP value chain: profile data, vacancy input, generated draft, review/edit, saved resume, PDF download, and public sharing.  
+**Traceability Notes:** This trace connects the main business requirement with the complete MVP value chain: profile data, vacancy input, generated draft, review/edit, saved resume, PDF download (from User Home), and public sharing.  
 **Gaps / Follow-up:** Define final end-to-end demo test after implementation plan is created.
 
 ### TR-002 Recruiter Public Resume Access
@@ -221,19 +221,19 @@ The goal is to ensure that project scope remains controlled and that each import
 **Traceability Notes:** User Home replaces the separate Resume History page and provides saved resume table, search, sorting, details access, PDF actions, and public link copying where available.  
 **Gaps / Follow-up:** Define minimum search/sort behavior and pagination threshold.
 
-### TR-011 Resume Details and PDF Actions
+### TR-011 Resume Details and PDF Actions (Superseded)
 
 **Business Objective:** BO-003 Reuse and manage saved resume versions  
-**Requirement ID:** FR-009  
+**Requirement ID:** FR-009 (Superseded)  
 **Requirement Type:** FR  
-**Use Case / Workflow:** View resume details and PDF actions  
-**UI Screen:** Resume Details  
+**Use Case / Workflow:** View resume PDF and actions from User Home  
+**UI Screen:** User Home  
 **Data Entity:** SavedResume, PdfFile, PublicCode  
 **Service / Component:** SavedResumeService, PdfService, PublicResumeService  
 **Test Case:** TC-011  
-**Status:** Draft  
-**Traceability Notes:** Resume Details gives user access to PDF preview/download, public recruiter link copying, and saved resume metadata.  
-**Gaps / Follow-up:** Select PDF generation approach and define public code uniqueness/access rules.
+**Status:** Superseded  
+**Traceability Notes:** This trace is superseded. The Resume Details page was removed per DEC-014 / CR-013. PDF actions (download, public link copy) are handled directly from User Home (TR-010) and the post-save success flow.  
+**Gaps / Follow-up:** Verify that TR-010 covers all required PDF actions from User Home.
 
 ### TR-012 Admin AI Model Management
 
