@@ -1,16 +1,15 @@
 # Risk Register
 
-**Project ID:** `resumainer`  
-**Product Name:** ResumAIner  
-**Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-10  
-**Author:** Anton  
-**Version:** 1.0  
-**Status:** Active  
-**Related BABOK Area:** 3.1 Plan Business Analysis Approach / 3.3 Plan Business Analysis Governance  
+**Project ID:** `resumainer`
+**Product Name:** ResumAIner
+**Date Created:** 2026-05-10
+**Last Updated:** 2026-05-12
+**Author:** Anton
+**Version:** 2.0
+**Status:** Active
+**Related BABOK Area:** 3.1 Plan Business Analysis Approach / 3.3 Plan Business Analysis Governance
 
 ---
-
 ## 1. Description
 
 This document identifies, assesses, and tracks project **risks** that may affect scope, requirements, architecture, implementation, testing, deployment, or final presentation.
@@ -92,95 +91,206 @@ The purpose is to make risks visible early and define practical mitigation strat
 
 | Risk ID | Date | Risk | Category | Probability | Impact | Severity | Response Strategy | Owner | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| RISK-001 | 2026-05-10 | MVP may become too large because of AI, PDF, public links, admin panel, ATS JSON, and future monetization ideas | Scope | High | High | Critical | Mitigate | BA | Open |
-| RISK-002 | 2026-05-11 | UI/UX questionnaire may become too broad and difficult to analyze | UX | Medium | Medium | Medium | Mitigate | BA | Open |
-| RISK-003 | 2026-05-11 | UI requirements may focus on visual preferences instead of functional screen-level decisions | UX | Medium | High | High | Mitigate | BA | Open |
-| RISK-004 | 2026-05-11 | UI ideas may be accepted without checking implementation feasibility | Technical | Medium | High | High | Mitigate | BA / Developer | Open |
-| RISK-005 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
+| RISK-001 | 2026-05-10 | MVP may become too large due to AI, PDF, public links, admin pages, and future monetization ideas | Scope | High | High | Critical | Mitigate | BA | Open |
+| RISK-002 | 2026-05-11 | UI/UX questionnaire may become too broad and difficult to analyze | UX | Medium | Medium | Medium | Mitigate | BA | Mitigated |
+| RISK-003 | 2026-05-11 | UI feedback may focus on visual preferences instead of functional decisions | UX | Medium | High | High | Mitigate | BA | Mitigated |
+| RISK-004 | 2026-05-11 | UI ideas may be accepted into MVP without feasibility check | Technical | Medium | High | High | Mitigate | BA / Developer | Open |
+| RISK-005 | 2026-05-13 | UI scope may become too large due to many user/admin pages | Scope / UX | Medium | Medium | Medium | Mitigate | BA | Open |
+| RISK-006 | 2026-05-13 | PDF generation may become technically difficult | Technical | Medium | High | High | Mitigate | BA / Developer | Open |
+| RISK-007 | 2026-05-13 | API key handling in AI Model Details may expose secrets | Security | Medium | High | High | Mitigate | BA / Developer | Closed |
+| RISK-008 | 2026-05-13 | Vue + Spring MVC integration may increase implementation workload | Technical / Schedule | Medium | Medium | Medium | Monitor | BA / Developer | Open |
+| RISK-009 | 2026-05-13 | Resume Review page may become complex due to editing, variants, and languages | UX / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
+| RISK-010 | 2026-05-13 | Wireframe field inconsistencies may create requirement ambiguity | Quality | Medium | Medium | Medium | Mitigate | BA | Mitigated |
+| RISK-999 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
 
 ## 4. Details
-
+ 
 ### RISK-001 MVP Scope Creep
-
-*   **Date Identified:** 2026-05-10
-*   **Category:** Scope
-*   **Probability:** High
-*   **Impact:** High
-*   **Severity:** Critical
-*   **Response Strategy:** Mitigate
-*   **Owner:** BA
-*   **Status:** Open
-*   **Risk Description:** MVP may become too large because the project includes AI generation, PDF export, public links, admin panel, token statistics, ATS JSON endpoint, and future monetization ideas.
-*   **Cause:** The product idea has strong expansion potential and combines several technically different areas.
-*   **Impact if Occurs:** Development may become delayed, core functionality may remain unfinished, and the final demo may become weaker.
-*   **Mitigation Plan:** Separate MVP, MVP Stretch, Post-MVP, and Future Scope. Use the Requirement Readiness Checklist before accepting requirements into MVP. Apply de-scoping rule from the Governance Plan.
-*   **Trigger / Early Warning:** More than three MVP features remain unclear before development starts, or new features are added without removing/postponing existing ones.
-*   **Contingency Plan:** Freeze MVP around the core flow: profile data → vacancy input → generated draft → review/edit → saved resume → public link → PDF download.
-
+ 
+**Date Identified:** 2026-05-10  
+**Category:** Scope  
+**Probability:** High  
+**Impact:** High  
+**Severity:** Critical  
+**Response Strategy:** Mitigate  
+**Owner:** BA  
+**Status:** Open  
+**Risk Description:** MVP may become too large because the project includes AI generation, PDF export, public links, admin pages, token usage, AI model management, and future monetization ideas.  
+**Cause:** The product idea has strong expansion potential and combines several technically different areas.  
+**Impact if Occurs:** Development may become delayed, core functionality may remain unfinished, and the final demo may become weaker.  
+**Mitigation Plan:** Freeze MVP around the core flow and move advanced features to MVP Stretch or Future Scope.  
+**Trigger / Early Warning:** New MVP features are added without removing or postponing other features.  
+**Contingency Plan:** Implement core vertical slice first: profile → generate → review → save → PDF → public link.
+ 
 ### RISK-002 UI/UX Questionnaire Scope Becomes Too Broad
-
-*   **Date Identified:** 2026-05-11
-*   **Category:** UX
-*   **Probability:** Medium
-*   **Impact:** Medium
-*   **Severity:** Medium
-*   **Response Strategy:** Mitigate
-*   **Owner:** BA
-*   **Status:** Open
-*   **Risk Description:** The UI/UX questionnaire may become too broad and generate answers that are difficult to analyze or convert into practical UI requirements.
-*   **Cause:** The product includes many possible pages, user roles, actions, states, and future features.
-*   **Impact if Occurs:** Elicitation results may become noisy, making it harder to identify MVP screens and page-level requirements.
-*   **Mitigation Plan:** Keep questions grouped by respondent role and screen. Use controlled answer values such as MVP, MVP Stretch, Post-MVP, Future Scope, Must Have, Should Have, and Not Needed.
-*   **Trigger / Early Warning:** Respondents provide vague feedback or many answers cannot be converted into concrete UI decisions.
-*   **Contingency Plan:** Reduce the questionnaire to the core MVP screens and move secondary questions to a follow-up review.
-
-### RISK-003 UI Feedback Focuses on Visual Preferences Instead of Functional Decisions
-
-*   **Date Identified:** 2026-05-11
-*   **Category:** UX
-*   **Probability:** Medium
-*   **Impact:** High
-*   **Severity:** High
-*   **Response Strategy:** Mitigate
-*   **Owner:** BA
-*   **Status:** Open
-*   **Risk Description:** Respondents may focus on colors, style, and general interface preferences instead of identifying required pages, blocks, actions, errors, empty states, and guidance.
-*   **Cause:** UI/UX discussions often drift toward visual design instead of functional usability.
-*   **Impact if Occurs:** Questionnaire results may not provide enough useful input for sitemap, wireframes, UI requirements, and acceptance criteria.
-*   **Mitigation Plan:** Structure the questionnaire screen-by-screen and ask about page necessity, required blocks, key actions, errors, empty states, and user guidance before asking about visual preferences.
-*   **Trigger / Early Warning:** Most feedback mentions visual style but does not clarify required functionality.
-*   **Contingency Plan:** Conduct a follow-up review focused only on screen structure, workflow, and MVP actions.
-
+ 
+**Date Identified:** 2026-05-11  
+**Category:** UX  
+**Probability:** Medium  
+**Impact:** Medium  
+**Severity:** Medium  
+**Response Strategy:** Mitigate  
+**Owner:** BA  
+**Status:** Mitigated  
+**Risk Description:** Questionnaire could produce noisy results that are hard to analyze.  
+**Cause:** The product includes many possible pages, user roles, actions, states, and future features.  
+**Impact if Occurs:** Elicitation results may become noisy, making it harder to identify MVP screens and page-level requirements.  
+**Mitigation Plan:** Use role-based and screen-by-screen structure with controlled answer values.  
+**Trigger / Early Warning:** Respondents provide vague feedback or many answers cannot be converted into concrete UI decisions.  
+**Contingency Plan:** Reduce the questionnaire to the core MVP screens and move secondary questions to a follow-up review.
+ 
+### RISK-003 UI Feedback Focuses on Visual Preferences
+ 
+**Date Identified:** 2026-05-11  
+**Category:** UX  
+**Probability:** Medium  
+**Impact:** High  
+**Severity:** High  
+**Response Strategy:** Mitigate  
+**Owner:** BA  
+**Status:** Mitigated  
+**Risk Description:** Feedback may focus on colors/style instead of useful page behavior.  
+**Cause:** UI/UX discussions often drift toward visual design instead of functional usability.  
+**Impact if Occurs:** Questionnaire results may not provide enough useful input for sitemap, wireframes, UI requirements, and acceptance criteria.  
+**Mitigation Plan:** Ask about pages, blocks, actions, errors, empty states, and guidance.  
+**Trigger / Early Warning:** Most feedback mentions visual style but does not clarify required functionality.  
+**Contingency Plan:** Conduct a follow-up review focused only on screen structure, workflow, and MVP actions.
+ 
 ### RISK-004 UI Requirements Are Not Checked for Implementation Feasibility
+ 
+**Date Identified:** 2026-05-11  
+**Category:** Technical  
+**Probability:** Medium  
+**Impact:** High  
+**Severity:** High  
+**Response Strategy:** Mitigate  
+**Owner:** BA / Developer  
+**Status:** Mitigated  
+**Risk Description:** UI ideas may be accepted into MVP without checking architecture, timeline, and implementation complexity.  
+**Cause:** User-facing features such as tabs, comparison views, PDF download, public pages, admin statistics, and ATS JSON may increase implementation complexity.  
+**Impact if Occurs:** MVP scope may become too difficult to implement, causing delays or unfinished features.  
+**Mitigation Plan:** Use Developer / Technical Reviewer checks, readiness checks in Requirements Log, and MVP/Stretch/Future classification.  
+**Trigger / Early Warning:** Several UI requirements are marked as MVP but have High or Critical implementation complexity.  
+**Contingency Plan:** Move complex UI items to MVP Stretch or Future Scope.
 
-*   **Date Identified:** 2026-05-11
-*   **Category:** Technical
-*   **Probability:** Medium
-*   **Impact:** High
-*   **Severity:** High
-*   **Response Strategy:** Mitigate
-*   **Owner:** BA / Developer
-*   **Status:** Open
-*   **Risk Description:** UI ideas may be accepted into MVP without checking whether they are realistic within the selected architecture, timeline, and technical constraints.
-*   **Cause:** User-facing features such as tabs, comparison views, PDF download, public pages, admin statistics, and ATS JSON may increase implementation complexity.
-*   **Impact if Occurs:** MVP scope may become too difficult to implement, causing delays or unfinished features.
-*   **Mitigation Plan:** Include Developer / Technical Reviewer questions in the questionnaire and check each significant UI requirement against complexity, data impact, validation, security, and deployment constraints.
-*   **Trigger / Early Warning:** Several UI requirements are marked as MVP but have High or Critical implementation complexity.
-*   **Contingency Plan:** Move complex UI features to MVP Stretch, Post-MVP, or Future Scope.
+### RISK-005 UI Scope May Become Too Large Due to Many User/Admin Pages
 
-### RISK-005 [Risk Short Title Template]
+**Date Identified:** 2026-05-13  
+**Category:** Scope / UX  
+**Probability:** Medium  
+**Impact:** Medium  
+**Severity:** Medium  
+**Response Strategy:** Mitigate  
+**Owner:** BA  
+**Status:** Open  
+**Risk Description:** Confirmed page map includes several user and admin pages.  
+**Cause:** The confirmed elicitation results show numerous pages and sections for both user and admin roles that could expand scope.  
+**Impact if Occurs:** Development timeline may extend, core features may receive less attention, and integration complexity may increase.  
+**Mitigation Plan:** Keep pages simple, prioritize tables/forms over advanced UI, and implement vertical slices.  
+**Trigger / Early Warning:** More than the agreed number of UI elements are marked as MVP during detailed design.  
+**Contingency Plan:** Reduce admin analytics and advanced filters first if schedule pressure appears.
+ 
+### RISK-006 PDF Generation May Become Technically Difficult
+ 
+**Date Identified:** 2026-05-13  
+**Category:** Technical  
+**Probability:** Medium  
+**Impact:** High  
+**Severity:** High  
+**Response Strategy:** Mitigate  
+**Owner:** BA / Developer  
+**Status:** Open  
+**Risk Description:** Generating selectable, printable, ATS-friendly PDFs may be harder than expected.  
+**Cause:** Generating PDFs with proper layout, selectable text, and ATS-friendly formatting can be technically challenging.  
+**Impact if Occurs:** PDF download feature may fail or produce low-quality output, affecting user experience and recruiter usability.  
+**Mitigation Plan:** Start with a simple A4 PDF layout with selectable text and minimal styling.  
+**Trigger / Early Warning:** Initial PDF generation attempts produce poor formatting or missing text selection.  
+**Contingency Plan:** Use a proven PDF library and postpone advanced templates.
+ 
+### RISK-007 API Key Handling May Expose Secrets
+ 
+**Date Identified:** 2026-05-13  
+**Category:** Security  
+**Probability:** Medium  
+**Impact:** High  
+**Severity:** High  
+**Response Strategy:** Mitigate  
+**Owner:** BA / Developer  
+**Status:** Closed  
+**Risk Description:** Showing or logging full API keys could expose secrets.  
+**Cause:** Displaying and managing full API keys in the admin interface creates potential security vulnerabilities.  
+**Impact if Occurs:** API keys could be exposed, leading to unauthorized AI usage and potential costs.  
+**Mitigation Plan:** API keys are masked after saving, never logged, and can only be replaced or deleted.  
+**Trigger / Early Warning:** Security review identifies potential key exposure in logs or UI.  
+**Contingency Plan:** Keep masked key display, allow key replacement/deletion only, and log only key management actions without storing full key values.
+ 
+### RISK-008 Vue + Spring MVC Integration May Increase Implementation Workload
+ 
+**Date Identified:** 2026-05-13  
+**Category:** Technical / Schedule  
+**Probability:** Medium  
+**Impact:** Medium  
+**Severity:** Medium  
+**Response Strategy:** Monitor  
+**Owner:** BA / Developer  
+**Status:** Open  
+**Risk Description:** Vue + Spring MVC requires additional integration work, API design, and deployment setup.  
+**Cause:** Integrating Vue frontend with Spring backend requires additional setup for API communication, state management, and build configuration.  
+**Impact if Occurs:** Development velocity may decrease, and integration issues may delay MVP completion.  
+**Mitigation Plan:** Validate integration early with one vertical slice.  
+**Trigger / Early Warning:** Initial integration attempts show significant configuration complexity or data mapping issues.  
+**Contingency Plan:** Keep Landing Page simple and reduce frontend complexity if needed.
+ 
+### RISK-009 Resume Review Page Complexity
+ 
+**Date Identified:** 2026-05-13  
+**Category:** UX / Technical  
+**Probability:** Medium  
+**Impact:** High  
+**Severity:** High  
+**Response Strategy:** Mitigate  
+**Owner:** BA / Developer  
+**Status:** Open  
+**Risk Description:** Resume Review can become complex due to editable sections, languages, variants, and regeneration.  
+**Cause:** Supporting multiple adaptation variants, language versions, and editable sections increases UI and implementation complexity.  
+**Impact if Occurs:** The resume review process may become confusing or difficult to implement within timeline.  
+**Mitigation Plan:** MVP supports one generated draft first; variants and language tabs are stretch.  
+**Trigger / Early Warning:** UI mockups show excessive complexity or user testing reveals confusion with multiple options.  
+**Contingency Plan:** Simplify to section-based editing and single save flow.
 
-*   **Date Identified:** YYYY-MM-DD
-*   **Category:** [Scope / Technical / Data / Security / UX / Integration / Deployment / Schedule / Quality / Compliance]
-*   **Probability:** [Low / Medium / High]
-*   **Impact:** [Low / Medium / High / Critical]
-*   **Severity:** [Low / Medium / High / Critical]
-*   **Response Strategy:** [Avoid / Mitigate / Transfer / Accept / Monitor]
-*   **Owner:** [Owner]
-*   **Status:** Open
-*   **Risk Description:** [What may happen]
-*   **Cause:** [Why it may happen]
-*   **Impact if Occurs:** [What will be affected]
-*   **Mitigation Plan:** [How to reduce probability/impact]
-*   **Trigger / Early Warning:** [How to know the risk is becoming real]
-*   **Contingency Plan:** [What to do if the risk happens]
+### RISK-010 Wireframe Field Inconsistencies Create Requirement Ambiguity
+
+**Date Identified:** 2026-05-13  
+**Category:** Quality  
+**Probability:** Medium  
+**Impact:** Medium  
+**Severity:** Medium  
+**Response Strategy:** Mitigate  
+**Owner:** BA  
+**Status:** Mitigated  
+**Risk Description:** Early wireframe notes had inconsistencies in required fields and validation rules.  
+**Cause:** Wireframe fields, validation rules, and error messages were drafted iteratively and some fields had conflicting required/optional status.  
+**Impact if Occurs:** Requirements, wireframes, data model drafts, and tests may become inconsistent.  
+**Mitigation Plan:** Field rules were cleaned and consolidated in `wireframe_field_requirements.md`.  
+**Trigger / Early Warning:** Same field has different required/optional status in different artifacts.
+**Contingency Plan:** Use `wireframe_field_requirements.md` as the field-level source of truth and update related requirements/logs if contradictions appear.
+
+### RISK-999 [Risk Short Title Template]
+
+**Date Identified:** YYYY-MM-DD  
+**Category:** [Scope / Technical / Data / Security / UX / Integration / Deployment / Schedule / Quality / Compliance]  
+**Probability:** [Low / Medium / High]  
+**Impact:** [Low / Medium / High / Critical]  
+**Severity:** [Low / Medium / High / Critical]  
+**Response Strategy:** [Avoid / Mitigate / Transfer / Accept / Monitor]  
+**Owner:** [Owner]  
+**Status:** Open  
+**Risk Description:** [What may happen]  
+**Cause:** [Why it may happen]  
+**Impact if Occurs:** [What will be affected]  
+**Mitigation Plan:** [How to reduce probability/impact]  
+**Trigger / Early Warning:** [How to know the risk is becoming real]  
+**Contingency Plan:** [What to do if the risk happens]
+
+***
+*This risk register follows the Information Management Plan structure and conventions for the ResumAIner project. Risks are reviewed regularly and mitigation actions are updated as the project progresses.*
