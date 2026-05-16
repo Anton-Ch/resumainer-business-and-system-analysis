@@ -126,6 +126,8 @@ Note: BABOK defines Solution Requirements as a major requirement class. In this 
 | FR-008  | Functional         | View saved resumes on User Home                  | Elicitation Results  | High       | MVP     | Approved | Ready                   |
 | FR-009  | Functional         | View resume details and PDF actions (superseded) | Governance Decision  | Low        | Post-MVP | Superseded | N/A       |
 | FR-010  | Functional         | Admin manages AI model details                   | Elicitation Results  | Medium     | MVP     | Approved | Ready                   |
+| FR-011  | Functional         | Generate and edit cover letter                   | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
+| FR-012  | Functional         | Include cover letter in generation request       | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
 | NFR-001 | Non-Functional     | Mask and protect saved API keys                  | Security Review      | High       | MVP     | Approved | Ready                   |
 | TRN-001 | Transition         | Prepare initial active AI model configuration    | Technical Constraint | Medium     | MVP     | Draft    | Needs Clarification     |
 | XX-XXX  | [Requirement Type] | [Requirement title]                              | [Source]             | [Priority] | [Scope] | Draft    | [Requirement Readiness] |
@@ -469,6 +471,7 @@ Wireframe Field Requirements, Traceability Matrix.
 
 **Notes:**  
 This section is important for portfolio and learning evidence.
+Courses section is mandatory for MVP per DEC-018. Page distribution: page 1 shows max 7 most relevant courses; page 2 — if 5+ work experience records exist, max 5 courses; if fewer than 5 work experience records, max 8 courses.
 
 ### FR-007 Manage Additional Profile Info and Settings
 
@@ -489,8 +492,13 @@ Additional info provides useful AI context and keeps user settings in one place 
 - User can enter optional skills, languages, professional aspirations, achievements, and general AI context.
 - User can set default resume language and optional additional resume language.
 - User can manage URL-friendly username.
+- User can enter date of birth.
+- User can select Ready for relocation (dropdown: Yes / No / Not specified).
+- User can select Ready for business trips and rotational schedule (dropdown: Yes / No / Not specified).
+- User can select Preferred work format (checkbox group: full-time, part-time, offline, remote, hybrid, on-site project based).
 - Profile picture is optional.
 - Username must be unique and URL-friendly.
+- Date of birth must be a valid date.
 
 **Affected UI:**  
 My Profile / Additional Info.
@@ -528,34 +536,32 @@ The system shall show saved/generated resumes in a searchable and sortable table
 Users need quick access to all generated resumes without a separate Resume History page.
 
 **Acceptance Criteria:**
-- User Home shows saved resumes in a table.
-- User can search resumes.
-- User can sort table columns.
-- User can open resume details view or access PDF actions directly from table.
-- User can download PDF directly from User Home.
-- User can copy public recruiter link directly from User Home.
+- User Home shows saved resumes in a searchable and sortable table.
+- Table includes a Details column with an `Open details` button for each resume row.
+- Clicking `Open details` opens a modal popup on User Home.
+- Modal contains: (1) public PDF resume link for copying, (2) PDF download button, (3) cover letter text for copying.
 - Empty state is shown when no resumes exist.
 - No-results state is shown when search returns no matches.
 
 **Affected UI:**  
-User Home.
+User Home, Resume Details modal.
 
 **Affected Data:**  
-SavedResume, PdfFile.
+SavedResume, PdfFile, CoverLetter.
 
 **Related Artifacts:**  
-Confirmed Elicitation Results, Decision Log, Change Request Log, Traceability Matrix.
+Confirmed Elicitation Results, Decision Log (DEC-015, DEC-016), Change Request Log (CR-014), Traceability Matrix.
 
 **Readiness Check:**
 - Business value clear: Yes
 - Acceptance criteria clear: Yes
 - Technically feasible: Yes
 - UI/workflow identified: Yes
-- Data impact identified: Yes
-- Testable: Yes
+- Data impact identified: Partial
+- Testable: Partial
 
 **Notes:**  
-This requirement replaced a separate Resume History page and now also absorbs PDF actions (download, public link copy) from the superseded FR-009. Resume Details page is removed per DEC-014 / CR-013.
+This requirement replaced a separate Resume History page. It now provides resume actions through a Details column modal per DEC-015/CR-014. Cover letter display added to modal because cover letter is MVP (DEC-016). The direct PDF download from table was replaced with Details column + modal approach.
 
 ### FR-009 View Resume Details and PDF Actions (Superseded)
 
@@ -680,6 +686,90 @@ Decision Log, Risk Register, Traceability Matrix.
 
 **Notes:**  
 This requirement supports DEC-008 and closes the API key exposure risk.
+
+### FR-011 Generate and Edit Cover Letter
+
+**Type:** Functional Requirement  
+**Source:** Governance Decision  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Draft  
+**Readiness:** Needs Clarification
+
+**Description:**  
+The system shall generate a cover letter alongside the resume draft and allow the user to review and edit it before saving the final version.
+
+**Business Value:**  
+Cover letter reduces the effort required to apply for a vacancy. Generating it alongside the resume is more efficient than adding it post-MVP since the LLM already has the vacancy and profile context.
+
+**Acceptance Criteria:**
+- System generates cover letter text as part of the resume generation process.
+- Cover letter text is displayed in the Resume Review screen alongside generated resume fields.
+- User can edit the generated cover letter before saving.
+- Saved resume includes the final cover letter version.
+- Cover letter text is viewable in the Resume Details modal on User Home.
+- User can copy cover letter text from the modal.
+
+**Affected UI:**  
+Resume Review, Resume Details modal, Generate Resume.
+
+**Affected Data:**  
+ResumeGenerationRequest (cover_letter field), SavedResume (cover_letter field).
+
+**Related Artifacts:**  
+Decision Log (DEC-016), Change Request Log (CR-015), Traceability Matrix.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Partial
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: Yes
+- Testable: Partial
+
+**Notes:**  
+Cover letter generation reuses the same AI generation flow as resume draft. The LLM receives the same vacancy and profile context and produces cover letter as additional output. Cover letter format and length rules should be defined during implementation.
+
+### FR-012 Include Cover Letter in Generation Request
+
+**Type:** Functional Requirement  
+**Source:** Governance Decision  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Draft  
+**Readiness:** Needs Clarification
+
+**Description:**  
+The system shall include cover letter generation as part of the resume generation request. The generation request shall instruct the AI to produce a cover letter alongside the adapted resume content.
+
+**Business Value:**  
+Cover letter generation must be explicitly requested as part of the AI generation call. Without this requirement, the AI would not produce cover letter output.
+
+**Acceptance Criteria:**
+- Generation request includes a flag or instruction for cover letter generation.
+- AI prompt includes cover letter generation instructions.
+- Cover letter output is stored separately from resume content.
+- System handles cases where cover letter generation fails while resume generation succeeds.
+
+**Affected UI:**  
+Generate Resume (optional toggle for cover letter generation), Resume Review.
+
+**Affected Data:**  
+ResumeGenerationRequest (include_cover_letter).
+
+**Related Artifacts:**  
+Decision Log (DEC-016), FR-011, Traceability Matrix.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Partial
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: Yes
+- Testable: Partial
+
+**Notes:**  
+This requirement works together with FR-011. The generation request should include cover letter as a requested output alongside the resume adaptation.
 
 ### TRN-001 Prepare Initial Active AI Model Configuration
 

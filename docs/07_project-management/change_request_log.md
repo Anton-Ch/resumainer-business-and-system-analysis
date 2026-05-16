@@ -90,7 +90,9 @@ It helps keep the project baseline controlled and explains why meaningful change
 | CR-011 | 2026-05-13 | Replace full API key visibility with masked key handling   | Security      | BA          | AI Model Details, logging, admin UI | High                       | Approved | Implemented |
 | CR-012 | 2026-05-13 | Clean validation inconsistencies from wireframe notes      | Requirement   | BA          | Validation rules, error messages    | Medium                     | Approved | Implemented |
 | CR-013 | 2026-05-15 | Remove Resume Details pages (user and admin)                | Scope         | BA          | User and admin page maps, FR-009    | Medium                     | Approved | Implemented |
-| CR-999 | YYYY-MM-DD | [Change title]                                             | [Type]        | [Requester] | [Affected area]                     | [Low/Medium/High/Critical] | Pending  | Draft       |
+| CR-014 | 2026-05-16 | Replace PDF column with Details modal on User Home         | UI/UX         | BA          | User Home table, Resume Details modal, FR-008 | Medium                | Approved | Draft       |
+| CR-015 | 2026-05-16 | Add Cover Letter generation and editing to MVP             | Scope         | BA          | Generate Resume, Resume Review, FR-001, new FR-011, FR-012 | Medium    | Approved | Draft       |
+| CR-016 | 2026-05-16 | Expand Additional Info fields in My Profile                | Requirement   | BA          | My Profile, FR-007, Wireframe Field Requirements | Low                  | Approved | Draft       |
 
 ## 4. Details
 
@@ -254,6 +256,48 @@ It helps keep the project baseline controlled and explains why meaningful change
 **Decision:** Approved  
 **Resolution Date:** 2026-05-15
 **Follow-up Actions:** Mark FR-009 as Superseded. Remove Resume Details from user and admin page maps in Confirmed Elicitation Results. Update sitemap to remove both user and admin Resume Details entries. Supersede TR-011.
+
+### CR-014 Replace PDF Column with Details Modal on User Home
+
+**Date:** 2026-05-16
+**Type:** UI/UX
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Replace the Link to PDF column in the User Home resume table with a Details column. Each row shows an `Open details` button that opens a modal popup containing: (1) public PDF link for copying, (2) PDF download button, (3) cover letter text for copying.
+**Reason:** Wireframe refinement showed that a modal provides all resume output actions in one place without cluttering the table or requiring a separate page. Cover letter display is included because cover letter is now MVP.
+**Affected Artifacts:** `requirements_log.md` (FR-008), `wireframe_field_requirements.md`, `traceability_matrix.md` (TR-010), `decision_log.md` (DEC-015)
+**Impact Assessment:** Medium. Changes User Home table column structure and adds modal component.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Update FR-008 acceptance criteria to reflect modal behavior. Update Wireframe Field Requirements. Add cover letter to modal content.
+
+### CR-015 Add Cover Letter Generation and Editing to MVP
+
+**Date:** 2026-05-16
+**Type:** Scope
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add cover letter generation to MVP. LLM generates cover letter text as part of the resume generation process. User can view and edit the cover letter in Resume Review before saving.
+**Reason:** Cover letter was already visible in wireframes. Generating alongside the resume is less effort than post-MVP. LLM already has the context needed.
+**Affected Artifacts:** `requirements_log.md` (FR-001, new FR-011, FR-012), `decision_log.md` (DEC-016), `traceability_matrix.md`, `wireframe_field_requirements.md`
+**Impact Assessment:** Medium. Adds cover letter field to generation flow but reuses existing infrastructure.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Create FR-011 and FR-012. Update FR-001. Add cover letter to Generate Resume and Resume Review field requirements. Add trace rows.
+
+### CR-016 Expand Additional Info Fields in My Profile
+
+**Date:** 2026-05-16
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add new fields to Additional Info section: Date of Birth, Ready for relocation (dropdown), Ready for business trips (dropdown), Preferred work format (checkbox group: full-time, part-time, offline, remote, hybrid, on-site project based).
+**Reason:** Wireframes show these fields are needed for complete profile data supporting resume generation and candidate positioning.
+**Affected Artifacts:** `requirements_log.md` (FR-007), `wireframe_field_requirements.md` (Section 4.6), `traceability_matrix.md` (TR-009)
+**Impact Assessment:** Low. Expands existing section without adding new pages.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Update FR-007 description and acceptance criteria. Add validation rules to Wireframe Field Requirements. Update TR-009 trace notes.
 
 ### CR-999 [Change Title Template]
 

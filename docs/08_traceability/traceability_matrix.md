@@ -77,6 +77,8 @@ The goal is to ensure that project scope remains controlled and that each import
 | TR-012 | BO-005 | FR-010 | FR | Admin manages AI model details | AI Model Details | AiModel | AiModelService, AiModelDao | TC-012 | Planned | Approved |
 | TR-013 | BO-005 | NFR-001 | NFR | Protect saved API keys | AI Model Details | AiModel | AiModelService, Security/Logging Components | TC-013 | Planned | Approved |
 | TR-014 | BO-005 | TRN-001 | TRN | Prepare initial active AI model configuration | AI Models, AI Model Details | AiModel | AiModelService, Migration/Seed Script | TC-014 | Not Started | Draft |
+| TR-015 | BO-001 | FR-011 | FR | Generate and edit cover letter | Resume Review, Resume Details modal | SavedResume (cover_letter), ResumeGenerationRequest (cover_letter) | ResumeGenerationService, AiClient | TC-015 | Not Started | Draft |
+| TR-016 | BO-001 | FR-012 | FR | Include cover letter in generation request | Generate Resume | ResumeGenerationRequest (include_cover_letter) | ResumeGenerationService | TC-016 | Not Started | Draft |
 | TR-999 | BO-XXX | FR-XXX | FR | [Use case] | [Screen] | [Entity] | [Component] | TC-XXX | Not Started | Draft |
 
 ## 4. Details
@@ -218,7 +220,7 @@ The goal is to ensure that project scope remains controlled and that each import
 **Service / Component:** SavedResumeService, PdfService  
 **Test Case:** TC-010  
 **Status:** Approved  
-**Traceability Notes:** User Home replaces the separate Resume History page and provides saved resume table, search, sorting, details access, PDF actions, and public link copying where available.  
+**Traceability Notes:** User Home replaces the separate Resume History page and provides saved resume table, search, sorting, pagination, and a Details column. Clicking `Open details` opens a modal popup with PDF link copy, PDF download, and cover letter text per DEC-015/CR-014.  
 **Gaps / Follow-up:** Define minimum search/sort behavior and pagination threshold.
 
 ### TR-011 Resume Details and PDF Actions (Superseded)
@@ -276,6 +278,34 @@ The goal is to ensure that project scope remains controlled and that each import
 **Status:** Draft  
 **Traceability Notes:** The system needs at least one configured active AI model before generation can be demonstrated reliably.  
 **Gaps / Follow-up:** Confirm whether seed data is created through SQL migration, admin UI, or manual setup before demo.
+
+### TR-015 Cover Letter Generation
+
+**Business Objective:** BO-001 Reduce manual resume adaptation effort
+**Requirement ID:** FR-011
+**Requirement Type:** FR
+**Use Case / Workflow:** Generate and edit cover letter
+**UI Screen:** Resume Review, Resume Details modal
+**Data Entity:** SavedResume (cover_letter), ResumeGenerationRequest (cover_letter)
+**Service / Component:** ResumeGenerationService, AiClient
+**Test Case:** TC-015
+**Status:** Draft
+**Traceability Notes:** Cover letter is generated alongside resume draft. User can edit cover letter text in Resume Review before saving. Cover letter is viewable in the Resume Details modal on User Home per DEC-016/CR-015.
+**Gaps / Follow-up:** Define cover letter generation prompt, max length, and whether cover letter generation is always on or toggleable.
+
+### TR-016 Cover Letter in Generation Request
+
+**Business Objective:** BO-001 Reduce manual resume adaptation effort
+**Requirement ID:** FR-012
+**Requirement Type:** FR
+**Use Case / Workflow:** Include cover letter in generation request
+**UI Screen:** Generate Resume
+**Data Entity:** ResumeGenerationRequest (include_cover_letter)
+**Service / Component:** ResumeGenerationService
+**Test Case:** TC-016
+**Status:** Draft
+**Traceability Notes:** Generation request must include cover letter generation instruction for the AI. Cover letter output is stored separately from resume content.
+**Gaps / Follow-up:** Define prompt format for cover letter generation and error handling if cover letter fails but resume succeeds.
 
 ### TR-999 [Trace Item Title Template]
 

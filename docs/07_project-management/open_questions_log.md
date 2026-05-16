@@ -74,6 +74,7 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
 | OQ-007 | 2026-05-13 | Is real OpenRouter API usage allowed during final demo? | Capstone Constraint | BA / Mentor | High | Before AI integration | Open | N/A |
 | OQ-008 | 2026-05-13 | Should ATS JSON endpoint remain MVP Stretch or move to MVP? | Scope | BA | Medium | Before MVP baseline freeze | Open | N/A |
 | OQ-009 | 2026-05-13 | How much admin access logging is required for MVP? | Security | BA / Developer | Medium | Before admin implementation | Open | N/A |
+| OQ-010 | 2026-05-16 | What information does LLM return as structured JSON vs taken directly from profile? | Architecture | BA / Developer | Medium | Before AI prompt design | Open | N/A |
 | OQ-999 | YYYY-MM-DD | [Question text] | [Category] | [Owner] | [Low/Medium/High/Critical] | YYYY-MM-DD | Open | [DEC/CR link or N/A] |
  
 ## 4. Details
@@ -247,6 +248,24 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
     *   `risk_register.md`
     *   `security_requirements.md`
 **Follow-up Actions:** Control during admin implementation.
+
+### OQ-010 LLM Output Format — JSON vs Direct Profile Data
+
+**Date:** 2026-05-16
+**Category:** Architecture
+**Owner:** BA / Developer
+**Status:** Open
+**Question:** What information does the LLM return as structured JSON (generated fields) vs what is taken directly from user profile data and inserted into the resume without AI processing?
+**Why It Matters:** This affects prompt design, generation request format, resume review screen behavior, and how much of the profile data is editable in the generated output vs hardcoded.
+**Options Considered:**
+- Option A: LLM returns only generated fields (summary, adaptation of experience, cover letter); profile data (name, contact, education, courses) is inserted directly from user profile.
+- Option B: LLM returns all resume content including profile data; user reviews everything.
+- Option C: Hybrid — LLM returns generated content and a transformed version of profile sections with adaptation applied.
+**Answer / Decision:** N/A
+**Related Artifacts:**
+- `decision_log.md` (DEC-016, DEC-017)
+- `requirements_log.md` (FR-001, FR-011)
+**Follow-up Actions:** Resolve before AI prompt design and generation implementation.
 
 ### OQ-999 [Question Short Title Template]
 

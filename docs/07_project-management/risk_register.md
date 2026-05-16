@@ -207,6 +207,7 @@ The purpose is to make risks visible early and define practical mitigation strat
 **Mitigation Plan:** Start with a simple A4 PDF layout with selectable text and minimal styling.  
 **Trigger / Early Warning:** Initial PDF generation attempts produce poor formatting or missing text selection.  
 **Contingency Plan:** Use a proven PDF library and postpone advanced templates.
+**Update (2026-05-16):** Risk scope expanded. Two-page HTML template (DEC-019) and HTML-to-PDF conversion approach (DEC-017) add template design and content distribution complexity. Even content spreading across two pages (courses count limits per page) needs careful implementation. Cover letter content also appears in the PDF, affecting page layout calculations.
  
 ### RISK-007 API Key Handling May Expose Secrets
  
@@ -258,6 +259,7 @@ The purpose is to make risks visible early and define practical mitigation strat
 **Mitigation Plan:** MVP supports one generated draft first; variants and language tabs are stretch.  
 **Trigger / Early Warning:** UI mockups show excessive complexity or user testing reveals confusion with multiple options.  
 **Contingency Plan:** Simplify to section-based editing and single save flow.
+**Update (2026-05-16):** Risk scope expanded. Cover letter generation (DEC-016) adds a new editable section in Resume Review. Cover letter text needs editing, saving, and display in the Resume Details modal. This increases Resume Review complexity moderately but is managed within the existing generation flow.
 
 ### RISK-010 Wireframe Field Inconsistencies Create Requirement Ambiguity
 

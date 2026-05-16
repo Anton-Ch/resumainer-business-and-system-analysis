@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-13  
-**Last Updated:** 2026-05-13  
+**Last Updated:** 2026-05-16  
 **Author:** Anton  
-**Version:** 1.0  
+**Version:** 2.0  
 **Status:** Active  
 **Related BABOK Area:** 7.1 Specify and Model Requirements  
 
@@ -373,6 +373,10 @@ deleted_at
 | Additional resume language | No | Dropdown | Optional second language |
 | General information | No | Textarea | Additional AI context |
 | Profile picture | No | File | Optional image |
+| Date of birth | No | Date | Candidate date of birth |
+| Ready for relocation | No | Dropdown | Yes / No / Not specified |
+| Ready for business trips and rotational schedule | No | Dropdown | Yes / No / Not specified |
+| Preferred work format | No | Checkbox group | Full-time, Part-time, Offline, Remote, Hybrid, On-site project based |
 | Username | Yes | Text | Unique URL-friendly value for public resume links |
 
 #### Validation Rules
@@ -387,6 +391,10 @@ deleted_at
 | Additional resume language | Optional, valid dropdown value and different from default if provided |
 | General information | Optional, max 10000 characters |
 | Profile picture | Optional, valid image type and size if provided |
+| Date of birth | Optional, valid date |
+| Ready for relocation | Optional, valid dropdown value (Yes / No / Not specified) |
+| Ready for business trips | Optional, valid dropdown value (Yes / No / Not specified) |
+| Preferred work format | Optional, valid checkbox values (full-time, part-time, offline, remote, hybrid, on-site project based) |
 | Username | Required, URL-friendly, unique |
 
 #### Error Messages
@@ -404,6 +412,8 @@ Please upload a valid image file.
 Username is required.
 Username must be URL-friendly.
 Username is already taken.
+Date of birth must be a valid date.
+Preferred work format has invalid value.
 ~~~
 
 #### Draft Data Model Notes
@@ -420,6 +430,10 @@ achievements
 default_resume_language
 additional_resume_language
 general_info
+date_of_birth
+ready_for_relocation
+ready_for_business_trips
+preferred_work_format
 profile_picture_path
 username
 created_at
@@ -441,6 +455,7 @@ deleted_at
 | Adaptation level | Yes | Dropdown | Minimal, Balanced, Maximum |
 | AI model | Yes | Dropdown | Active model selected for generation |
 | Additional comments for AI | No | Textarea | Extra instructions for resume generation |
+| Include cover letter | No | Checkbox / Toggle | Include cover letter generation with resume |
 
 #### Validation Rules
 
@@ -453,6 +468,7 @@ deleted_at
 | Adaptation level | Required, valid dropdown value |
 | AI model | Required, active model only |
 | Additional comments for AI | Optional, max 10000 characters |
+| Include cover letter | Optional, boolean |
 
 #### Error Messages
 
@@ -482,6 +498,7 @@ professional_aspirations
 resume_language
 adaptation_level
 additional_comments
+include_cover_letter
 status
 error_message
 created_at
@@ -510,7 +527,70 @@ POST /api/resume-generation-requests
 GET  /api/resume-generation-requests/{id}
 ~~~
 
-## 6. Summary
+### 6. Resume Review Field Requirements
+
+#### Fields
+
+| Field | Required | Type | Notes |
+|---|---|---|---|
+| Professional summary | Generated | Text | AI-generated, editable |
+| Professional role | Generated | Text | AI-generated, editable |
+| Professional aspiration | Generated | Text | AI-generated, editable |
+| Work Experience rows | Generated | Repeatable | AI-generated, editable |
+| Skills rows | Generated | Repeatable | AI-generated, editable |
+| Courses & Certificates rows | Generated | Repeatable | AI-generated, editable |
+| Projects & Volunteering rows | Generated | Repeatable | AI-generated, editable |
+| Cover letter text | Generated | Textarea | AI-generated, editable before saving |
+
+#### Validation Rules
+
+| Field | Validation |
+|---|---|
+| Professional summary | Editable, max 5000 characters |
+| Professional role | Editable, max 200 characters |
+| Professional aspiration | Editable, max 1000 characters |
+| Work Experience rows | Editable sections |
+| Skills rows | Editable sections |
+| Courses & Certificates rows | Editable sections |
+| Projects & Volunteering rows | Editable sections |
+| Cover letter text | Editable, max 10000 characters |
+
+#### Error Messages
+
+~~~text
+Cover letter text is too long.
+~~~
+
+#### Main Action
+
+| Button | Description |
+|---|---|
+| Save & Create | Saves final resume version, creates PDF and public link |
+
+#### Draft Data Model Notes
+
+~~~text
+saved_resumes
+-------------
+id
+user_id
+source_draft_id
+adaptation_level_id
+language_id
+title
+final_content
+cover_letter
+public_code
+is_public
+is_deleted
+created_at
+updated_at
+deleted_at
+~~~
+
+---
+
+## 7. Summary
 
 These field requirements should be used as a practical bridge between wireframes, validation rules, data model refinement, and implementation planning.
 
