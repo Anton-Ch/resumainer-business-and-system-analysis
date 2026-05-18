@@ -388,6 +388,8 @@ Wireframe Field Requirements, Traceability Matrix.
 **Notes:**  
 Volunteering is handled together with projects for MVP simplicity.
 
+**Default Role Value:** If the user does not specify a role for a project entry, the system defaults to "Participant" at the UI/code level (DEC-031).
+
 ### FR-005 Manage Education
 
 **Type:** Functional Requirement  
@@ -770,6 +772,8 @@ Decision Log (DEC-016), FR-011, Traceability Matrix.
 
 **Notes:**  
 This requirement works together with FR-011. The generation request should include cover letter as a requested output alongside the resume adaptation.
+
+**Generated Content Page Placement:** Generated work experience entries and course entries are placed on page 1 (primary, more relevant) or page 2 (additional) of the resume. Page placement is controlled by `is_first_page` flag in `generation_response_experience` and `generation_response_course` tables. AI model assigns relevance and placement during generation (DEC-030).
 
 ### TRN-001 Prepare Initial Active AI Model Configuration
 

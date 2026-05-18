@@ -335,23 +335,178 @@ Each decision includes context, selected option, rejected alternatives, rational
 - Page 1: max 7 most relevant courses.
 - Page 2: if 5+ work experience records, max 5 courses; if fewer than 5 work experience records, max 8 courses.
 
----
+### DEC-020 Generation Response Status Flow (Draft → Finalized)
 
- 
-**Date:** YYYY-MM-DD
-**Type:** [Architecture / Scope / Requirement / Data Model / UI/UX / Deployment / Security / Process]
-**Status:** Proposed
-**Context:** [Why is this decision needed?]
-**Selected Option:** [What was chosen?]
-**Rejected Alternatives:** [What else was considered?]
-**Rationale:** [Why this option was chosen]
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** The data model needs to distinguish between AI-generated content (draft) and user-reviewed/finalized content.
+**Selected Option:** Two-phase flow with `response_status` lookup table (DRAFT, FINALIZED) and `resume_generation_response.status_id` FK. Response section tables store AI output and user edits per section.
+**Rejected Alternatives:** Single in-memory draft; single flat table.
+**Rationale:** Persisting the generation response allows users to revisit and resume interrupted review sessions. Section-level storage provides structured data for template rendering.
 **Impact:**
-- **Scope:** [Impact on MVP or future scope]
-- **Requirements:** [Affected FR/NFR if any]
-- **Data Model:** [Affected entities/tables if any]
-- **Requirements:** [Affected layers, technologies, or patterns]
-- **Risks:** [New or reduced risks]
-**Follow-up Actions:** [Optional next steps]
- 
+- **Data Model:** New tables: `response_status`, `resume_generation_response`, `generation_response_experience`, `generation_response_education`, `generation_response_course`, `generation_response_project`, `generation_response_skill`.
+- **Requirements:** Affects FR-001, FR-011.
+**Follow-up Actions:** Map response section tables to Resume Review UI blocks.
+
+### DEC-021 Contact Fields in Contact Detail
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** Profile contact data should be separated from account/authentication data. `full_name`, `phone`, and `resume_email` are profile data shown on resumes.
+**Selected Option:** `full_name`, `phone`, `resume_email` → `contact_detail`. `users` keeps: `username`, `email`, `password_hash`, `is_privileged`, FKs.
+**Rejected Alternatives:** All in `users`; duplication.
+**Rationale:** Clean separation: `users` = auth/account control; `contact_detail` = resume profile data.
+**Impact:**
+- **Data Model:** `users` removes full_name, phone, resume_email. `contact_detail` adds them.
+**Follow-up Actions:** Update admin User Details description to JOIN contact_detail.
+
+### DEC-022 Work Format as Junction Table
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** Preferred work format is multi-select in wireframes.
+**Selected Option:** `work_format` lookup + `user_work_format` junction table.
+**Rejected Alternatives:** TEXT comma-separated; JSON array.
+**Rationale:** Junction table follows 3NF, queryable, consistent.
+**Impact:**
+- **Data Model:** New tables: `work_format`, `user_work_format`. Remove `preferred_work_format` from `additional_profile_info`.
+**Follow-up Actions:** Define final work format values in seed data.
+
+### DEC-023 UI Language from Browser Locale
+
+**Date:** 2026-05-17
+**Type:** Architecture
+**Status:** Approved
+**Context:** Default interface language should be automatic.
+**Selected Option:** Browser locale (Accept-Language header). User overrides via Language Switcher. Session-persisted.
+**Rejected Alternatives:** Default English; manual selection.
+**Rationale:** Seamless first-visit experience. Switcher allows override.
+**Impact:**
+- **Architecture:** LocaleResolver in Spring MVC.
+**Follow-up Actions:** Implement LocaleChangeInterceptor.
+
+### DEC-024 AI Model Visibility and Privileged Users
+
+**Date:** 2026-05-17
+**Type:** Data Model / Security
+**Status:** Approved
+**Context:** Some models (paid/experimental) should not be available to all users.
+**Selected Option:** `ai_model.is_hidden` + `users.is_privileged`. Hidden models visible only to privileged users. Admin sets Visibility dropdown (Visible/Hidden) and Privileged checkbox.
+**Rejected Alternatives:** Role-based model access.
+**Rationale:** Simple boolean flags sufficient for MVP.
+**Impact:**
+- **Data Model:** `ai_model.is_hidden`, `users.is_privileged`.
+- **UI/UX:** AI Model Details — Visibility dropdown. Admin User Details — Privileged checkbox.
+**Follow-up Actions:** Update wireframe descriptions.
+
+### DEC-025 Resume Template Table (Post-MVP Ready)
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** Future feature: user-selectable resume templates (ATS-friendly, Human-friendly).
+**Selected Option:** `resume_template` table with name, html_file_path, description. Single seed record for MVP. `saved_resume.template_id` FK (nullable for MVP).
+**Rejected Alternatives:** No template table; hardcoded.
+**Rationale:** DDL-ready prevents migration cycle later. Single seed keeps MVP lean.
+**Impact:**
+- **Data Model:** New table `resume_template`. `saved_resume.template_id` FK nullable.
+**Follow-up Actions:** Seed default template in MVP data.sql.
+
+### DEC-026 LinkedIn URL Field Length
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** LinkedIn vanity URL max 100 characters after linkedin.com/in/.
+**Selected Option:** `contact_detail.linkedin_url` varchar(150).
+**Rejected Alternatives:** varchar(500).
+**Rationale:** Business-aware field sizing.
+**Impact:**
+- **Data Model:** Field size change only.
+**Follow-up Actions:** Add server-side validation.
+
+### DEC-027 Post-MVP Columns in DDL
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** Include Post-MVP columns now to avoid future migrations.
+**Selected Option:** Include with clear docs/comments. Developer ignores in MVP DAO.
+**Rejected Alternatives:** Add later via migration.
+**Rationale:** Stable schema, documented intent.
+**Impact:**
+- **Data Model:** `work_experience.company_url`, `resume_template` table, `saved_resume.template_id` marked Post-MVP.
+**Follow-up Actions:** Document Post-MVP columns.
+
+### DEC-028 Resume Generation Response Structure
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** `saved_resume.final_content` as a single text blob violates 3NF. Reviewed content should be stored per-section for template rendering.
+**Selected Option:** Structure:
+- `resume_generation_response` — professional_summary, professional_aspirations, cover_letter, status_id
+- `generation_response_*` tables per section (experience, education, course, project, skill)
+- `saved_resume` — user_id, response_id, adaptation_level_id, language_id, title, pdf_file_path, public_code, template_id (no professional_summary/aspirations/cover_letter — those live in response table)
+**Rejected Alternatives:** Single `final_content` blob; JSON columns.
+**Rationale:** 3NF compliance, per-section editing, template rendering. Cover letter is AI-generated output — logically belongs with the rest of generation response, not with saved_resume metadata.
+**Impact:**
+- **Data Model:** Multiple new tables. `saved_resume.final_content` removed. `saved_resume.is_public` removed (all resumes are public by design).
+- **Requirements:** FR-008, FR-011, FR-012.
+**Follow-up Actions:** Map response tables to Resume Review UI sections.
+
+### DEC-029 Resume Language Preferences as FK to Language Table
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** Resume language preferences (default and additional resume language) were initially stored as varchar free-text fields. To ensure valid input and simplify AI model integration, dropdown selection from available languages is preferred.
+**Selected Option:** Replace `additional_profile_info.default_resume_language` and `additional_profile_info.additional_resume_language` varchar fields with FKs to `language` table: `default_resume_language_id`, `additional_resume_language_id`.
+**Rejected Alternatives:** Free-text varchar fields; separate junction table for user languages.
+**Rationale:** FK constraint ensures only valid language values are stored. Dropdown on the frontend provides clear options. AI model receives consistent language identifiers.
+**Impact:**
+- **Data Model:** `additional_profile_info.default_resume_language_id integer ref: language.id`, `additional_profile_info.additional_resume_language_id integer ref: language.id`.
+**Follow-up Actions:** Update frontend dropdown values to match language table seed data.
+
+### DEC-030 Resume Content Order and Page Placement
+
+**Date:** 2026-05-17
+**Type:** Data Model
+**Status:** Approved
+**Context:** Generated resume content needs to distinguish between first-page and second-page placement, and maintain a fixed display order. Sort_order semantics were unclear — whether user-controlled or system-controlled.
+**Selected Option:**
+- Rename `sort_order` to `order_in_resume` in all `generation_response_*` tables (fixed display order, not user-reorderable).
+- Add `is_first_page boolean not null default true` to `generation_response_experience` and `generation_response_course` — items on page 1 are primary; items on page 2 go to "Additional work experience" or "Additional courses" sections.
+- Add `description` removed from `generation_response_education` and `generation_response_course` (not needed in final resume template — education/courses use compact format).
+- Add `updated_at` to `generation_response_education`, `generation_response_project`, `generation_response_skill` for data consistency.
+- Make `start_date not null` in `generation_response_experience` and `generation_response_project` (experience/project without start date has no meaning in resume).
+- Add `generation_response_education.description` removed (education is summary-only in template).
+**Rejected Alternatives:** User-reorderable sort_order; single page without placement distinction.
+**Rationale:** Fixed order simplifies template rendering. Page placement flags give the two-page template (DEC-019) the data it needs to distribute content without complex heuristics.
+**Impact:**
+- **Data Model:** sort_order → order_in_* tables. New columns: `generation_response_experience.is_first_page`, `generation_response_course.is_first_page`, `generation_response_experience.start_date not null`, `generation_response_project.start_date not null`. Removed: `generation_response_education.description`, `generation_response_course.description`.
+- **Requirements:** New requirement: generated work experience and course entries can be placed on page 1 (primary, more relevant) or page 2 (additional) of the resume.
+**Follow-up Actions:** Add is_first_page logic to generation prompt engineering.
+
+### DEC-031 Default Role Value for Project Participants
+
+**Date:** 2026-05-17
+**Type:** Requirement
+**Status:** Approved
+**Context:** The `project.role` field is optional in the database (wireframes show it as non-mandatory). However, when generating resume content, every project entry needs a role descriptor.
+**Selected Option:** If user does not provide a role for a project record, the system defaults to "Participant" / "Участник" at UI/code level. Database schema remains unchanged (optional field).
+**Rejected Alternatives:** Making `project.role` required in DB; not providing any default.
+**Rationale:** Keeping the DB field optional respects the wireframe design. The code-level default ensures generated resumes never show an empty role field, which would look unprofessional.
+**Impact:**
+- **Data Model:** No change.
+- **Implementation:** Service layer default value logic.
+**Follow-up Actions:** Document default value rule in implementation notes.
+
+***
+*This decision log follows the Information Management Plan structure and conventions for the ResumAIner project. Decisions are recorded with full context for auditability and reuse.*
+
 ***
 *This decision log follows the Information Management Plan structure and conventions for the ResumAIner project. Decisions are recorded with full context for auditability and reuse.*
