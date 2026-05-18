@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-15  
+**Last Updated:** 2026-05-18  
 **Author:** Anton  
-**Version:** 3.0  
+**Version:** 4.0  
 **Status:** Active  
 **Related BABOK Area:** 3.4 Plan Business Analysis Information Management  
 
@@ -79,6 +79,7 @@ The goal is to ensure that project scope remains controlled and that each import
 | TR-014 | BO-005 | TRN-001 | TRN | Prepare initial active AI model configuration | AI Models, AI Model Details | AiModel | AiModelService, Migration/Seed Script | TC-014 | Not Started | Draft |
 | TR-015 | BO-001 | FR-011 | FR | Generate and edit cover letter | Resume Review, Resume Details modal | SavedResume (cover_letter), ResumeGenerationRequest (cover_letter) | ResumeGenerationService, AiClient | TC-015 | Not Started | Draft |
 | TR-016 | BO-001 | FR-012 | FR | Include cover letter in generation request | Generate Resume | ResumeGenerationRequest (include_cover_letter) | ResumeGenerationService | TC-016 | Not Started | Draft |
+| TR-017 | BO-003 | FR-013 | FR | Delete saved resume from User Home | User Home (Resume Details modal) | SavedResume (is_deleted, deleted_at) | SavedResumeService | TC-017 | Not Started | Draft |
 | TR-999 | BO-XXX | FR-XXX | FR | [Use case] | [Screen] | [Entity] | [Component] | TC-XXX | Not Started | Draft |
 
 ## 4. Details
@@ -306,6 +307,20 @@ The goal is to ensure that project scope remains controlled and that each import
 **Status:** Draft
 **Traceability Notes:** Generation request must include cover letter generation instruction for the AI. Cover letter output is stored separately from resume content.
 **Gaps / Follow-up:** Define prompt format for cover letter generation and error handling if cover letter fails but resume succeeds.
+
+### TR-017 Resume Delete from User Home
+
+**Business Objective:** BO-003 Reuse and manage saved resume versions
+**Requirement ID:** FR-013
+**Requirement Type:** FR
+**Use Case / Workflow:** Delete saved resume from User Home
+**UI Screen:** User Home (Resume Details modal)
+**Data Entity:** SavedResume (is_deleted, deleted_at)
+**Service / Component:** SavedResumeService
+**Test Case:** TC-017
+**Status:** Draft
+**Traceability Notes:** Resume delete action is initiated from the Resume Details modal. Soft-delete sets `is_deleted = true`. Public URL returns HTTP 410 Gone for deleted resumes.
+**Gaps / Follow-up:** Define exact confirmation UI behavior and 410 page design.
 
 ### TR-999 [Trace Item Title Template]
 

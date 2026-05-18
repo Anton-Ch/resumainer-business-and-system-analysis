@@ -1,8 +1,8 @@
 # ResumAIner — Entity-Relationship Diagram (Mermaid)
 
 > **Project ID:** `resumainer`  
-> **Version:** 1.0  
-> **Date:** 2026-05-17  
+> **Version:** 1.1  
+> **Date:** 2026-05-18  
 > **Status:** Approved — MVP Baseline  
 > **Normalization:** 3NF (Third Normal Form)  
 > **Total Entities:** 26  
@@ -119,10 +119,10 @@ erDiagram
     
     contact_detail {
         int id PK
-        int user_id FK UK
+        int user_id FK
         varchar full_name
-        varchar phone
-        varchar resume_email
+        varchar phone "not null"
+        varchar resume_email "not null"
         varchar location
         varchar professional_title
         varchar linkedin_url
@@ -139,7 +139,7 @@ erDiagram
         varchar job_title
         varchar company_name
         text description
-        varchar location
+        varchar location "not null"
         date start_date
         date end_date "NULL = current"
         boolean is_current
@@ -153,7 +153,7 @@ erDiagram
         int user_id FK
         varchar institution_name
         varchar degree
-        varchar field_of_study
+        varchar field_of_study "not null"
         varchar education_type
         text description
         date start_date
@@ -171,7 +171,7 @@ erDiagram
         varchar role "default: Participant"
         text description
         varchar location
-        date start_date
+        date start_date "not null"
         date end_date "NULL = ongoing"
         varchar project_url
         timestamp created_at
@@ -194,7 +194,7 @@ erDiagram
     
     additional_profile_info {
         int id PK
-        int user_id FK UK
+        int user_id FK
         text skills
         text languages
         text professional_aspirations
@@ -258,7 +258,7 @@ erDiagram
     
     resume_generation_response {
         int id PK
-        int generation_request_id FK UK
+        int generation_request_id FK
         int status_id FK "DRAFT | FINALIZED"
         text professional_summary
         text professional_aspirations
@@ -347,6 +347,7 @@ erDiagram
         int language_id FK
         varchar title
         varchar public_code
+        varchar public_url_link
         varchar pdf_file_path
         boolean is_deleted
         timestamp deleted_at

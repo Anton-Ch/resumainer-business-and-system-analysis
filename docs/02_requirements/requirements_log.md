@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-13  
-**Last Updated:** 2026-05-15  
+**Last Updated:** 2026-05-18  
 **Author:** Anton  
-**Version:** 3.0  
+**Version:** 4.0  
 **Status:** Active  
 **Related BABOK Area:** 5.1 Trace Requirements / 5.3 Prioritize Requirements / 6.2 Specify and Model Requirements  
 
@@ -128,6 +128,7 @@ Note: BABOK defines Solution Requirements as a major requirement class. In this 
 | FR-010  | Functional         | Admin manages AI model details                   | Elicitation Results  | Medium     | MVP     | Approved | Ready                   |
 | FR-011  | Functional         | Generate and edit cover letter                   | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
 | FR-012  | Functional         | Include cover letter in generation request       | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
+| FR-013  | Functional         | Delete saved resume from User Home               | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
 | NFR-001 | Non-Functional     | Mask and protect saved API keys                  | Security Review      | High       | MVP     | Approved | Ready                   |
 | TRN-001 | Transition         | Prepare initial active AI model configuration    | Technical Constraint | Medium     | MVP     | Draft    | Needs Clarification     |
 | XX-XXX  | [Requirement Type] | [Requirement title]                              | [Source]             | [Priority] | [Scope] | Draft    | [Requirement Readiness] |
@@ -541,7 +542,9 @@ Users need quick access to all generated resumes without a separate Resume Histo
 - User Home shows saved resumes in a searchable and sortable table.
 - Table includes a Details column with an `Open details` button for each resume row.
 - Clicking `Open details` opens a modal popup on User Home.
-- Modal contains: (1) public PDF resume link for copying, (2) PDF download button, (3) cover letter text for copying.
+- Modal contains: (1) public PDF resume link for copying, (2) PDF download button, (3) cover letter text for copying, (4) "Delete this resume" button.
+- Clicking "Delete this resume" changes the button text to a confirmation prompt and reveals a "Confirm deletion" button.
+- After confirming deletion, the resume is soft-deleted and removed from the table.
 - Empty state is shown when no resumes exist.
 - No-results state is shown when search returns no matches.
 
@@ -815,6 +818,50 @@ Technical Constraints, Deployment Plan, Decision Log.
 
 **Notes:**  
 Needs final setup approach for environment variables, seed data, and demo mode.
+
+### FR-013 Delete Saved Resume from User Home
+
+**Type:** Functional Requirement
+**Source:** Governance Decision
+**Priority:** Medium
+**Scope:** MVP
+**Status:** Draft
+**Readiness:** Needs Clarification
+
+**Description:**
+The system shall allow a registered user to delete a saved resume from User Home. The delete action is initiated from the Resume Details modal on User Home. After soft-delete, the public resume link returns HTTP 410 Gone with the message "Пользователь решил удалить данное резюме. Больше оно не доступно."
+
+**Business Value:**
+Users need to remove outdated or unwanted resumes. Soft-delete ensures data is not permanently lost and the public link is properly deactivated.
+
+**Acceptance Criteria:**
+- User Home's Resume Details modal displays a "Delete this resume" button.
+- Clicking "Delete this resume" changes the button to a confirmation prompt and reveals a "Confirm deletion" button.
+- Clicking "Confirm deletion" soft-deletes the resume (sets `is_deleted = true` and `deleted_at` timestamp in `saved_resume`).
+- After deletion, the resume row is removed from the User Home table.
+- Accessing a deleted resume's public URL returns HTTP status code 410 Gone.
+- The 410 page displays the message: "Пользователь решил удалить данное резюме. Больше оно не доступно."
+- Private profile data, drafts, and other user data are not affected by the delete action.
+
+**Affected UI:**
+User Home (Resume Details modal).
+
+**Affected Data:**
+SavedResume (is_deleted, deleted_at).
+
+**Related Artifacts:**
+Decision Log (DEC-032), Change Request Log (CR-017), Traceability Matrix (TR-017).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Partial
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: Yes
+- Testable: Partial
+
+**Notes:**
+This requirement works together with FR-008. The Resume Details modal described in FR-008 gains a delete action. The existing `is_deleted` and `deleted_at` fields in `saved_resume` table are used for soft-delete. The `public_url_link` field in `saved_resume` stores the ready-made public resume URL.
 
 ### FR-999 [Requirement Title Template]
 

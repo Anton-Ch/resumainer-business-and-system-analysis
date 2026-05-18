@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-15
+**Last Updated:** 2026-05-18
 **Author:** Anton
-**Version:** 3.0
+**Version:** 4.0
 **Status:** Active
 **Related BABOK Area:** 3.1 Plan Business Analysis Approach / 3.3 Plan Business Analysis Governance
 
@@ -101,6 +101,7 @@ The purpose is to make risks visible early and define practical mitigation strat
 | RISK-008 | 2026-05-13 | Vue + Spring MVC integration may increase implementation workload | Technical / Schedule | Medium | Medium | Medium | Monitor | BA / Developer | Open |
 | RISK-009 | 2026-05-13 | Resume Review page may become complex due to editing, variants, and languages | UX / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
 | RISK-010 | 2026-05-13 | Wireframe field inconsistencies may create requirement ambiguity | Quality | Medium | Medium | Medium | Mitigate | BA | Mitigated |
+| RISK-011 | 2026-05-18 | Accidental resume deletion may cause user frustration and data loss | UX / Data | Low | High | Medium | Mitigate | BA | Open |
 | RISK-999 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
 
 ## 4. Details
@@ -277,6 +278,23 @@ The purpose is to make risks visible early and define practical mitigation strat
 **Mitigation Plan:** Field rules were cleaned and consolidated in `wireframe_field_requirements.md`.  
 **Trigger / Early Warning:** Same field has different required/optional status in different artifacts.
 **Contingency Plan:** Use `wireframe_field_requirements.md` as the field-level source of truth and update related requirements/logs if contradictions appear.
+
+### RISK-011 Accidental Resume Deletion May Cause User Frustration and Data Loss
+
+**Date Identified:** 2026-05-18
+**Category:** UX / Data
+**Probability:** Low
+**Impact:** High
+**Severity:** Medium
+**Response Strategy:** Mitigate
+**Owner:** BA / Developer
+**Status:** Open
+**Risk Description:** A user may accidentally delete a saved resume, causing frustration and potential data loss.
+**Cause:** The delete action is available from the Resume Details modal with a confirmation step, but a user might still confirm accidentally or regret the decision.
+**Impact if Occurs:** User loses access to the generated resume and its public sharing link. Data is soft-deleted but cannot be restored without admin intervention.
+**Mitigation Plan:** Implement confirmation dialog with two-step process: first click shows confirmation prompt, second click confirms. Consider undo option within a short time window.
+**Trigger / Early Warning:** User reports accidentally deleting a resume or requests data restoration.
+**Contingency Plan:** Provide admin ability to restore soft-deleted resumes by setting `is_deleted` back to `false`.
 
 ### RISK-999 [Risk Short Title Template]
 

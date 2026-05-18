@@ -93,6 +93,7 @@ It helps keep the project baseline controlled and explains why meaningful change
 | CR-014 | 2026-05-16 | Replace PDF column with Details modal on User Home         | UI/UX         | BA          | User Home table, Resume Details modal, FR-008 | Medium                | Approved | Draft       |
 | CR-015 | 2026-05-16 | Add Cover Letter generation and editing to MVP             | Scope         | BA          | Generate Resume, Resume Review, FR-001, new FR-011, FR-012 | Medium    | Approved | Draft       |
 | CR-016 | 2026-05-16 | Expand Additional Info fields in My Profile                | Requirement   | BA          | My Profile, FR-007, Wireframe Field Requirements | Low                  | Approved | Draft       |
+| CR-017 | 2026-05-18 | Add resume delete from User Home and public_url_link field | Requirement   | BA          | Requirements Log, ERD, Data Dictionary, Traceability Matrix, Risk Register, Decision Log | Medium | Approved | Implemented |
 
 ## 4. Details
 
@@ -298,6 +299,26 @@ It helps keep the project baseline controlled and explains why meaningful change
 **Decision:** Approved
 **Resolution Date:** N/A
 **Follow-up Actions:** Update FR-007 description and acceptance criteria. Add validation rules to Wireframe Field Requirements. Update TR-009 trace notes.
+
+### CR-017 Add Resume Delete from User Home and public_url_link Field
+
+**Date:** 2026-05-18
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Implemented
+**Description:** Add user-facing resume delete capability from User Home and add `public_url_link` varchar(200) field to `saved_resume` table for storing ready-made public resume URLs.
+
+**Reason:** Users need to delete saved resumes directly from User Home. The delete button ("Delete this resume") is placed in the Open Details modal. After clicking, the button changes to a confirmation prompt with a new "Confirm deletion" button. Additionally, `public_url_link` is needed to store the generated public link for direct access. The existing `is_deleted` boolean field in `saved_resume` (default: false) is set to true on deletion to deactivate the link. If a recruiter or external visitor accesses a deleted resume link, the system returns HTTP 410 Gone with a custom page stating "Пользователь решил удалить данное резюме. Больше оно не доступно."
+
+**Affected Artifacts:** `requirements_log.md`, `dbml_erd.md`, `mermaid_erd.md`, `plantuml_erd.puml`, `data_dictionary.md`, `traceability_matrix.md`, `risk_register.md`, `decision_log.md`
+
+**Impact Assessment:** Medium. Adds new user-facing delete flow, a new DB field, and custom HTTP 410 handling.
+
+**Decision:** Approved
+
+**Resolution Date:** 2026-05-18
+
+**Follow-up Actions:** Create FR-013. Update ERD files with `public_url_link`. Update Data Dictionary. Add trace row TR-017. Add risk RISK-011. [Completed 2026-05-18]
 
 ### CR-999 [Change Title Template]
 

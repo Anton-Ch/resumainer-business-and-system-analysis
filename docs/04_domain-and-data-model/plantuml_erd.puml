@@ -92,8 +92,8 @@ entity "contact_detail" as contact_detail {
   --
   user_id FK UNIQUE
   full_name varchar
-  phone varchar
-  resume_email varchar
+  phone varchar "not null"
+  resume_email varchar "not null"
   location varchar
   professional_title varchar
   linkedin_url varchar
@@ -111,7 +111,7 @@ entity "work_experience" as work_experience {
   job_title varchar
   company_name varchar
   description text
-  location varchar
+  location varchar "not null"
   start_date date
   end_date date
   is_current boolean
@@ -126,7 +126,7 @@ entity "education" as education {
   user_id FK
   institution_name varchar
   degree varchar
-  field_of_study varchar
+  field_of_study varchar "not null"
   education_type varchar
   description text
   start_date date
@@ -145,7 +145,7 @@ entity "project" as project {
   role varchar
   description text
   location varchar
-  start_date date
+  start_date date "not null"
   end_date date
   project_url varchar
   created_at timestamp
@@ -321,6 +321,7 @@ entity "saved_resume" as saved_resume {
   language_id FK
   title varchar
   public_code varchar
+  public_url_link varchar
   pdf_file_path varchar
   is_deleted boolean
   deleted_at timestamp

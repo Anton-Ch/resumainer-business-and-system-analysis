@@ -1,8 +1,8 @@
 // ResumAIner — Entity-Relationship Data Model
 // Format: DBML for dbdiagram.io
 // Project ID: resumainer
-// File: dbml_erd.md (v1.0)
-// Date: 2026-05-17
+// File: dbml_erd.md (v1.1)
+// Date: 2026-05-18
 // Author: Anton
 // Status: Approved — MVP Baseline
 
@@ -120,8 +120,8 @@ Table contact_detail {
 
   // Contact info used on resumes
   full_name varchar(255) [not null]
-  phone varchar(50)
-  resume_email varchar(255)                    // Email shown on resumes (may differ from account email)
+  phone varchar(50) [not null]
+  resume_email varchar(255) [not null]         // Email shown on resumes (may differ from account email)
 
   // Profile contacts
   location varchar(255)                        // "Kazakhstan, Astana"
@@ -144,7 +144,7 @@ Table work_experience {
   job_title varchar(255) [not null]
   company_name varchar(255) [not null]
   description text [not null]
-  location varchar(255)
+  location varchar(255) [not null]
 
   start_date date [not null]
   end_date date                                 // NULL = current job
@@ -164,7 +164,7 @@ Table education {
 
   institution_name varchar(255) [not null]
   degree varchar(100) [not null]               // Bachelor, Master, PhD, etc. (free text)
-  field_of_study varchar(255)                 // "Information Systems"
+  field_of_study varchar(255) [not null]       // "Information Systems"
   education_type varchar(150)                  // Optional: "University", "College", etc.
   description text
 
@@ -187,7 +187,7 @@ Table project {
   description text [not null]
   location varchar(255)
 
-  start_date date
+  start_date date [not null]
   end_date date                                // NULL = still ongoing; allows future dates (planned end)
   project_url varchar(500)
 
@@ -241,8 +241,8 @@ Table additional_profile_info {
   ready_for_business_trips varchar(20)         // "Yes", "No", "Not specified"
 
   // Personal
-  date_of_birth date
-  citizenship varchar(150)                     // Optional: user's citizenship
+  date_of_birth date  [not null]
+  citizenship varchar(150) [not null]          // Optional: user's citizenship
   photo_file_path varchar(500)                 // Optional per confirmed requirement
 
   created_at timestamp [not null, default: `now()`]
@@ -275,10 +275,10 @@ Table ai_model {
   provider varchar(255) [not null]             // "OpenRouter"
   model_code varchar(255) [not null]           // "deepseek/deepseek-v4-pro"
   display_name varchar(255) [not null]         // "Deepseek v4 Pro"
-  provider_api_url varchar(500)                // Base URL for API calls
+  provider_api_url varchar(500) [not null]     // Base URL for API calls
 
   // NFR-001: API key encrypted, never logged, masked in UI after saving
-  api_key_encrypted varchar(512)               // Encrypted, not plaintext
+  api_key_encrypted varchar(512) [not null]    // Encrypted, not plaintext
 
   is_active boolean [not null, default: true]
   is_paid boolean [not null, default: false]   // Marks paid models for admin awareness
@@ -335,8 +335,8 @@ Table resume_generation_response {
   // FINALIZED = user reviewed and approved; ready for PDF generation
 
   // Top-level single-value fields (reviewed/edited by user)
-  professional_summary text
-  professional_aspirations text
+  professional_summary text [not null]
+  professional_aspirations text [not null]
   cover_letter text                            // DEC-016: Final edited cover letter
 
   created_at timestamp [not null, default: `now()`]
@@ -354,7 +354,7 @@ Table generation_response_experience {
   job_title varchar(255) [not null]
   company_name varchar(255) [not null]
   description text [not null]
-  location varchar(255)
+  location varchar(255) [not null]
   is_first_page boolean [not null, default: true]  // DEC-030: page 1 (primary) or page 2 (additional)
   start_date date [not null]                       // Experience without start date has no resume value
   end_date date                                    // NULL = current
@@ -372,7 +372,7 @@ Table generation_response_education {
 
   institution_name varchar(255) [not null]
   degree varchar(100) [not null]
-  field_of_study varchar(255)
+  field_of_study varchar(255) [not null]
   start_date date [not null]
   end_date date
   location varchar(255)
@@ -453,9 +453,10 @@ Table saved_resume {
 
   title varchar(255) [not null]
   public_code varchar(4) [not null]            // 4-char: QWRYUPASEDFGHJKZXCVBNM
+  public_url_link varchar(200) [not null]      // Full ready-made public resume URL
 
   // Path to generated PDF file on server
-  pdf_file_path varchar(500)                   // DEC-017: HTML-to-PDF on Java backend
+  pdf_file_path varchar(500) [not null]        // DEC-017: HTML-to-PDF on Java backend
 
   is_deleted boolean [not null, default: false]
   deleted_at timestamp
@@ -481,8 +482,8 @@ Table ai_usage_log {
 
   user_id integer [not null, ref: > users.id]
   ai_model_id integer [not null, ref: > ai_model.id]
-  generation_request_id integer [ref: > resume_generation_request.id]
-  generation_response_id integer [ref: > resume_generation_response.id]
+  generation_request_id integer [not null, ref: > resume_generation_request.id]
+  generation_response_id integer [not null, ref: > resume_generation_response.id]
 
   tokens_sent integer [not null, default: 0]          // Prompt tokens
   tokens_generated integer [not null, default: 0]     // Completion tokens
@@ -599,3 +600,9 @@ Table ai_usage_log {
 // 13. ai_usage_log: added generation_response_id FK
 // 14. ai_usage_log.generation_rsponse_id → generation_response_id (typo fix)
 // 15. response_status section relabeled to "Generated AI response" for clarity
+
+// ============================================================
+// KEY CHANGES FROM v1.0 TO v1.1
+// ============================================================
+//
+// 1. saved_resume: added public_url_link varchar(200) for storing ready-made public resume URL (DEC-032)

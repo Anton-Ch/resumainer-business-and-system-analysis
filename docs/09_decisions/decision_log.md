@@ -6,9 +6,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-15
+**Last Updated:** 2026-05-18
 **Author:** Anton
-**Version:** 2.0
+**Version:** 3.0
 **Status:** Active
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance
 
@@ -76,6 +76,7 @@ Each decision includes context, selected option, rejected alternatives, rational
 | DEC-017 | 2026-05-16 | Architecture | HTML-to-PDF generation on Java server side | Easier to maintain structured layout with HTML templates than direct PDF generation | Resume generated as HTML first, then converted to PDF on Java backend | Approved |
 | DEC-018 | 2026-05-16 | Scope | Courses and Certificates section is mandatory for MVP | System targets users with practical experience and completed courses | Courses section stays in MVP scope, FR-006 priority unchanged (Medium) | Approved |
 | DEC-019 | 2026-05-16 | Data Model | Two-page default HTML resume template for all resumes | Ensures consistent visual quality and even content spreading | Standard two-page layout; separate technical approach doc needed for content distribution rules | Approved |
+| DEC-032 | 2026-05-18 | UI/UX | Resume delete from User Home with confirmation | Users can delete saved resumes; soft-delete deactivates public link with HTTP 410 | New FR-013; `public_url_link` field in `saved_resume`; HTTP 410 Gone page | Approved |
 
 ## 4. Details
 
@@ -505,7 +506,27 @@ Each decision includes context, selected option, rejected alternatives, rational
 - **Implementation:** Service layer default value logic.
 **Follow-up Actions:** Document default value rule in implementation notes.
 
-***
+### DEC-032 Resume Delete from User Home with Confirmation
+
+**Date:** 2026-05-18
+**Type:** UI/UX
+**Status:** Approved
+**Context:** Users need to delete saved resumes from User Home. The delete action must have a confirmation step to prevent accidental deletion. After deletion, the public resume link should no longer work and must return a meaningful HTTP status code.
+
+**Selected Option:** A "Delete this resume" button is placed in the Resume Details modal on User Home. On click, the button changes to a confirmation prompt and a "Confirm deletion" button appears. After confirmation, the resume is soft-deleted (`is_deleted = true` in `saved_resume`). Public access to a deleted resume returns HTTP 410 Gone with a custom message: "Пользователь решил удалить данное резюме. Больше оно не доступно."
+
+**Rejected Alternatives:** Hard-delete (permanent removal); delete action from table row instead of modal; no confirmation step.
+
+**Rationale:** Soft-delete preserves data integrity and allows potential undo. The confirmation step prevents accidental deletion. The HTTP 410 Gone semantically indicates that the resource was intentionally removed, distinguishing from 404 Not Found.
+
+**Impact:**
+- **Scope:** New FR-013; adds delete action to existing modal.
+- **Requirements:** FR-008 modal gains delete functionality; new FR-013 created.
+- **Data Model:** `saved_resume` already has `is_deleted` and `deleted_at`. New field: `public_url_link varchar(200)` for storing ready-made public URL.
+- **UI/UX:** Resume Details modal gains delete button with confirmation step.
+- **Risks:** Adds new UI complexity but follows existing modal pattern.
+
+**Follow-up Actions:** Create FR-013. Update FR-008 modal description. Add `public_url_link` to saved_resume in ERDs. Implement HTTP 410 handling for public resume endpoint.
 *This decision log follows the Information Management Plan structure and conventions for the ResumAIner project. Decisions are recorded with full context for auditability and reuse.*
 
 ***
