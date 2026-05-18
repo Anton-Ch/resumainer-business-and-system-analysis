@@ -202,10 +202,9 @@ assets/                     Diagrams, wireframes, screenshots
 Planned structure expansion:
 ```
 docs/
-├── 00_project-overview/
-├── 01_stakeholders/
+├── 01_project-overview/
 ├── 02_requirements/
-├── 03_workflows-and-use-cases/
+├── 03_processes-and-workflows/
 ├── 04_domain-and-data-model/
 ├── 05_ui-ux/
 ├── 06_system-analysis/
