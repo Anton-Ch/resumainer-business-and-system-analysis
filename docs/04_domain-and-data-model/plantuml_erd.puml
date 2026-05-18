@@ -232,6 +232,7 @@ entity "resume_generation_response" as resume_generation_response {
   --
   generation_request_id FK UNIQUE
   status_id FK
+  professional_title varchar "not null"
   professional_summary text
   professional_aspirations text
   cover_letter text
@@ -321,8 +322,8 @@ entity "saved_resume" as saved_resume {
   language_id FK
   title varchar
   public_code varchar
-  public_url_link varchar
-  pdf_file_path varchar
+  public_url_link varchar "not null"
+  pdf_file_path varchar "not null"
   is_deleted boolean
   deleted_at timestamp
   created_at timestamp

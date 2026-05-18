@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-15 
+**Last Updated:** 2026-05-18 
 **Author:** Anton  
-**Version:** 4.0  
+**Version:** 5.0  
 **Status:** Active  
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance  
 
@@ -94,6 +94,7 @@ It helps keep the project baseline controlled and explains why meaningful change
 | CR-015 | 2026-05-16 | Add Cover Letter generation and editing to MVP             | Scope         | BA          | Generate Resume, Resume Review, FR-001, new FR-011, FR-012 | Medium    | Approved | Draft       |
 | CR-016 | 2026-05-16 | Expand Additional Info fields in My Profile                | Requirement   | BA          | My Profile, FR-007, Wireframe Field Requirements | Low                  | Approved | Draft       |
 | CR-017 | 2026-05-18 | Add resume delete from User Home and public_url_link field | Requirement   | BA          | Requirements Log, ERD, Data Dictionary, Traceability Matrix, Risk Register, Decision Log | Medium | Approved | Implemented |
+| CR-018 | 2026-05-18 | Add professional_title to resume_generation_response       | Requirement   | BA          | Requirements Log, Decision Log, ERD, Data Dictionary, Traceability Matrix | Low | Approved | Draft       |
 
 ## 4. Details
 
@@ -319,6 +320,26 @@ It helps keep the project baseline controlled and explains why meaningful change
 **Resolution Date:** 2026-05-18
 
 **Follow-up Actions:** Create FR-013. Update ERD files with `public_url_link`. Update Data Dictionary. Add trace row TR-017. Add risk RISK-011. [Completed 2026-05-18]
+
+### CR-018 Add professional_title to resume_generation_response
+
+**Date:** 2026-05-18
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add `professional_title` varchar(250) NOT NULL field to `resume_generation_response` table. The AI model generates the most relevant professional title matching the target vacancy and stores it in this field.
+
+**Reason:** The generated resume needs a professional title that is specifically adapted to the target vacancy, distinct from the user's general `professional_title` in `contact_detail`. The AI model determines the best-fit title based on the vacancy requirements.
+
+**Affected Artifacts:** `requirements_log.md` (FR-001), `dbml_erd.md`, `mermaid_erd.md`, `plantuml_erd.puml`, `data_dictionary.md`, `traceability_matrix.md` (TR-003), `decision_log.md`
+
+**Impact Assessment:** Low. Adds one field to existing table; uses existing AI generation flow.
+
+**Decision:** Approved
+
+**Resolution Date:** N/A
+
+**Follow-up Actions:** Update FR-001 affected data. Add DEC-033. Update ERDs and Data Dictionary. Update TR-003 trace notes.
 
 ### CR-999 [Change Title Template]
 

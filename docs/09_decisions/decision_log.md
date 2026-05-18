@@ -8,7 +8,7 @@
 **Date Created:** 2026-05-10
 **Last Updated:** 2026-05-18
 **Author:** Anton
-**Version:** 3.0
+**Version:** 4.0
 **Status:** Active
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance
 
@@ -77,6 +77,7 @@ Each decision includes context, selected option, rejected alternatives, rational
 | DEC-018 | 2026-05-16 | Scope | Courses and Certificates section is mandatory for MVP | System targets users with practical experience and completed courses | Courses section stays in MVP scope, FR-006 priority unchanged (Medium) | Approved |
 | DEC-019 | 2026-05-16 | Data Model | Two-page default HTML resume template for all resumes | Ensures consistent visual quality and even content spreading | Standard two-page layout; separate technical approach doc needed for content distribution rules | Approved |
 | DEC-032 | 2026-05-18 | UI/UX | Resume delete from User Home with confirmation | Users can delete saved resumes; soft-delete deactivates public link with HTTP 410 | New FR-013; `public_url_link` field in `saved_resume`; HTTP 410 Gone page | Approved |
+| DEC-033 | 2026-05-18 | Data Model | Add professional_title to resume_generation_response | AI generates vacancy-specific professional title distinct from user's contact_detail title | New field `professional_title varchar(250)` in `resume_generation_response` | Approved |
 
 ## 4. Details
 
@@ -527,6 +528,25 @@ Each decision includes context, selected option, rejected alternatives, rational
 - **Risks:** Adds new UI complexity but follows existing modal pattern.
 
 **Follow-up Actions:** Create FR-013. Update FR-008 modal description. Add `public_url_link` to saved_resume in ERDs. Implement HTTP 410 handling for public resume endpoint.
+
+### DEC-033 Add professional_title to resume_generation_response
+
+**Date:** 2026-05-18
+**Type:** Data Model
+**Status:** Approved
+**Context:** The generated resume needs a professional title adapted to the target vacancy, which may differ from the user's general `professional_title` in `contact_detail`. The AI model determines the best-fit title based on vacancy requirements.
+
+**Selected Option:** Add `professional_title varchar(250) NOT NULL` to `resume_generation_response`. The AI generates and the user can review/edit this field as part of the generation response.
+
+**Rejected Alternatives:** Reusing `contact_detail.professional_title` (too generic); storing only in generated content without a dedicated field.
+
+**Rationale:** A dedicated field ensures the AI-generated title is stored separately from the user's profile title, enabling vacancy-specific professional positioning.
+
+**Impact:**
+- **Data Model:** New field `professional_title` in `resume_generation_response`.
+- **Requirements:** FR-001 affected data updated.
+
+**Follow-up Actions:** Update FR-001 affected data. Update ERDs and Data Dictionary. Update TR-003 trace notes.
 *This decision log follows the Information Management Plan structure and conventions for the ResumAIner project. Decisions are recorded with full context for auditability and reuse.*
 
 ***

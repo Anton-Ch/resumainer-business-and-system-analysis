@@ -5,7 +5,7 @@
 **Date Created:** 2026-05-13  
 **Last Updated:** 2026-05-18  
 **Author:** Anton  
-**Version:** 4.0  
+**Version:** 5.0  
 **Status:** Active  
 **Related BABOK Area:** 5.1 Trace Requirements / 5.3 Prioritize Requirements / 6.2 Specify and Model Requirements  
 
@@ -246,7 +246,7 @@ This requirement supports the core product value: reducing manual resume adaptat
 Generate Resume, Resume Review.
 
 **Affected Data:**  
-ResumeGenerationRequest, GeneratedResumeDraft, AiModel, AiUsageLog.
+ResumeGenerationRequest, GeneratedResumeDraft, AiModel, AiUsageLog, resume_generation_response (professional_title).
 
 **Related Artifacts:**  
 Confirmed Elicitation Results, Wireframe Field Requirements, Open Questions Log, Traceability Matrix.

@@ -260,8 +260,9 @@ erDiagram
         int id PK
         int generation_request_id FK
         int status_id FK "DRAFT | FINALIZED"
-        text professional_summary
-        text professional_aspirations
+        varchar professional_title "not null"
+        text professional_summary "not null"
+        text professional_aspirations "not null"
         text cover_letter
         timestamp created_at
         timestamp updated_at
@@ -347,8 +348,8 @@ erDiagram
         int language_id FK
         varchar title
         varchar public_code
-        varchar public_url_link
-        varchar pdf_file_path
+        varchar public_url_link "not null"
+        varchar pdf_file_path "not null"
         boolean is_deleted
         timestamp deleted_at
         timestamp created_at

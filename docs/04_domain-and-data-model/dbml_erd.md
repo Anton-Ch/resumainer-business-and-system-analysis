@@ -124,7 +124,7 @@ Table contact_detail {
   resume_email varchar(255) [not null]         // Email shown on resumes (may differ from account email)
 
   // Profile contacts
-  location varchar(255)                        // "Kazakhstan, Astana"
+  location varchar(255) [not null]             // "Kazakhstan, Astana"
   professional_title varchar(255)              // "Business Analyst, Junior Java Developer"
   linkedin_url varchar(150)                    // DEC-026: LinkedIn vanity URL max 100 chars
   portfolio_url varchar(500)
@@ -335,6 +335,7 @@ Table resume_generation_response {
   // FINALIZED = user reviewed and approved; ready for PDF generation
 
   // Top-level single-value fields (reviewed/edited by user)
+  professional_title varchar(250) [not null]
   professional_summary text [not null]
   professional_aspirations text [not null]
   cover_letter text                            // DEC-016: Final edited cover letter

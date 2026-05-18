@@ -70,7 +70,7 @@
 **Business rules:**
 - DRAFT = AI generated, user has not completed review
 - FINALIZED = user reviewed and approved; triggers PDF generation
-- Only FINALIZED responses can create a saved_resume record
+- Only FINALIZED responses can create a `saved_resume` record
 
 
 ## Entity: language
@@ -136,62 +136,62 @@
 
 **Business rules:**
 - Post-MVP feature: users choose template (ATS-friendly, Human-friendly)
-- MVP: single default template seeded in data.sql
-- saved_resume.template_id FK is nullable for MVP backward compatibility
+- MVP: single default template
+- `saved_resume.template_id FK` is nullable for MVP backward compatibility
 
 
 ## Entity: users
 
 **Description:** Registered user accounts. Stores authentication data and access control references. Profile data is stored in separate profile tables (DEC-021).
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `username` | Varchar(100) | Yes | UNIQUE, NOT NULL | URL-friendly username for public resume links |
-| `email` | Varchar(255) | Yes | UNIQUE, NOT NULL | Registration email (not exposed on resumes) |
-| `password_hash` | Varchar(255) | Yes | NOT NULL | BCrypt password hash |
-| `role_id` | Integer | Yes | FK → role.id, NOT NULL | User role reference |
-| `status_id` | Integer | Yes | FK → user_status.id, NOT NULL | Account status reference |
-| `permission_id` | Integer | Yes | FK → user_permission.id, NOT NULL | Generation permission reference |
-| `default_language_id` | Integer | No | FK → language.id | Default interface language |
-| `secondary_language_id` | Integer | No | FK → language.id | Secondary interface language |
-| `is_privileged` | Boolean | Yes | NOT NULL, DEFAULT false | Privileged user — can access hidden AI models (DEC-024) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Account creation timestamp |
-| `updated_at` | Timestamp | No |  | Last profile update timestamp |
-| `deleted_at` | Timestamp | No |  | Soft-delete timestamp |
-| `is_deleted` | Boolean | Yes | NOT NULL, DEFAULT false | Soft-delete flag |
+| Attribute               | Data type    | Required | Constraints                       | Description                                             |
+| ----------------------- | ------------ | -------- | --------------------------------- | ------------------------------------------------------- |
+| `id`                    | Integer      | Yes      | PK, AUTO_INCREMENT                | Unique identifier                                       |
+| `username`              | Varchar(100) | Yes      | UNIQUE, NOT NULL                  | URL-friendly username for public resume links           |
+| `email`                 | Varchar(255) | Yes      | UNIQUE, NOT NULL                  | Registration email (not exposed on resumes)             |
+| `password_hash`         | Varchar(255) | Yes      | NOT NULL                          | BCrypt password hash                                    |
+| `role_id`               | Integer      | Yes      | FK → role.id, NOT NULL            | User role reference                                     |
+| `status_id`             | Integer      | Yes      | FK → user_status.id, NOT NULL     | Account status reference                                |
+| `permission_id`         | Integer      | Yes      | FK → user_permission.id, NOT NULL | Generation permission reference                         |
+| `default_language_id`   | Integer      | No       | FK → language.id                  | Default interface language                              |
+| `secondary_language_id` | Integer      | No       | FK → language.id                  | Secondary interface language                            |
+| `is_privileged`         | Boolean      | Yes      | NOT NULL, DEFAULT false           | Privileged user — can access hidden AI models (DEC-024) |
+| `created_at`            | Timestamp    | Yes      | NOT NULL, DEFAULT now()           | Account creation timestamp                              |
+| `updated_at`            | Timestamp    | No       |                                   | Last profile update timestamp                           |
+| `deleted_at`            | Timestamp    | No       |                                   | Soft-delete timestamp                                   |
+| `is_deleted`            | Boolean      | Yes      | NOT NULL, DEFAULT false           | Soft-delete flag                                        |
 
 **Business rules:**
 - Table name is plural (users) to avoid PostgreSQL reserved word conflict
-- Email is used for authentication; resume_email in contact_detail is for resume display
-- Username is part of public resume URL: /{username}/{public_code}
-- Deactivation uses status_id = BLOCKED, not record deletion
-- is_privileged grants access to hidden/payed AI models (DEC-024)
+- Email is used for authentication; `resume_email` in `contact_detail` is for resume display
+- Username is part of public resume URL: `/{username}/{public_code}`
+- Deactivation uses `status_id` = BLOCKED, not record deletion
+- `is_privileged` grants access to hidden/paid AI models (DEC-024)
 
 
 ## Entity: contact_detail
 
 **Description:** User profile contact information. One-to-one with users. Contains all resume-relevant contact data (DEC-021).
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, UNIQUE, NOT NULL | User reference (1:1) |
-| `full_name` | Varchar(255) | Yes | NOT NULL | User's full name for resume display |
-| `phone` | Varchar(50) | No |  | Contact phone number |
-| `resume_email` | Varchar(255) | No |  | Email shown on resumes (may differ from account email) |
-| `location` | Varchar(255) | No |  | City and country for resume |
-| `professional_title` | Varchar(255) | No |  | Professional headline: Business Analyst, Junior Java Developer |
-| `linkedin_url` | Varchar(150) | No |  | LinkedIn profile URL (DEC-026: max 150 chars for vanity URL) |
-| `portfolio_url` | Varchar(500) | No |  | Portfolio or personal website URL |
-| `telegram` | Varchar(100) | No |  | Telegram username |
-| `whatsapp` | Varchar(50) | No |  | WhatsApp phone number |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute            | Data type    | Required | Constraints                     | Description                                                    |
+| -------------------- | ------------ | -------- | ------------------------------- | -------------------------------------------------------------- |
+| `id`                 | Integer      | Yes      | PK, AUTO_INCREMENT              | Unique identifier                                              |
+| `user_id`            | Integer      | Yes      | FK → users.id, UNIQUE, NOT NULL | User reference (1:1)                                           |
+| `full_name`          | Varchar(255) | Yes      | NOT NULL                        | User's full name for resume display                            |
+| `phone`              | Varchar(50)  | Yes      | NOT NULL                        | Contact phone number                                           |
+| `resume_email`       | Varchar(255) | Yes      | NOT NULL                        | Email shown on resumes (may differ from account email)         |
+| `location`           | Varchar(255) | Yes      | NOT NULL                        | City and country for resume                                    |
+| `professional_title` | Varchar(255) | No       |                                 | Professional headline: Business Analyst, Junior Java Developer |
+| `linkedin_url`       | Varchar(150) | No       |                                 | LinkedIn profile URL (DEC-026: max 150 chars for vanity URL)   |
+| `portfolio_url`      | Varchar(500) | No       |                                 | Portfolio or personal website URL                              |
+| `telegram`           | Varchar(100) | No       |                                 | Telegram username                                              |
+| `whatsapp`           | Varchar(50)  | No       |                                 | WhatsApp phone number                                          |
+| `created_at`         | Timestamp    | Yes      | NOT NULL, DEFAULT now()         | Record creation timestamp                                      |
+| `updated_at`         | Timestamp    | No       |                                 | Last update timestamp                                          |
 
 **Business rules:**
-- One user has exactly one contact_detail record (created on registration)
-- full_name is required for resume generation
+- One user has exactly one `contact_detail` record (created on registration)
+- `full_name` is required for resume generation
 - linkedin_url max 150 chars per LinkedIn vanity URL limit (DEC-026)
 
 
@@ -199,51 +199,51 @@
 
 **Description:** User work history records. Each entry represents one job position held by the user.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, NOT NULL | User reference |
-| `job_title` | Varchar(255) | Yes | NOT NULL | Position/job title |
-| `company_name` | Varchar(255) | Yes | NOT NULL | Employer name |
-| `description` | Text | Yes | NOT NULL | Role description: responsibilities, achievements |
-| `location` | Varchar(255) | No |  | Work location: city, remote |
-| `start_date` | Date | Yes | NOT NULL | Employment start date |
-| `end_date` | Date | No |  | Employment end date; NULL = current job |
-| `is_current` | Boolean | Yes | NOT NULL, DEFAULT false | Flag: currently employed here |
-| `company_url` | Varchar(500) | No |  | Post-MVP: company profile URL (DEC-027) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute      | Data type    | Required | Constraints             | Description                                      |
+| -------------- | ------------ | -------- | ----------------------- | ------------------------------------------------ |
+| `id`           | Integer      | Yes      | PK, AUTO_INCREMENT      | Unique identifier                                |
+| `user_id`      | Integer      | Yes      | FK → users.id, NOT NULL | User reference                                   |
+| `job_title`    | Varchar(255) | Yes      | NOT NULL                | Position/job title                               |
+| `company_name` | Varchar(255) | Yes      | NOT NULL                | Employer name                                    |
+| `description`  | Text         | Yes      | NOT NULL                | Role description: responsibilities, achievements |
+| `location`     | Varchar(255) | Yes      | NOT NULL                | Work location: city, remote                      |
+| `start_date`   | Date         | Yes      | NOT NULL                | Employment start date                            |
+| `end_date`     | Date         | No       |                         | Employment end date; NULL = current job          |
+| `is_current`   | Boolean      | Yes      | NOT NULL, DEFAULT false | Flag: currently employed here                    |
+| `company_url`  | Varchar(500) | No       |                         | Post-MVP: company profile URL (DEC-027)          |
+| `created_at`   | Timestamp    | Yes      | NOT NULL, DEFAULT now() | Record creation timestamp                        |
+| `updated_at`   | Timestamp    | No       |                         | Last update timestamp                            |
 
 **Business rules:**
 - Auto-sorted by start_date DESC, end_date DESC NULLS FIRST (DEC-012)
 - description is confirmed required for useful resume generation
-- is_current = true if end_date is NULL
-- company_url is Post-MVP: not used in MVP generation flow
+- `is_current` = true if `end_date` is NULL
+- `company_url` is Post-MVP: not used in MVP generation flow
 
 
 ## Entity: education
 
 **Description:** Formal education records: universities, colleges, degrees, programs.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, NOT NULL | User reference |
-| `institution_name` | Varchar(255) | Yes | NOT NULL | School, university, or institution name |
-| `degree` | Varchar(100) | Yes | NOT NULL | Degree or qualification: Bachelor, Master, PhD, etc. |
-| `field_of_study` | Varchar(255) | No |  | Major or specialization: Information Systems |
-| `education_type` | Varchar(150) | No |  | Optional: University, College, etc. |
-| `description` | Text | No |  | Additional education details |
-| `start_date` | Date | Yes | NOT NULL | Study start date |
-| `end_date` | Date | No |  | Graduation date; NULL = still studying; allows future dates |
-| `location` | Varchar(255) | No |  | Institution location |
-| `gpa_grade` | Varchar(20) | No |  | GPA or grade (text for flexible format) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute          | Data type    | Required | Constraints             | Description                                                 |
+| ------------------ | ------------ | -------- | ----------------------- | ----------------------------------------------------------- |
+| `id`               | Integer      | Yes      | PK, AUTO_INCREMENT      | Unique identifier                                           |
+| `user_id`          | Integer      | Yes      | FK → users.id, NOT NULL | User reference                                              |
+| `institution_name` | Varchar(255) | Yes      | NOT NULL                | School, university, or institution name                     |
+| `degree`           | Varchar(100) | Yes      | NOT NULL                | Degree or qualification: Bachelor, Master, PhD, etc.        |
+| `field_of_study`   | Varchar(255) | Yes      | NOT NULL                | Major or specialization: Information Systems                |
+| `education_type`   | Varchar(150) | No       |                         | Optional: University, College, etc.                         |
+| `description`      | Text         | No       |                         | Additional education details                                |
+| `start_date`       | Date         | Yes      | NOT NULL                | Study start date                                            |
+| `end_date`         | Date         | No       |                         | Graduation date; NULL = still studying; allows future dates |
+| `location`         | Varchar(255) | No       |                         | Institution location                                        |
+| `gpa_grade`        | Varchar(20)  | No       |                         | GPA or grade (text for flexible format)                     |
+| `created_at`       | Timestamp    | Yes      | NOT NULL, DEFAULT now() | Record creation timestamp                                   |
+| `updated_at`       | Timestamp    | No       |                         | Last update timestamp                                       |
 
 **Business rules:**
-- start_date (year) is required per confirmed elicitation decision
-- end_date can be NULL (still studying) or in the future (planned graduation)
+- `start_date` (year) is required per confirmed elicitation decision
+- `end_date` can be NULL (still studying) or in the future (planned graduation)
 - degree field is free text to allow 'Other' values
 
 
@@ -251,19 +251,19 @@
 
 **Description:** Projects and volunteering records. Captures personal, academic, professional, and volunteer experience.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, NOT NULL | User reference |
-| `project_name` | Varchar(255) | Yes | NOT NULL | Project or activity name |
-| `role` | Varchar(255) | No |  | User's role in project; code default = Participant (DEC-031) |
-| `description` | Text | Yes | NOT NULL | Project description and contributions |
-| `location` | Varchar(255) | No |  | Project location |
-| `start_date` | Date | No |  | Project start date |
-| `end_date` | Date | No |  | End date; NULL = ongoing; allows future dates |
-| `project_url` | Varchar(500) | No |  | Project URL or repository link |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute      | Data type    | Required | Constraints             | Description                                                  |
+| -------------- | ------------ | -------- | ----------------------- | ------------------------------------------------------------ |
+| `id`           | Integer      | Yes      | PK, AUTO_INCREMENT      | Unique identifier                                            |
+| `user_id`      | Integer      | Yes      | FK → users.id, NOT NULL | User reference                                               |
+| `project_name` | Varchar(255) | Yes      | NOT NULL                | Project or activity name                                     |
+| `role`         | Varchar(255) | No       |                         | User's role in project; code default = Participant (DEC-031) |
+| `description`  | Text         | Yes      | NOT NULL                | Project description and contributions                        |
+| `location`     | Varchar(255) | No       |                         | Project location                                             |
+| `start_date`   | Date         | Yes      | NOT NULL                | Project start date                                           |
+| `end_date`     | Date         | No       |                         | End date; NULL = ongoing; allows future dates                |
+| `project_url`  | Varchar(500) | No       |                         | Project URL or repository link                               |
+| `created_at`   | Timestamp    | Yes      | NOT NULL, DEFAULT now() | Record creation timestamp                                    |
+| `updated_at`   | Timestamp    | No       |                         | Last update timestamp                                        |
 
 **Business rules:**
 - Volunteering handled together with projects under the same entity for MVP simplicity
@@ -292,38 +292,38 @@
 **Business rules:**
 - Mandatory section per DEC-018 — target users are professionals with completed courses
 - Two-page template limits: Page 1 max 7 most relevant courses; Page 2 adjusts based on work experience count (DEC-019)
-- course_focus is user-provided, not AI-generated
+- `course_focus` is user-provided, not AI-generated
 
 
 ## Entity: additional_profile_info
 
-**Description:** Simplified additional profile data (DEC-013). Single table replaces 7 normalized tables for MVP. Stores free-text fields, resume language preferences, and personal information.
+**Description:** Simplified additional profile data (DEC-013). Single table replaces 7 tables for MVP. Stores free-text fields, resume language preferences, and personal information.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, UNIQUE, NOT NULL | User reference (1:1) |
-| `skills` | Text | No |  | Free-text: skills list (comma-separated or free form) |
-| `languages` | Text | No |  | Free-text: languages with proficiency levels |
-| `professional_aspirations` | Text | No |  | Target career direction and goals |
-| `achievements` | Text | No |  | Key professional and personal achievements |
-| `general_information` | Text | No |  | AI context: any job-related info to help resume generation |
-| `default_resume_language_id` | Integer | No | FK → language.id | Default resume generation language (DEC-029) |
-| `additional_resume_language_id` | Integer | No | FK → language.id | Additional resume generation language (DEC-029) |
-| `ready_for_relocation` | Varchar(20) | No |  | Relocation readiness: Yes, No, Not specified |
-| `ready_for_business_trips` | Varchar(20) | No |  | Business trip readiness: Yes, No, Not specified |
-| `date_of_birth` | Date | No |  | Date of birth |
-| `citizenship` | Varchar(150) | No |  | Optional: user's citizenship |
-| `photo_file_path` | Varchar(500) | No |  | Profile photo file path (optional per confirmed requirement) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute                       | Data type    | Required | Constraints                     | Description                                                  |
+| ------------------------------- | ------------ | -------- | ------------------------------- | ------------------------------------------------------------ |
+| `id`                            | Integer      | Yes      | PK, AUTO_INCREMENT              | Unique identifier                                            |
+| `user_id`                       | Integer      | Yes      | FK → users.id, UNIQUE, NOT NULL | User reference (1:1)                                         |
+| `skills`                        | Text         | No       |                                 | Free-text: skills list (comma-separated or free form)        |
+| `languages`                     | Text         | No       |                                 | Free-text: languages with proficiency levels                 |
+| `professional_aspirations`      | Text         | No       |                                 | Target career direction and goals                            |
+| `achievements`                  | Text         | No       |                                 | Key professional and personal achievements                   |
+| `general_information`           | Text         | No       |                                 | AI context: any job-related info to help resume generation   |
+| `default_resume_language_id`    | Integer      | No       | FK → language.id                | Default resume generation language (DEC-029)                 |
+| `additional_resume_language_id` | Integer      | No       | FK → language.id                | Additional resume generation language (DEC-029)              |
+| `ready_for_relocation`          | Varchar(20)  | No       |                                 | Relocation readiness: Yes, No, Not specified                 |
+| `ready_for_business_trips`      | Varchar(20)  | No       |                                 | Business trip readiness: Yes, No, Not specified              |
+| `date_of_birth`                 | Date         | YES      | NOT NULL                        | Date of birth                                                |
+| `citizenship`                   | Varchar(150) | YES      | NOT NULL                        | Optional: user's citizenship                                 |
+| `photo_file_path`               | Varchar(500) | No       |                                 | Profile photo file path (optional per confirmed requirement) |
+| `created_at`                    | Timestamp    | Yes      | NOT NULL, DEFAULT now()         | Record creation timestamp                                    |
+| `updated_at`                    | Timestamp    | No       |                                 | Last update timestamp                                        |
 
 **Business rules:**
-- Simplified MVP design (DEC-013): skills, languages, aspirations, achievements are text fields, not separate tables
+- Simplified MVP design (DEC-013): skills, languages, aspirations, achievements are text fields, not separate tables because used as feed for AI model only
 - Resume language IDs are FKs to language table (DEC-029) — dropdown selection on frontend
 - Relocation/travel readiness uses controlled dropdown values
 - Photo is optional despite wireframe asterisk (confirmed decision)
-- preferred_work_format moved to separate junction table user_work_format (DEC-022)
+- `preferred_work_format` moved to separate junction table `user_work_format` (DEC-022)
 
 
 ## Entity: user_work_format
@@ -337,7 +337,7 @@
 | `work_format_id` | Integer | Yes | FK → work_format.id, NOT NULL | Work format reference |
 
 **Business rules:**
-- Composite unique constraint on (user_id, work_format_id)
+- Composite unique constraint on (`user_id`, `work_format_id`)
 - One user can have multiple work formats (checkbox group on frontend)
 - Follows 3NF — enables querying by format
 
@@ -346,24 +346,24 @@
 
 **Description:** AI provider model configurations. Stores provider connection details, API keys, and visibility settings.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `provider` | Varchar(255) | Yes | NOT NULL | AI provider name: OpenRouter |
-| `model_code` | Varchar(255) | Yes | NOT NULL | Provider model code: deepseek/deepseek-v4-pro |
-| `display_name` | Varchar(255) | Yes | NOT NULL | Human-readable model display name |
-| `provider_api_url` | Varchar(500) | No |  | API base URL for provider |
-| `api_key_encrypted` | Varchar(512) | No |  | Encrypted API key (NFR-001) |
-| `is_active` | Boolean | Yes | NOT NULL, DEFAULT true | Whether model is available for generation |
-| `is_paid` | Boolean | Yes | NOT NULL, DEFAULT false | Flag: model requires payment |
-| `is_hidden` | Boolean | Yes | NOT NULL, DEFAULT false | Hidden from non-privileged users (DEC-024) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute           | Data type    | Required | Constraints             | Description                                   |
+| ------------------- | ------------ | -------- | ----------------------- | --------------------------------------------- |
+| `id`                | Integer      | Yes      | PK, AUTO_INCREMENT      | Unique identifier                             |
+| `provider`          | Varchar(255) | Yes      | NOT NULL                | AI provider name: OpenRouter                  |
+| `model_code`        | Varchar(255) | Yes      | NOT NULL                | Provider model code: deepseek/deepseek-v4-pro |
+| `display_name`      | Varchar(255) | Yes      | NOT NULL                | Human-readable model display name             |
+| `provider_api_url`  | Varchar(500) | Yes      | NOT NULL                | API base URL for provider                     |
+| `api_key_encrypted` | Varchar(512) | Yes      | NOT NULL                | Encrypted API key (NFR-001)                   |
+| `is_active`         | Boolean      | Yes      | NOT NULL, DEFAULT true  | Whether model is available for generation     |
+| `is_paid`           | Boolean      | Yes      | NOT NULL, DEFAULT false | Flag: model requires payment                  |
+| `is_hidden`         | Boolean      | Yes      | NOT NULL, DEFAULT false | Hidden from non-privileged users (DEC-024)    |
+| `created_at`        | Timestamp    | Yes      | NOT NULL, DEFAULT now() | Record creation timestamp                     |
+| `updated_at`        | Timestamp    | No       |                         | Last update timestamp                         |
 
 **Business rules:**
 - API key is masked after saving, never logged (NFR-001)
-- is_paid marks paid models for admin awareness
-- is_hidden controls visibility to non-privileged users (DEC-024)
+- `is_paid` marks paid models for admin awareness
+- `is_hidden` controls visibility to non-privileged users (DEC-024)
 - Admin manages Visibility dropdown (Visible/Hidden) in AI Model Details page
 
 
@@ -371,22 +371,22 @@
 
 **Description:** User's request to generate an adapted resume. Captures all input parameters for traceability and re-generation.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, NOT NULL | User who submitted the request |
-| `ai_model_id` | Integer | Yes | FK → ai_model.id, NOT NULL | AI model used for generation |
-| `vacancy_description` | Text | Yes | NOT NULL | Vacancy description pasted by user |
-| `company_description` | Text | No |  | Optional company context |
-| `additional_comments` | Text | No |  | Additional instructions for AI |
-| `include_cover_letter` | Boolean | Yes | NOT NULL, DEFAULT false | Whether to generate cover letter |
-| `language_id` | Integer | Yes | FK → language.id, NOT NULL | Target resume language |
-| `adaptation_level_id` | Integer | Yes | FK → adaptation_level.id, NOT NULL | Adaptation intensity |
-| `language_mode` | Varchar(20) | Yes | NOT NULL, DEFAULT 'default' | Language mode: 'default', 'additional', 'both' |
-| `status` | Varchar(30) | Yes | NOT NULL, DEFAULT 'pending' | Processing status: pending, processing, completed, failed |
-| `error_message` | Text | No |  | Error details if generation failed |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Request creation timestamp |
-| `completed_at` | Timestamp | No |  | Generation completion timestamp |
+| Attribute              | Data type   | Required | Constraints                        | Description                                               |
+| ---------------------- | ----------- | -------- | ---------------------------------- | --------------------------------------------------------- |
+| `id`                   | Integer     | Yes      | PK, AUTO_INCREMENT                 | Unique identifier                                         |
+| `user_id`              | Integer     | Yes      | FK → users.id, NOT NULL            | User who submitted the request                            |
+| `ai_model_id`          | Integer     | Yes      | FK → ai_model.id, NOT NULL         | AI model used for generation                              |
+| `vacancy_description`  | Text        | Yes      | NOT NULL                           | Vacancy description pasted by user                        |
+| `company_description`  | Text        | No       |                                    | Optional company context                                  |
+| `additional_comments`  | Text        | No       |                                    | Additional instructions for AI                            |
+| `include_cover_letter` | Boolean     | Yes      | NOT NULL, DEFAULT false            | Whether to generate cover letter                          |
+| `language_id`          | Integer     | Yes      | FK → language.id, NOT NULL         | Target resume language                                    |
+| `adaptation_level_id`  | Integer     | Yes      | FK → adaptation_level.id, NOT NULL | Adaptation intensity                                      |
+| `language_mode`        | Varchar(20) | Yes      | NOT NULL, DEFAULT 'default'        | Language mode: 'default', 'additional', 'both'            |
+| `status`               | Varchar(30) | Yes      | NOT NULL, DEFAULT 'pending'        | Processing status: pending, processing, completed, failed |
+| `error_message`        | Text        | No       |                                    | Error details if generation failed                        |
+| `created_at`           | Timestamp   | Yes      | NOT NULL, DEFAULT now()            | Request creation timestamp                                |
+| `completed_at`         | Timestamp   | No       |                                    | Generation completion timestamp                           |
 
 **Business rules:**
 - Each request produces exactly one response (1:1)
@@ -399,16 +399,17 @@
 
 **Description:** AI generation output and user-reviewed edits. Status tracks lifecycle: DRAFT (AI output) → FINALIZED (user approved).
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `generation_request_id` | Integer | Yes | FK → resume_generation_request.id, UNIQUE, NOT NULL | Source request (1:1) |
-| `status_id` | Integer | Yes | FK → response_status.id, NOT NULL | Response status: DRAFT or FINALIZED |
-| `professional_summary` | Text | No |  | AI-generated and user-reviewed professional summary |
-| `professional_aspirations` | Text | No |  | AI-generated and user-reviewed career aspirations |
-| `cover_letter` | Text | No |  | Generated and user-edited cover letter (DEC-016) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Response creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute                  | Data type    | Required | Constraints                                         | Description                                         |
+| -------------------------- | ------------ | -------- | --------------------------------------------------- | --------------------------------------------------- |
+| `id`                       | Integer      | Yes      | PK, AUTO_INCREMENT                                  | Unique identifier                                   |
+| `generation_request_id`    | Integer      | Yes      | FK → resume_generation_request.id, UNIQUE, NOT NULL | Source request (1:1)                                |
+| `status_id`                | Integer      | Yes      | FK → response_status.id, NOT NULL                   | Response status: DRAFT or FINALIZED                 |
+| `professional_title`       | Varchar(250) | Yes      | NOT NULL                                            | AI-generated and user-reviewed professional title   |
+| `professional_summary`     | Text         | Yes      | NOT NULL                                            | AI-generated and user-reviewed professional summary |
+| `professional_aspirations` | Text         | Yes      | NOT NULL                                            | AI-generated and user-reviewed career aspirations   |
+| `cover_letter`             | Text         | No       |                                                     | Generated and user-edited cover letter (DEC-016)    |
+| `created_at`               | Timestamp    | Yes      | NOT NULL, DEFAULT now()                             | Response creation timestamp                         |
+| `updated_at`               | Timestamp    | No       |                                                     | Last update timestamp                               |
 
 **Business rules:**
 - Only FINALIZED responses can create a saved_resume record
@@ -420,20 +421,20 @@
 
 **Description:** Reviewed and edited work experience items from a generation response. Each row represents one work entry in the final resume.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `response_id` | Integer | Yes | FK → resume_generation_response.id, NOT NULL | Parent generation response |
-| `job_title` | Varchar(255) | Yes | NOT NULL | Job title in generated resume |
-| `company_name` | Varchar(255) | Yes | NOT NULL | Company name in generated resume |
-| `description` | Text | Yes | NOT NULL | AI-generated and user-reviewed description |
-| `location` | Varchar(255) | No |  | Work location in generated resume |
-| `is_first_page` | Boolean | Yes | NOT NULL, DEFAULT true | Page 1 (primary) or Page 2 (additional) placement (DEC-030) |
-| `start_date` | Date | Yes | NOT NULL | Start date in generated resume |
-| `end_date` | Date | No |  | End date; NULL = current |
-| `order_in_resume` | Integer | Yes | NOT NULL, DEFAULT 0 | Fixed display order (DEC-030) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute         | Data type    | Required | Constraints                                  | Description                                                 |
+| ----------------- | ------------ | -------- | -------------------------------------------- | ----------------------------------------------------------- |
+| `id`              | Integer      | Yes      | PK, AUTO_INCREMENT                           | Unique identifier                                           |
+| `response_id`     | Integer      | Yes      | FK → resume_generation_response.id, NOT NULL | Parent generation response                                  |
+| `job_title`       | Varchar(255) | Yes      | NOT NULL                                     | Job title in generated resume                               |
+| `company_name`    | Varchar(255) | Yes      | NOT NULL                                     | Company name in generated resume                            |
+| `description`     | Text         | Yes      | NOT NULL                                     | AI-generated and user-reviewed description                  |
+| `location`        | Varchar(255) | Yes      | NOT NULL                                     | Work location in generated resume                           |
+| `is_first_page`   | Boolean      | Yes      | NOT NULL, DEFAULT true                       | Page 1 (primary) or Page 2 (additional) placement (DEC-030) |
+| `start_date`      | Date         | Yes      | NOT NULL                                     | Start date in generated resume                              |
+| `end_date`        | Date         | No       |                                              | End date; NULL = current                                    |
+| `order_in_resume` | Integer      | Yes      | NOT NULL, DEFAULT 0                          | Fixed display order (DEC-030)                               |
+| `created_at`      | Timestamp    | Yes      | NOT NULL, DEFAULT now()                      | Record creation timestamp                                   |
+| `updated_at`      | Timestamp    | No       |                                              | Last update timestamp                                       |
 
 **Business rules:**
 - start_date is required — work experience without start date has no resume value
@@ -445,24 +446,24 @@
 
 **Description:** Reviewed education items from a generation response. Compact format for resume template.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `response_id` | Integer | Yes | FK → resume_generation_response.id, NOT NULL | Parent generation response |
-| `institution_name` | Varchar(255) | Yes | NOT NULL | Institution name in generated resume |
-| `degree` | Varchar(100) | Yes | NOT NULL | Degree in generated resume |
-| `field_of_study` | Varchar(255) | No |  | Field of study in generated resume |
-| `start_date` | Date | Yes | NOT NULL | Start date in generated resume |
-| `end_date` | Date | No |  | End date in generated resume |
-| `location` | Varchar(255) | No |  | Institution location |
-| `gpa_grade` | Varchar(20) | No |  | GPA or grade |
-| `order_in_resume` | Integer | Yes | NOT NULL, DEFAULT 0 | Fixed display order (DEC-030) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute          | Data type    | Required | Constraints                                  | Description                          |
+| ------------------ | ------------ | -------- | -------------------------------------------- | ------------------------------------ |
+| `id`               | Integer      | Yes      | PK, AUTO_INCREMENT                           | Unique identifier                    |
+| `response_id`      | Integer      | Yes      | FK → resume_generation_response.id, NOT NULL | Parent generation response           |
+| `institution_name` | Varchar(255) | Yes      | NOT NULL                                     | Institution name in generated resume |
+| `degree`           | Varchar(100) | Yes      | NOT NULL                                     | Degree in generated resume           |
+| `field_of_study`   | Varchar(255) | Yes      | NOT NULL                                     | Field of study in generated resume   |
+| `start_date`       | Date         | Yes      | NOT NULL                                     | Start date in generated resume       |
+| `end_date`         | Date         | No       |                                              | End date in generated resume         |
+| `location`         | Varchar(255) | No       |                                              | Institution location                 |
+| `gpa_grade`        | Varchar(20)  | No       |                                              | GPA or grade                         |
+| `order_in_resume`  | Integer      | Yes      | NOT NULL, DEFAULT 0                          | Fixed display order (DEC-030)        |
+| `created_at`       | Timestamp    | Yes      | NOT NULL, DEFAULT now()                      | Record creation timestamp            |
+| `updated_at`       | Timestamp    | No       |                                              | Last update timestamp                |
 
 **Business rules:**
 - No description field — education uses compact format in resume template (DEC-030)
-- order_in_resume is fixed (not user-reorderable) as per DEC-030
+- `order_in_resume` is fixed (not user-reorderable) as per DEC-030
 
 
 ## Entity: generation_response_course
@@ -491,19 +492,19 @@
 
 **Description:** Reviewed project/volunteering items from a generation response.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `response_id` | Integer | Yes | FK → resume_generation_response.id, NOT NULL | Parent generation response |
-| `project_name` | Varchar(255) | Yes | NOT NULL | Project name in generated resume |
-| `role` | Varchar(255) | No |  | User's role in project |
-| `description` | Text | Yes | NOT NULL | Project description in generated resume |
-| `location` | Varchar(255) | No |  | Project location |
-| `start_date` | Date | Yes | NOT NULL | Project start date |
-| `end_date` | Date | No |  | Project end date |
-| `order_in_resume` | Integer | Yes | NOT NULL, DEFAULT 0 | Fixed display order (DEC-030) |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Record creation timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute         | Data type    | Required | Constraints                                  | Description                             |
+| ----------------- | ------------ | -------- | -------------------------------------------- | --------------------------------------- |
+| `id`              | Integer      | Yes      | PK, AUTO_INCREMENT                           | Unique identifier                       |
+| `response_id`     | Integer      | Yes      | FK → resume_generation_response.id, NOT NULL | Parent generation response              |
+| `project_name`    | Varchar(255) | Yes      | NOT NULL                                     | Project name in generated resume        |
+| `role`            | Varchar(255) | No       |                                              | User's role in project                  |
+| `description`     | Text         | Yes      | NOT NULL                                     | Project description in generated resume |
+| `location`        | Varchar(255) | No       |                                              | Project location                        |
+| `start_date`      | Date         | Yes      | NOT NULL                                     | Project start date                      |
+| `end_date`        | Date         | No       |                                              | Project end date                        |
+| `order_in_resume` | Integer      | Yes      | NOT NULL, DEFAULT 0                          | Fixed display order (DEC-030)           |
+| `created_at`      | Timestamp    | Yes      | NOT NULL, DEFAULT now()                      | Record creation timestamp               |
+| `updated_at`      | Timestamp    | No       |                                              | Last update timestamp                   |
 
 **Business rules:**
 - start_date is required — project without start date has no resume value
@@ -534,23 +535,23 @@
 
 **Description:** Finalized saved resume record. Created after user approves (FINALIZEs) the generation response. Stores metadata and PDF file path.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, NOT NULL | Resume owner |
-| `generation_request_id` | Integer | Yes | FK → resume_generation_request.id, NOT NULL | Source generation request |
-| `response_id` | Integer | Yes | FK → resume_generation_response.id, NOT NULL | Finalized response |
-| `template_id` | Integer | No | FK → resume_template.id | Post-MVP: template used for PDF |
-| `adaptation_level_id` | Integer | Yes | FK → adaptation_level.id, NOT NULL | Adaptation level used |
-| `language_id` | Integer | Yes | FK → language.id, NOT NULL | Resume language |
-| `title` | Varchar(255) | Yes | NOT NULL | Resume title for user identification |
-| `public_code` | Varchar(4) | Yes | NOT NULL | 4-char public code for sharing URL |
-| `public_url_link` | Varchar(200) | No |  | Full ready-made public resume URL |
-| `pdf_file_path` | Varchar(500) | No |  | Server path to generated PDF file |
-| `is_deleted` | Boolean | Yes | NOT NULL, DEFAULT false | Soft-delete flag |
-| `deleted_at` | Timestamp | No |  | Soft-delete timestamp |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Save timestamp |
-| `updated_at` | Timestamp | No |  | Last update timestamp |
+| Attribute               | Data type    | Required | Constraints                                  | Description                          |
+| ----------------------- | ------------ | -------- | -------------------------------------------- | ------------------------------------ |
+| `id`                    | Integer      | Yes      | PK, AUTO_INCREMENT                           | Unique identifier                    |
+| `user_id`               | Integer      | Yes      | FK → users.id, NOT NULL                      | Resume owner                         |
+| `generation_request_id` | Integer      | Yes      | FK → resume_generation_request.id, NOT NULL  | Source generation request            |
+| `response_id`           | Integer      | Yes      | FK → resume_generation_response.id, NOT NULL | Finalized response                   |
+| `template_id`           | Integer      | No       | FK → resume_template.id                      | Post-MVP: template used for PDF      |
+| `adaptation_level_id`   | Integer      | Yes      | FK → adaptation_level.id, NOT NULL           | Adaptation level used                |
+| `language_id`           | Integer      | Yes      | FK → language.id, NOT NULL                   | Resume language                      |
+| `title`                 | Varchar(255) | Yes      | NOT NULL                                     | Resume title for user identification |
+| `public_code`           | Varchar(4)   | Yes      | NOT NULL                                     | 4-char public code for sharing URL   |
+| `public_url_link`       | Varchar(200) | Yes      | NOT NULL                                     | Full ready-made public resume URL    |
+| `pdf_file_path`         | Varchar(500) | Yes      | NOT NULL                                     | Server path to generated PDF file    |
+| `is_deleted`            | Boolean      | Yes      | NOT NULL, DEFAULT false                      | Soft-delete flag                     |
+| `deleted_at`            | Timestamp    | No       |                                              | Soft-delete timestamp                |
+| `created_at`            | Timestamp    | Yes      | NOT NULL, DEFAULT now()                      | Save timestamp                       |
+| `updated_at`            | Timestamp    | No       |                                              | Last update timestamp                |
 
 **Business rules:**
 - Generated only from FINALIZED responses
@@ -566,17 +567,17 @@
 
 **Description:** AI token usage log. One row per API call. Powers statistics on User Home and Admin Home dashboards.
 
-| Attribute | Data type | Required | Constraints | Description |
-|---------|-----------|--------------|-------------|----------|
-| `id` | Integer | Yes | PK, AUTO_INCREMENT | Unique identifier |
-| `user_id` | Integer | Yes | FK → users.id, NOT NULL | User who made the request |
-| `ai_model_id` | Integer | Yes | FK → ai_model.id, NOT NULL | AI model used |
-| `generation_request_id` | Integer | No | FK → resume_generation_request.id | Related generation request |
-| `generation_response_id` | Integer | No | FK → resume_generation_response.id | Related generation response |
-| `tokens_sent` | Integer | Yes | NOT NULL, DEFAULT 0 | Prompt/input tokens |
-| `tokens_generated` | Integer | Yes | NOT NULL, DEFAULT 0 | Completion/output tokens |
-| `cost` | Decimal | No |  | Post-MVP: request cost |
-| `created_at` | Timestamp | Yes | NOT NULL, DEFAULT now() | Log entry timestamp |
+| Attribute                | Data type | Required | Constraints                                  | Description                 |
+| ------------------------ | --------- | -------- | -------------------------------------------- | --------------------------- |
+| `id`                     | Integer   | Yes      | PK, AUTO_INCREMENT                           | Unique identifier           |
+| `user_id`                | Integer   | Yes      | FK → users.id, NOT NULL                      | User who made the request   |
+| `ai_model_id`            | Integer   | Yes      | FK → ai_model.id, NOT NULL                   | AI model used               |
+| `generation_request_id`  | Integer   | Yes      | FK → resume_generation_request.id, NOT NULL  | Related generation request  |
+| `generation_response_id` | Integer   | No       | FK → resume_generation_response.id, NOT NULL | Related generation response |
+| `tokens_sent`            | Integer   | Yes      | NOT NULL, DEFAULT 0                          | Prompt/input tokens         |
+| `tokens_generated`       | Integer   | Yes      | NOT NULL, DEFAULT 0                          | Completion/output tokens    |
+| `cost`                   | Decimal   | No       |                                              | Post-MVP: request cost      |
+| `created_at`             | Timestamp | Yes      | NOT NULL, DEFAULT now()                      | Log entry timestamp         |
 
 **Business rules:**
 - One row per API call for granular tracking

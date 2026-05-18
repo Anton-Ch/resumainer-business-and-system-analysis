@@ -5,7 +5,7 @@
 **Date Created:** 2026-05-10  
 **Last Updated:** 2026-05-18  
 **Author:** Anton  
-**Version:** 4.0  
+**Version:** 5.0  
 **Status:** Active  
 **Related BABOK Area:** 3.4 Plan Business Analysis Information Management  
 
@@ -119,11 +119,11 @@ The goal is to ensure that project scope remains controlled and that each import
 **Requirement Type:** FR  
 **Use Case / Workflow:** Generate AI-assisted resume draft  
 **UI Screen:** Generate Resume, Resume Review  
-**Data Entity:** ResumeGenerationRequest, GeneratedResumeDraft, AiModel, AiUsageLog  
+**Data Entity:** ResumeGenerationRequest, GeneratedResumeDraft, AiModel, AiUsageLog, ResumeGenerationResponse (professional_title)  
 **Service / Component:** ResumeGenerationService, AiClient, AiUsageLogService  
 **Test Case:** TC-003  
 **Status:** Draft  
-**Traceability Notes:** This trace connects the core resume generation feature with vacancy input, model selection, draft generation, and review flow.  
+**Traceability Notes:** This trace connects the core resume generation feature with vacancy input, model selection, draft generation, and review flow. The AI generates a `professional_title` specific to the target vacancy, distinct from the user's `professional_title` in `contact_detail`.  
 **Gaps / Follow-up:** Define final acceptance criteria for mock AI generation, real OpenRouter integration, timeout handling, and empty response handling.
 
 ### TR-004 Contact Details
