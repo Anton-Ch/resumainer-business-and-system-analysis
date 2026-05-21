@@ -98,7 +98,7 @@ The future implementation is expected to follow the required Java course stack a
 
 ## Repository Status
 
-**Current stage:** Business Analysis / System Analysis Planning
+**Current stage:** Business Analysis / System Analysis Complete — Ready for Development Handoff
 
 Current repository state:
 
@@ -106,11 +106,11 @@ Current repository state:
 - [x]  Draft input documents prepared
 - [x]  MVP direction identified
 - [x]  Course technical constraints collected
-- [ ]  BA/SA analysis completed
-- [ ]  Reviewed BA/SA documentation prepared
-- [ ]  ERD finalized
-- [ ]  UI flows and wireframes prepared
-- [ ]  Development handoff package prepared
+- [x]  BA/SA analysis completed
+- [x]  Reviewed BA/SA documentation prepared
+- [x]  ERD finalized
+- [x]  UI flows and wireframes prepared
+- [x]  Development handoff package prepared
 - [ ]  Implementation repository created
 
 ---
@@ -199,16 +199,17 @@ docs/                       Reviewed and curated BA/SA documentation
 assets/                     Diagrams, wireframes, screenshots
 ```
 
-Planned structure expansion:
+Current docs structure:
 ```
 docs/
 ├── 01_project-overview/
 ├── 02_requirements/
+│   └── elicitation/
 ├── 03_processes-and-workflows/
 ├── 04_domain-and-data-model/
 ├── 05_ui-ux/
-├── 06_system-analysis/
 ├── 07_project-management/
+│   └── ba-planning-and-monitoring/
 ├── 08_traceability/
 └── 09_decisions/
 ```
@@ -217,65 +218,67 @@ docs/
 
 ## Current Documentation Areas
 
-The current draft documentation covers:
-- Project overview
-- Business context
-- Stakeholders and personas
-- Scope and MVP
-- User workflows
-- Functional requirements
-- Non-functional requirements
-- Initial data model
-- UI/UX requirements
-- AI and OpenRouter context
-- Technical constraints
-- Architecture requirements
-- Risks, assumptions, and open questions
-- Development handoff plan
+The current documentation covers:
+- Project overview and strategic context
+- Business goals with SMART KPIs
+- Stakeholder analysis and engagement plan
+- Methodology decision (Hybrid approach)
+- Governance plan with change control workflows
+- Information management plan
+- BA process improvement plan
+- Confirmed elicitation results
+- 7 user workflows with extensions
+- 5 functional requirements (profile, generation, management, admin)
+- 32 non-functional requirements (error handling, code quality, testing, security, deployment)
+- 3 business and stakeholder requirements
+- Detailed wireframe descriptions and field-level requirements
+- Resume template details with AI prompt contract and content budgets
+- ERD (25 entities, 3NF) and data dictionary
+- Traceability matrix with 47 trace rows
+- Decision log with 59 decisions
+- Change request log with 30 CRs
+- Risk register with 14 risks
+- Open questions log (all closed)
 
 ---
 
-## Planned Deliverables
-
-The planned BA/SA deliverables include:
+## Completed Deliverables
 
 ### Business Analysis Deliverables
 
-- Business Requirements Document
-- Stakeholder Analysis
-- Personas
-- Scope and MVP Definition
-- Functional Requirements Specification
-- Non-Functional Requirements Specification
-- User Stories
-- Use Cases
-- Acceptance Criteria
+- Strategic Context and Gap Analysis (docs/01_project-overview/)
+- Business Goals and KPIs with SMART criteria (docs/01_project-overview/)
+- Stakeholder Engagement Plan (Power/Interest Grid) (docs/07_project-management/ba-planning-and-monitoring/)
+- Project Approach Decision (Hybrid methodology) (docs/07_project-management/ba-planning-and-monitoring/)
+- Requirements Log with 40 requirements and acceptance criteria (docs/02_requirements/)
+- Confirmed Elicitation Results (docs/02_requirements/elicitation/)
+- Governance Plan with RACI matrix and change control workflows (docs/07_project-management/ba-planning-and-monitoring/)
+- BA Process Improvement Plan (docs/07_project-management/ba-planning-and-monitoring/)
 
 ### System Analysis Deliverables
 
-- Domain Model
-- Entity Relationship Diagram
-- Data Dictionary
-- Architecture Requirements
-- Technical Constraints
-- Integration Requirements
-- Security Requirements
-- Traceability Matrix
+- Entity Relationship Diagram — DBML format (docs/04_domain-and-data-model/)
+- Entity Relationship Diagram — Mermaid format (docs/04_domain-and-data-model/)
+- Data Dictionary — 26 entities with field-level descriptions (docs/04_domain-and-data-model/)
+- Requirements Traceability Matrix — 47 trace rows (docs/08_traceability/)
+- Decision Log — 59 architecture, scope, and requirement decisions (docs/09_decisions/)
+- Error Handling, DB Layer, UI Security, and Testing NFRs (docs/02_requirements/)
 
 ### UX/UI Deliverables
 
-- User Flow Diagrams
-- Wireframe Notes
-- Screen List
-- Public Resume View Scenario
-- Admin Panel Scenario
+- User Workflows — 7 complete workflows with extensions (docs/03_processes-and-workflows/)
+- Wireframes Detailed Description — 14 screens and modal (docs/05_ui-ux/)
+- Wireframe Field Requirements — field-level validation and error messages (docs/05_ui-ux/)
+- Resume Template Details and Logic — AI prompt contract, content budgets, template rules (docs/05_ui-ux/)
+- HTML Templates — one-page and two-page resume variants (docs/05_ui-ux/)
 
 ### Project Management Deliverables
 
-- MVP Roadmap
-- Risk Register
-- Open Questions Register
-- Development Handoff Package
+- Change Request Log — 30 tracked changes (docs/07_project-management/)
+- Risk Register — 14 identified risks with mitigation plans (docs/07_project-management/)
+- Open Questions Log — all questions closed with decisions (docs/07_project-management/)
+- Information Management Plan (docs/07_project-management/ba-planning-and-monitoring/)
+- Development Handoff Package — all artifacts approved and ready
 
 ---
 
@@ -295,24 +298,30 @@ I --> J["Development handoff"]
 J --> K["Implementation repository"]  
 K --> L["Deployed MVP"]  
 L --> M["Final portfolio case"]
+
+style J fill:#4CAF50,stroke:#333,stroke-width:2px
 ```
 
 ## Target MVP Scope
 
-The future MVP is expected to include:
-- user registration and login;
-- structured user profile management;
-- vacancy description input;
-- AI model selection;
-- resume adaptation level selection;
-- AI-generated resume draft;
-- editable generated resume content;
-- saved resume versions;
-- public resume links;
-- PDF export;
-- admin user management;
-- basic AI usage statistics;
-- Docker Compose deployment.
+The MVP includes:
+- user registration and login (email + BCrypt password);
+- structured profile management (contact, experience, education, projects, courses);
+- customizable additional profile info and settings;
+- AI model selection and management (admin);
+- adaptation level selection (Minimal, Balanced, Maximum) with all variants;
+- AI-generated resume draft with mock and real OpenRouter integration;
+- cover letter generation;
+- editable generated resume content with review and final save;
+- saved resume versions with search, sort, and pagination;
+- soft-delete of resumes with HTTP 410;
+- public recruiter resume links with direct PDF open;
+- PDF download with A4 layout and selectable text;
+- admin user, resume, and AI model management;
+- AI usage statistics;
+- Docker Compose deployment (3 containers);
+- Swagger/OpenAPI documentation (ADMIN-only in prod);
+- bilingual English and Russian UI.
 
 ---
 
@@ -323,15 +332,19 @@ The future implementation is expected to use:
 - Servlets
 - Spring Core
 - Spring MVC
-- JDBC
-- PostgreSQL
+- JDBC (plain, with custom thread-safe Connection Pool)
+- PostgreSQL (3NF normalized)
 - Flyway
-- Vue.js
-- Docker Compose
+- Vue 3 (Composition API) + Vite + PrimeVue
+- Thymeleaf (Landing Page)
+- Docker Compose (backend + frontend + database)
 - OpenRouter API
 - PDF generation library
+- SLF4J + Logback
+- Swagger/OpenAPI (springdoc-openapi)
+- JUnit 5 + Mockito + JaCoCo
 
-The implementation must respect the course requirement to use **plain JDBC** instead of ORM frameworks.
+The implementation must respect the course requirement to use **plain JDBC** instead of ORM frameworks, and **no Spring Boot** — only pure Spring MVC.
 
 ---
 
