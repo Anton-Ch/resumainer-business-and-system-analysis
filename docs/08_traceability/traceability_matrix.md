@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-20  
+**Last Updated:** 2026-05-21  
 **Author:** Anton  
-**Version:** 6.0  
+**Version:** 15.0  
 **Status:** Active  
 **Related BABOK Area:** 3.4 Plan Business Analysis Information Management  
 
@@ -63,8 +63,8 @@ The goal is to ensure that project scope remains controlled and that each import
 
 | Trace ID | Business Objective | Requirement ID | Requirement Type | Use Case / Workflow | UI Screen | Data Entity | Service / Component | Test Case | Test Coverage | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
-| TR-001 | BO-001 | BR-001 | BR | End-to-end resume adaptation workflow | User Home, My Profile, Generate Resume, Resume Review | Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume, PdfFile | ProfileService, ResumeGenerationService, SavedResumeService, PdfService | TC-001 | Planned | Approved |
-| TR-002 | BO-004 | STK-001 | STK | Recruiter opens public resume link | Public PDF Resume Link | SavedResume, PdfFile, PublicCode | PublicResumeService, PdfService | TC-002 | Planned | Approved |
+| TR-001 | BO-001 | BR-001 | BR | End-to-end resume adaptation workflow | User Home, My Profile, Generate Resume, Resume Review | Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume | ProfileService, ResumeGenerationService, SavedResumeService, PdfGenerationService | TC-001 | Planned | Approved |
+| TR-002 | BO-004 | STK-001 | STK | Recruiter opens public resume link | Public PDF Resume Link | SavedResume, PublicCode | PublicResumeService, PdfGenerationService | TC-002 | Planned | Approved |
 | TR-003 | BO-001 | FR-001 | FR | Generate AI-assisted resume draft | Generate Resume, Resume Review | ResumeGenerationRequest, GeneratedResumeDraft, AiModel, AiUsageLog | ResumeGenerationService, AiClient, AiUsageLogService | TC-003 | Planned | Draft |
 | TR-004 | BO-002 | FR-002 | FR | Complete contact profile | My Profile / Contact Details | ContactDetails | ProfileService, ContactDetailsDao | TC-004 | Planned | Approved |
 | TR-005 | BO-002 | FR-003 | FR | Manage work experience | My Profile / Work Experience | WorkExperience | ProfileService, WorkExperienceDao | TC-005 | Planned | Approved |
@@ -72,14 +72,44 @@ The goal is to ensure that project scope remains controlled and that each import
 | TR-007 | BO-002 | FR-005 | FR | Manage education | My Profile / Education | Education | ProfileService, EducationDao | TC-007 | Planned | Approved |
 | TR-008 | BO-002 | FR-006 | FR | Manage courses and certificates | My Profile / Courses & Certificates | CourseCertificate | ProfileService, CourseCertificateDao | TC-008 | Planned | Approved |
 | TR-009 | BO-002 | FR-007 | FR | Manage additional profile info and settings | My Profile / Additional Info | AdditionalProfileInfo | ProfileService, AdditionalInfoDao | TC-009 | Planned | Draft |
-| TR-010 | BO-003 | FR-008 | FR | View saved resumes on User Home | User Home | SavedResume, PdfFile | SavedResumeService, PdfService | TC-010 | Planned | Approved |
-| TR-011 | BO-003 | FR-009 | FR | View resume PDF and actions from User Home (superseded) | User Home | SavedResume, PdfFile, PublicCode | SavedResumeService, PdfService, PublicResumeService | TC-011 | Not Applicable | Superseded |
+| TR-010 | BO-003 | FR-008 | FR | View saved resumes on User Home | User Home | SavedResume | SavedResumeService, PdfGenerationService | TC-010 | Planned | Approved |
+| TR-011 | BO-003 | FR-009 | FR | View resume PDF and actions from User Home (superseded) | User Home | SavedResume, PublicCode | SavedResumeService, PdfGenerationService, PublicResumeService | TC-011 | Not Applicable | Superseded |
 | TR-012 | BO-005 | FR-010 | FR | Admin manages AI model details | AI Model Details | AiModel | AiModelService, AiModelDao | TC-012 | Planned | Approved |
 | TR-013 | BO-005 | NFR-001 | NFR | Protect saved API keys | AI Model Details | AiModel | AiModelService, Security/Logging Components | TC-013 | Planned | Approved |
 | TR-014 | BO-005 | TRN-001 | TRN | Prepare initial active AI model configuration | AI Models, AI Model Details | AiModel | AiModelService, Migration/Seed Script | TC-014 | Not Started | Draft |
 | TR-015 | BO-001 | FR-011 | FR | Generate and edit cover letter | Resume Review, Resume Details modal | SavedResume (cover_letter), ResumeGenerationRequest (cover_letter) | ResumeGenerationService, AiClient | TC-015 | Not Started | Draft |
 | TR-016 | BO-001 | FR-012 | FR | Include cover letter in generation request | Generate Resume | ResumeGenerationRequest (include_cover_letter) | ResumeGenerationService | TC-016 | Not Started | Draft |
 | TR-017 | BO-003 | FR-013 | FR | Delete saved resume from User Home | User Home (Resume Details modal) | SavedResume (is_deleted, deleted_at) | SavedResumeService | TC-017 | Not Started | Draft |
+| TR-018 | BO-006 | NFR-002 | NFR | Custom exception hierarchy | All layers (cross-cutting) | N/A | GlobalExceptionHandler, ServiceException, DaoException | TC-018 | Not Started | Draft |
+| TR-019 | BO-006 | NFR-003 | NFR | Global exception handler | All controllers | N/A | GlobalExceptionHandler | TC-019 | Not Started | Draft |
+| TR-020 | BO-006 | NFR-004 | NFR | Graceful error responses | All screens | N/A | GlobalExceptionHandler, ApiErrorResponse | TC-020 | Not Started | Draft |
+| TR-021 | BO-006 | NFR-005 | NFR | Structured error logging | All layers (cross-cutting) | N/A | LoggingAspect, Services, DAOs | TC-021 | Not Started | Draft |
+| TR-022 | BO-007 | NFR-006 | NFR | Standard package structure | N/A (code organization) | N/A | Entire project | TC-022 | Not Started | Draft |
+| TR-023 | BO-007 | NFR-007 | NFR | Java Code Convention | N/A (code style) | N/A | Entire project | TC-023 | Not Started | Draft |
+| TR-024 | BO-007 | NFR-008 | NFR | Javadoc on public service methods | N/A (code documentation) | N/A | Service and DAO interfaces | TC-024 | Not Started | Draft |
+| TR-025 | BO-007 | NFR-009 | NFR | Maven CLI build | N/A (build) | N/A | pom.xml, Maven wrapper | TC-025 | Not Started | Draft |
+| TR-026 | BO-007 | NFR-010 | NFR | .gitignore and README.md | N/A (repo root) | N/A | Repository root files | TC-026 | Not Started | Draft |
+| TR-027 | BO-007 | NFR-011 | NFR | Minimal dependencies | N/A (build) | N/A | pom.xml | TC-027 | Not Started | Draft |
+| TR-028 | BO-008 | NFR-012 | NFR | Service-layer transaction management | N/A (cross-cutting) | N/A | Service layer, ConnectionPool | TC-028 | Not Started | Draft |
+| TR-029 | BO-008 | NFR-013 | NFR | SQL scripts for DB initialization | N/A (DB setup) | All entities | schema.sql, data.sql | TC-029 | Not Started | Draft |
+| TR-030 | BO-008 | NFR-014 | NFR | Prevent SQL injection via PreparedStatement | N/A (data access) | N/A | All DAO classes | TC-030 | Not Started | Draft |
+| TR-031 | BO-008 | NFR-015 | NFR | UTF-8 encoding for database | N/A (DB config) | All text columns | ConnectionPool, DB config | TC-031 | Not Started | Draft |
+| TR-032 | BO-008 | NFR-016 | NFR | Custom thread-safe Connection Pool | N/A (infrastructure) | N/A | ConnectionPool | TC-032 | Not Started | Draft |
+| TR-033 | BO-009 | NFR-017 | NFR | Form resubmission prevention | All forms | N/A | Controllers (PRG pattern), PrimeVue forms | TC-033 | Not Started | Draft |
+| TR-034 | BO-009 | NFR-018 | NFR | User input XSS sanitization | My Profile, Generate Resume | All user-editable text fields | Validator/Sanitizer service | TC-034 | Not Started | Draft |
+| TR-035 | BO-009 | NFR-019 | NFR | Dual validation frontend + backend | All forms | All entities with required fields | Controllers (@Valid), PrimeVue forms | TC-035 | Not Started | Draft |
+| TR-036 | BO-010 | NFR-020 | NFR | Consistent log format | N/A (cross-cutting) | N/A | Logback config, all layers | TC-036 | Not Started | Draft |
+| TR-037 | BO-011 | NFR-021 | NFR | Spring MVC Interceptors | All pages | N/A | HandlerInterceptors (logging, auth) | TC-037 | Not Started | Draft |
+| TR-038 | BO-011 | NFR-022 | NFR | AOP for cross-cutting logic | N/A (service layer) | N/A | LoggingAspect | TC-038 | Not Started | Draft |
+| TR-039 | BO-011 | NFR-023 | NFR | SOLID, DRY, and reusability | N/A (architecture) | All entities | All layers | TC-039 | Not Started | Draft |
+| TR-040 | BO-012 | NFR-024 | NFR | Test coverage 50%+ Service+DAO | N/A (testing) | N/A | JaCoCo, JUnit 5, Mockito | TC-040 | Not Started | Draft |
+| TR-041 | BO-012 | NFR-025 | NFR | Test scenarios (positive, negative, boundary) | N/A (testing) | N/A | Service, DAO test classes | TC-041 | Not Started | Draft |
+| TR-042 | BO-012 | NFR-026 | NFR | Test structure and consistency | N/A (testing) | N/A | Test classes in src/test/java | TC-042 | Not Started | Draft |
+| TR-043 | BO-012 | NFR-027 | NFR | Test-Driven Development approach | N/A (process) | N/A | All Service and DAO code | TC-043 | Not Started | Draft |
+| TR-044 | BO-013 | NFR-029 | NFR | Pagination for all long lists | User Home, Admin tables | N/A | Backend LIMIT/OFFSET, PrimeVue pagination | TC-044 | Not Started | Draft |
+| TR-045 | BO-013 | NFR-030 | NFR | i18n resource files | All pages | N/A | Spring MessageSource, vue-i18n | TC-045 | Not Started | Draft |
+| TR-046 | BO-014 | NFR-031 | NFR | Swagger/OpenAPI documentation | N/A (API docs) | N/A | springdoc-openapi, Spring Security | TC-046 | Not Started | Draft |
+| TR-047 | BO-014 | NFR-032 | NFR | Docker Compose deployment | N/A (infra) | All entities | docker-compose.yml, Dockerfiles | TC-047 | Not Started | Draft |
 | TR-999 | BO-XXX | FR-XXX | FR | [Use case] | [Screen] | [Entity] | [Component] | TC-XXX | Not Started | Draft |
 
 ## 4. Details
@@ -91,8 +121,8 @@ The goal is to ensure that project scope remains controlled and that each import
 **Requirement Type:** BR  
 **Use Case / Workflow:** End-to-end resume adaptation workflow  
 **UI Screen:** User Home, My Profile, Generate Resume, Resume Review  
-**Data Entity:** Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume, PdfFile  
-**Service / Component:** ProfileService, ResumeGenerationService, SavedResumeService, PdfService  
+**Data Entity:** Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume  
+**Service / Component:** ProfileService, ResumeGenerationService, SavedResumeService, PdfGenerationService  
 **Test Case:** TC-001  
 **Status:** Approved  
 **Traceability Notes:** This trace connects the main business requirement with the complete MVP value chain: profile data, vacancy input, generated draft, review/edit, saved resume, PDF download (from User Home), and public sharing.  
@@ -105,8 +135,8 @@ The goal is to ensure that project scope remains controlled and that each import
 **Requirement Type:** STK  
 **Use Case / Workflow:** Recruiter opens public resume link  
 **UI Screen:** Public PDF Resume Link  
-**Data Entity:** SavedResume, PdfFile, PublicCode  
-**Service / Component:** PublicResumeService, PdfService  
+**Data Entity:** SavedResume, PublicCode  
+**Service / Component:** PublicResumeService, PdfGenerationService  
 **Test Case:** TC-002  
 **Status:** Approved  
 **Traceability Notes:** This trace connects recruiter needs with direct public PDF access without registration. It also supports the privacy rule that only the saved resume PDF is exposed.  
@@ -217,8 +247,8 @@ The goal is to ensure that project scope remains controlled and that each import
 **Requirement Type:** FR  
 **Use Case / Workflow:** View saved resumes on User Home  
 **UI Screen:** User Home  
-**Data Entity:** SavedResume, PdfFile  
-**Service / Component:** SavedResumeService, PdfService  
+**Data Entity:** SavedResume  
+**Service / Component:** SavedResumeService, PdfGenerationService  
 **Test Case:** TC-010  
 **Status:** Approved  
 **Traceability Notes:** User Home replaces the separate Resume History page and provides saved resume table, search, sorting, pagination, and a Details column. Clicking `Open details` opens a modal popup with PDF link copy, PDF download, and cover letter text per DEC-015/CR-014.  
@@ -231,8 +261,8 @@ The goal is to ensure that project scope remains controlled and that each import
 **Requirement Type:** FR  
 **Use Case / Workflow:** View resume PDF and actions from User Home  
 **UI Screen:** User Home  
-**Data Entity:** SavedResume, PdfFile, PublicCode  
-**Service / Component:** SavedResumeService, PdfService, PublicResumeService  
+**Data Entity:** SavedResume, PublicCode  
+**Service / Component:** SavedResumeService, PdfGenerationService, PublicResumeService  
 **Test Case:** TC-011  
 **Status:** Superseded  
 **Traceability Notes:** This trace is superseded. The Resume Details page was removed per DEC-014 / CR-013. PDF actions (download, public link copy) are handled directly from User Home (TR-010) and the post-save success flow.  
@@ -322,6 +352,426 @@ The goal is to ensure that project scope remains controlled and that each import
 **Traceability Notes:** Resume delete action is initiated from the Resume Details modal. Soft-delete sets `is_deleted = true`. Public URL returns HTTP 410 Gone for deleted resumes.
 **Gaps / Follow-up:** Define exact confirmation UI behavior and 410 page design.
 
+### TR-018 Custom Exception Hierarchy
+
+**Business Objective:** BO-006 Ensure system reliability and error transparency  
+**Requirement ID:** NFR-002  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Custom exception hierarchy  
+**UI Screen:** N/A (cross-cutting)  
+**Data Entity:** N/A  
+**Service / Component:** GlobalExceptionHandler, ServiceException, DaoException  
+**Test Case:** TC-018  
+**Status:** Draft  
+**Traceability Notes:** Per-layer custom exceptions (ControllerException, ServiceException, DaoException) enable quick failure localization. Part of CR-020 error handling package.  
+**Gaps / Follow-up:** Define exception class hierarchy and constructors during implementation.
+
+### TR-019 Global Exception Handler
+
+**Business Objective:** BO-006 Ensure system reliability and error transparency  
+**Requirement ID:** NFR-003  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Global exception handler  
+**UI Screen:** N/A (cross-cutting)  
+**Data Entity:** N/A  
+**Service / Component:** GlobalExceptionHandler  
+**Test Case:** TC-019  
+**Status:** Draft  
+**Traceability Notes:** `@ControllerAdvice` catches all uncaught exceptions and returns standardized error responses. Works with NFR-002 and NFR-005.  
+**Gaps / Follow-up:** Define error response JSON structure.
+
+### TR-020 Graceful Error Responses
+
+**Business Objective:** BO-006 Ensure system reliability and error transparency  
+**Requirement ID:** NFR-004  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Graceful error responses  
+**UI Screen:** All screens (global error behavior)  
+**Data Entity:** N/A  
+**Service / Component:** GlobalExceptionHandler, ApiErrorResponse  
+**Test Case:** TC-020  
+**Status:** Draft  
+**Traceability Notes:** No Java stack traces exposed to Vue frontend. All technical details logged server-side.  
+**Gaps / Follow-up:** Define error response DTO fields.
+
+### TR-021 Structured Error Logging
+
+**Business Objective:** BO-006 Ensure system reliability and error transparency  
+**Requirement ID:** NFR-005  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Structured error logging  
+**UI Screen:** N/A (cross-cutting)  
+**Data Entity:** N/A  
+**Service / Component:** LoggingAspect, Services, DAOs  
+**Test Case:** TC-021  
+**Status:** Draft  
+**Traceability Notes:** SLF4J/Log4j2 with ERROR, WARN, INFO levels. Log messages include context without exposing secrets.  
+**Gaps / Follow-up:** Define log format standards and sensitive data filters.
+
+### TR-022 Standard Package Structure
+
+**Business Objective:** BO-007 Ensure code quality and maintainability  
+**Requirement ID:** NFR-006  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Standard package structure  
+**UI Screen:** N/A (code organization)  
+**Data Entity:** N/A  
+**Service / Component:** Entire project  
+**Test Case:** TC-022  
+**Status:** Draft  
+**Traceability Notes:** Package structure: controller, service, dao, model, config, util. Clear DAO/Service separation — no business logic in DAO.  
+**Gaps / Follow-up:** Define base package name.
+
+### TR-023 Java Code Convention
+
+**Business Objective:** BO-007 Ensure code quality and maintainability  
+**Requirement ID:** NFR-007  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Java Code Convention  
+**UI Screen:** N/A (code style)  
+**Data Entity:** N/A  
+**Service / Component:** Entire project  
+**Test Case:** TC-023  
+**Status:** Draft  
+**Traceability Notes:** Oracle Java Code Convention standards: naming, formatting, braces, indentation.  
+**Gaps / Follow-up:** Configure IDE formatter or Checkstyle rules.
+
+### TR-024 Javadoc on Public Service Methods
+
+**Business Objective:** BO-007 Ensure code quality and maintainability  
+**Requirement ID:** NFR-008  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Javadoc documentation  
+**UI Screen:** N/A (code documentation)  
+**Data Entity:** N/A  
+**Service / Component:** Service and DAO interfaces  
+**Test Case:** TC-024  
+**Status:** Draft  
+**Traceability Notes:** All public interface and service methods include @param, @return, @throws.  
+**Gaps / Follow-up:** Define minimum Javadoc completeness standard.
+
+### TR-025 Maven CLI Build
+
+**Business Objective:** BO-007 Ensure code quality and maintainability  
+**Requirement ID:** NFR-009  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Maven CLI build  
+**UI Screen:** N/A (build)  
+**Data Entity:** N/A  
+**Service / Component:** pom.xml, Maven wrapper  
+**Test Case:** TC-025  
+**Status:** Draft  
+**Traceability Notes:** `mvn clean package` completes without IDE. Build produces WAR/JAR artifact.  
+**Gaps / Follow-up:** Verify build on clean checkout during implementation.
+
+### TR-026 .gitignore and README.md
+
+**Business Objective:** BO-007 Ensure code quality and maintainability  
+**Requirement ID:** NFR-010  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Repository setup  
+**UI Screen:** N/A (repo root)  
+**Data Entity:** N/A  
+**Service / Component:** Repository root files  
+**Test Case:** TC-026  
+**Status:** Draft  
+**Traceability Notes:** .gitignore excludes IDE/build/secrets. README.md covers project, tech stack, build/run instructions.  
+**Gaps / Follow-up:** Draft README.md during implementation.
+
+### TR-027 Minimal Dependencies
+
+**Business Objective:** BO-007 Ensure code quality and maintainability  
+**Requirement ID:** NFR-011  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Dependency management  
+**UI Screen:** N/A (build)  
+**Data Entity:** N/A  
+**Service / Component:** pom.xml  
+**Test Case:** TC-027  
+**Status:** Draft  
+**Traceability Notes:** Only directly used, stable dependencies in pom.xml. No snapshots or beta versions.  
+**Gaps / Follow-up:** Review dependency tree before implementation baseline.
+
+### TR-028 Service-Layer Transaction Management
+
+**Business Objective:** BO-008 Ensure robust database access layer  
+**Requirement ID:** NFR-012  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Service-layer transaction management  
+**UI Screen:** N/A (cross-cutting)  
+**Data Entity:** N/A  
+**Service / Component:** Service layer, ConnectionPool  
+**Test Case:** TC-028  
+**Status:** Draft  
+**Traceability Notes:** Manual JDBC transaction control via connection.commit()/rollback() in Service layer. No Spring @Transactional.  
+**Gaps / Follow-up:** Define transaction boundaries for each critical operation.
+
+### TR-029 SQL Scripts for DB Initialization
+
+**Business Objective:** BO-008 Ensure robust database access layer  
+**Requirement ID:** NFR-013  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** SQL scripts for DB initialization  
+**UI Screen:** N/A (DB setup)  
+**Data Entity:** All entities  
+**Service / Component:** schema.sql, data.sql  
+**Test Case:** TC-029  
+**Status:** Draft  
+**Traceability Notes:** schema.sql for DDL, data.sql for seed data. Runable against empty PostgreSQL.  
+**Gaps / Follow-up:** Generate scripts from ERD during implementation.
+
+### TR-030 SQL Injection Prevention
+
+**Business Objective:** BO-008 Ensure robust database access layer  
+**Requirement ID:** NFR-014  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Prevent SQL injection via PreparedStatement  
+**UI Screen:** N/A (data access)  
+**Data Entity:** N/A  
+**Service / Component:** All DAO classes  
+**Test Case:** TC-030  
+**Status:** Draft  
+**Traceability Notes:** All SQL queries use PreparedStatement with ? placeholders. String concatenation forbidden.  
+**Gaps / Follow-up:** Enforce via code review checklist.
+
+### TR-031 UTF-8 Encoding
+
+**Business Objective:** BO-008 Ensure robust database access layer  
+**Requirement ID:** NFR-015  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** UTF-8 encoding for database  
+**UI Screen:** N/A (DB config)  
+**Data Entity:** All text columns  
+**Service / Component:** ConnectionPool, DB configuration  
+**Test Case:** TC-031  
+**Status:** Draft  
+**Traceability Notes:** UTF-8 encoding for DB, connections, and all text columns. Supports Cyrillic.  
+**Gaps / Follow-up:** Configure at database creation and connection pool initialization.
+
+### TR-032 Custom Thread-Safe Connection Pool
+
+**Business Objective:** BO-008 Ensure robust database access layer  
+**Requirement ID:** NFR-016  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Custom thread-safe Connection Pool  
+**UI Screen:** N/A (infrastructure)  
+**Data Entity:** N/A  
+**Service / Component:** ConnectionPool  
+**Test Case:** TC-032  
+**Status:** Draft  
+**Traceability Notes:** Manual implementation. No third-party pool libraries. Must be thoroughly documented for code review.  
+**Gaps / Follow-up:** Document thread-safety mechanism, connection lifecycle, timeout handling, and edge cases.
+
+### TR-033 Form Resubmission Prevention
+
+**Business Objective:** BO-009 Ensure UI/UX security and validation integrity  
+**Requirement ID:** NFR-017  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Form submission prevention  
+**UI Screen:** All forms (Register, Login, My Profile, Generate Resume, Admin forms)  
+**Data Entity:** N/A  
+**Service / Component:** Controllers (PRG pattern), PrimeVue form components  
+**Test Case:** TC-033  
+**Status:** Draft  
+**Traceability Notes:** PRG pattern prevents duplicate submissions on F5/Back. Button disable prevents double-clicks.  
+**Gaps / Follow-up:** Confirm PRG implementation in all POST controllers.
+
+### TR-034 User Input XSS Sanitization
+
+**Business Objective:** BO-009 Ensure UI/UX security and validation integrity  
+**Requirement ID:** NFR-018  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** User input XSS mitigation  
+**UI Screen:** My Profile, Generate Resume, Admin forms  
+**Data Entity:** All user-editable text fields  
+**Service / Component:** Input sanitizer, Vue template escaping  
+**Test Case:** TC-034  
+**Status:** Draft  
+**Traceability Notes:** User input sanitized server-side on input; Vue's built-in escaping handles output. Covers gap not addressed by DEC-037/038 (which covers AI output only).  
+**Gaps / Follow-up:** Define sanitization allowlist or approach.
+
+### TR-035 Dual Validation Frontend + Backend
+
+**Business Objective:** BO-009 Ensure UI/UX security and validation integrity  
+**Requirement ID:** NFR-019  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Dual validation  
+**UI Screen:** All forms  
+**Data Entity:** All entities with required fields  
+**Service / Component:** Controllers (@Valid), PrimeVue form validation  
+**Test Case:** TC-035  
+**Status:** Draft  
+**Traceability Notes:** Frontend provides immediate UX feedback; backend enforces via @Valid with @Email, @NotNull, @NotEmpty, @Size. Backend is authoritative — enforces even if frontend is bypassed.  
+**Gaps / Follow-up:** Map all Wireframe Field Requirements to DTO annotations.
+
+### TR-036 Consistent Log Format
+
+**Business Objective:** BO-010 Ensure consistent observability practices  
+**Requirement ID:** NFR-020  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Log format consistency  
+**UI Screen:** N/A (cross-cutting)  
+**Data Entity:** N/A  
+**Service / Component:** Logback config, all layers  
+**Test Case:** TC-036  
+**Status:** Draft  
+**Traceability Notes:** Single log pattern (ISO 8601, level, thread, logger, message) applied across all layers via logback.xml. MDC injects user ID and request ID context.  
+**Gaps / Follow-up:** Define exact log pattern and MDC keys.
+
+### TR-037 Spring MVC Interceptors
+
+**Business Objective:** BO-011 Apply professional architecture and design patterns  
+**Requirement ID:** NFR-021  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Request logging and authorization  
+**UI Screen:** All pages (cross-cutting)  
+**Data Entity:** N/A  
+**Service / Component:** HandlerInterceptor implementations (logging, auth)  
+**Test Case:** TC-037  
+**Status:** Draft  
+**Traceability Notes:** RequestLoggingInterceptor logs HTTP method, URI, execution time, response status. AuthInterceptor checks authentication before secured endpoints. AdminInterceptor checks ADMIN role.  
+**Gaps / Follow-up:** Define URL patterns for each interceptor.
+
+### TR-038 AOP for Cross-Cutting Logic
+
+**Business Objective:** BO-011 Apply professional architecture and design patterns  
+**Requirement ID:** NFR-022  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** AOP logging and monitoring  
+**UI Screen:** N/A (service layer)  
+**Data Entity:** N/A  
+**Service / Component:** LoggingAspect (Spring AOP + AspectJ)  
+**Test Case:** TC-038  
+**Status:** Draft  
+**Traceability Notes:** At least one @Aspect class with @Before, @AfterReturning, or @Around pointcuts for Service methods. Complements NFR-021 (interceptors handle web layer, AOP handles service layer).  
+**Gaps / Follow-up:** Define pointcut expressions.
+
+### TR-039 SOLID, DRY, and Reusability
+
+**Business Objective:** BO-011 Apply professional architecture and design patterns  
+**Requirement ID:** NFR-023  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Architecture principles  
+**UI Screen:** N/A (architecture)  
+**Data Entity:** All entities  
+**Service / Component:** All layers  
+**Test Case:** TC-039  
+**Status:** Draft  
+**Traceability Notes:** SOLID enforced via SRP (single-purpose classes), DIP (interface-based dependencies), OCP (extensible modules). DRY via reusable DAO utilities and shared Vue components.  
+**Gaps / Follow-up:** Enforce via code review checklist.
+
+### TR-040 Test Coverage 50%+ Service and DAO
+
+**Business Objective:** BO-012 Ensure testing quality and coverage  
+**Requirement ID:** NFR-024  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Coverage measurement  
+**UI Screen:** N/A (testing)  
+**Data Entity:** N/A  
+**Service / Component:** JaCoCo, JUnit 5, Mockito  
+**Test Case:** TC-040  
+**Status:** Draft  
+**Traceability Notes:** 50%+ line coverage in Service and DAO layers measured by JaCoCo. Report at target/site/jacoco/index.html.  
+**Gaps / Follow-up:** Configure JaCoCo in pom.xml before development starts.
+
+### TR-041 Test Scenarios
+
+**Business Objective:** BO-012 Ensure testing quality and coverage  
+**Requirement ID:** NFR-025  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Test scenario types  
+**UI Screen:** N/A (testing)  
+**Data Entity:** N/A  
+**Service / Component:** Service and DAO test classes  
+**Test Case:** TC-041  
+**Status:** Draft  
+**Traceability Notes:** Positive, negative, and boundary tests for Service and DAO methods. Validation and business rule consistency checked.  
+**Gaps / Follow-up:** Define test scenario checklist.
+
+### TR-042 Test Structure and Consistency
+
+**Business Objective:** BO-012 Ensure testing quality and coverage  
+**Requirement ID:** NFR-026  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Test organization  
+**UI Screen:** N/A (testing)  
+**Data Entity:** N/A  
+**Service / Component:** Test classes in src/test/java  
+**Test Case:** TC-042  
+**Status:** Draft  
+**Traceability Notes:** Mirror production package structure. Descriptive naming. arrange-act-assert pattern. Consistent test data.  
+**Gaps / Follow-up:** Define naming convention examples.
+
+### TR-043 Test-Driven Development
+
+**Business Objective:** BO-012 Ensure testing quality and coverage  
+**Requirement ID:** NFR-027  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** TDD approach  
+**UI Screen:** N/A (process)  
+**Data Entity:** N/A  
+**Service / Component:** All Service and DAO code  
+**Test Case:** TC-043  
+**Status:** Draft  
+**Traceability Notes:** Test-first approach for Service and DAO development. Tests written before or alongside implementation code.  
+**Gaps / Follow-up:** Apply to new Service methods; may relax for simple CRUD boilerplate.
+
+### TR-044 Pagination for All Long Lists
+
+**Business Objective:** BO-013 Deliver complete UI and localization readiness  
+**Requirement ID:** NFR-029  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Paginated data browsing  
+**UI Screen:** User Home, Admin Users, Admin Resumes, Admin AI Models  
+**Data Entity:** N/A  
+**Service / Component:** Backend LIMIT/OFFSET queries, PrimeVue pagination component  
+**Test Case:** TC-044  
+**Status:** Draft  
+**Traceability Notes:** Pagination is mandatory for all list views. Configurable page size. Works with search and filters.  
+**Gaps / Follow-up:** Define default page size.
+
+### TR-045 i18n Resource Files
+
+**Business Objective:** BO-013 Deliver complete UI and localization readiness  
+**Requirement ID:** NFR-030  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Internationalization  
+**UI Screen:** All pages (Landing Page, User app, Admin pages)  
+**Data Entity:** N/A  
+**Service / Component:** Spring MessageSource, vue-i18n  
+**Test Case:** TC-045  
+**Status:** Draft  
+**Traceability Notes:** Resource files for EN and RU. Thymeleaf uses Spring MessageSource. Vue uses vue-i18n library. Language switcher in both layers.  
+**Gaps / Follow-up:** Create initial resource files during implementation.
+
+### TR-046 Swagger/OpenAPI Documentation
+
+**Business Objective:** BO-014 Ensure deployment and documentation readiness  
+**Requirement ID:** NFR-031  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** REST API documentation  
+**UI Screen:** N/A (API docs)  
+**Data Entity:** N/A  
+**Service / Component:** springdoc-openapi, Spring Security  
+**Test Case:** TC-046  
+**Status:** Draft  
+**Traceability Notes:** Swagger UI at /swagger-ui.html in dev; ADMIN-only access in prod. All controller endpoints annotated with @Operation.  
+**Gaps / Follow-up:** Configure springdoc-openapi in pom.xml.
+
+### TR-047 Docker Compose Deployment
+
+**Business Objective:** BO-014 Ensure deployment and documentation readiness  
+**Requirement ID:** NFR-032  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Containerized deployment  
+**UI Screen:** N/A (infrastructure)  
+**Data Entity:** All entities  
+**Service / Component:** docker-compose.yml, Dockerfiles  
+**Test Case:** TC-047  
+**Status:** Draft  
+**Traceability Notes:** 3 containers: backend (Tomcat), frontend (Vue/Nginx), database (PostgreSQL). Flyway runs on startup. Single command deployment.  
+**Gaps / Follow-up:** Create Dockerfiles during implementation.
+
 ### TR-999 [Trace Item Title Template]
 
 **Business Objective:** BO-XXX  
@@ -339,4 +789,3 @@ The goal is to ensure that project scope remains controlled and that each import
 ---
 
 *This traceability matrix follows the Information Management Plan structure and conventions for the ResumAIner project.*
-ss

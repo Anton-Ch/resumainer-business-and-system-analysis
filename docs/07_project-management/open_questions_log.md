@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-20  
+**Last Updated:** 2026-05-21  
 **Author:** Anton  
-**Version:** 3.0  
+**Version:** 5.0  
 **Status:** Active  
 **Related BABOK Area:** 3.2 Plan Stakeholder Engagement / 3.3 Plan Business Analysis Governance  
  
@@ -65,15 +65,15 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
  
 | OQ ID | Date | Question | Category | Owner | Impact | Target Resolution | Status | Answer / Decision Link |
 |---|---|---|---|---|---|---|---|---|
-| OQ-001 | 2026-05-10 | Is Vue allowed for the final Capstone implementation? | Architecture | BA / Mentor | High | Before dev repository creation | Open | N/A |
+| OQ-001 | 2026-05-10 | Is Vue allowed for the final Capstone implementation? | Architecture | BA / Mentor | High | 2026-05-21 | Closed | DEC-052 |
 | OQ-002 | 2026-05-13 | Should Resume History be a separate page? | Scope | BA | Medium | Resolved during wireframe review | Closed | DEC-005, CR-007 |
 | OQ-003 | 2026-05-13 | Should saved API keys ever be visible in full? | Security | BA | High | Resolved during security review | Closed | DEC-008, CR-011 |
 | OQ-004 | 2026-05-13 | Should Work Experience description be required? | Requirement | BA | Medium | Resolved during wireframe review | Closed | CR-012 |
 | OQ-005 | 2026-05-13 | Should Education start year be required? | Requirement | BA | Medium | Resolved during wireframe review | Closed | CR-012 |
 | OQ-006 | 2026-05-13 | Should profile picture be required? | Requirement | BA | Low | Resolved during wireframe review | Closed | CR-012 |
-| OQ-007 | 2026-05-13 | Is real OpenRouter API usage allowed during final demo? | Capstone Constraint | BA / Mentor | High | Before AI integration | Open | N/A |
-| OQ-008 | 2026-05-13 | Should ATS JSON endpoint remain MVP Stretch or move to MVP? | Scope | BA | Medium | Before MVP baseline freeze | Open | N/A |
-| OQ-009 | 2026-05-13 | How much admin access logging is required for MVP? | Security | BA / Developer | Medium | Before admin implementation | Open | N/A |
+| OQ-007 | 2026-05-13 | Is real OpenRouter API usage allowed during final demo? | Capstone Constraint | BA / Mentor | High | 2026-05-21 | Closed | DEC-009, DEC-059 |
+| OQ-008 | 2026-05-13 | Should ATS JSON endpoint remain MVP Stretch or move to MVP? | Scope | BA | Medium | 2026-05-21 | Closed | Confirmed as MVP Stretch |
+| OQ-009 | 2026-05-13 | How much admin access logging is required for MVP? | Security | BA / Developer | Medium | 2026-05-21 | Closed | DEC-059 |
 | OQ-010 | 2026-05-16 | What information does LLM return as structured JSON vs taken directly from profile? | Architecture | BA / Developer | Medium | Before AI prompt design | Open | N/A |
 | OQ-999 | YYYY-MM-DD | [Question text] | [Category] | [Owner] | [Low/Medium/High/Critical] | YYYY-MM-DD | Open | [DEC/CR link or N/A] |
  
@@ -91,12 +91,12 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
     -   Option A: Spring MVC backend + Vue frontend.
     -   Option B: Spring MVC + Thymeleaf/JSP for all pages.
     -   Option C: Hybrid approach with Thymeleaf landing page and Vue app for authenticated UI.
-**Answer / Decision:** N/A
+**Answer / Decision:** Vue 3 + Vite + PrimeVue for authenticated SPA; Thymeleaf for Landing Page (DEC-052). Hybrid approach confirmed viable.
 **Related Artifacts:**
-    -   `architecture_requirements.md`
-    -   `technical_constraints.md`
-    -   `ui_ux_requirements.md`
-**Follow-up Actions:** Ask mentor or validate capstone requirements before development repository creation.ы
+    -   `decision_log.md` — DEC-052
+    -   `strategic_context_and_gap_analysis.md`
+    -   `confirmed_elicitation_results.md`
+**Follow-up Actions:** Implement SPA with Vue 3 Composition API. Use PrimeVue components for responsive design and cross-browser compatibility.
 
 ### OQ-002 Should Resume History Be a Separate Page?
 
@@ -197,57 +197,54 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
 **Date:** 2026-05-13
 **Category:** Capstone Constraint
 **Owner:** BA / Mentor
-**Status:** Open
+**Status:** Closed
 **Question:** Is real OpenRouter API usage allowed during the final demo?
 **Why It Matters:** If real external API calls are not allowed or unreliable, mock AI generation must be used for demo stability.
 **Options Considered:**
     -   Option A: Use real OpenRouter integration during demo.
     -   Option B: Use mock-only demo.
     -   Option C: Support both real and mock modes.
-**Answer / Decision:** Use real OpenRouter integration during demo.
+**Answer / Decision:** Mock AI for early dev tests and stable pipeline; real OpenRouter integration for MVP demo. Both implementations coexist behind the same interface (AiClientFactory — DEC-056).
 **Related Artifacts:**
-    -   `technical_constraints.md`
-    -   `decision_log.md` — DEC-009
-    -   `risk_register.md`
-**Follow-up Actions:** Confirm before final AI integration.
+    -   `decision_log.md` — DEC-009, DEC-059
+    -   `requirements_log.md` — FR-001
+**Follow-up Actions:** Closed. Decision confirmed.
 
 ### OQ-008 Should ATS JSON Endpoint Remain MVP Stretch or Move to MVP?
 
 **Date:** 2026-05-13
 **Category:** Scope
 **Owner:** BA
-**Status:** Open
+**Status:** Closed
 **Question:** Should the ATS JSON endpoint remain MVP Stretch or move into MVP?
 **Why It Matters:** ATS JSON is portfolio-friendly but adds an additional public output format, validation rules, and traceability requirements.
 **Options Considered:**
     -   Option A: Include ATS JSON in MVP.
     -   Option B: Keep ATS JSON as MVP Stretch.
     -   Option C: Move ATS JSON to Post-MVP.
-**Answer / Decision:** Keep ATS JSON as MVP Stretch.
+**Answer / Decision:** Keep ATS JSON as MVP Stretch. Not moved to MVP — no dedicated FR/NFR created. Documented in Target Vision as MVP Stretch and listed in Confirmed Elicitation Results section 4.2.
 **Related Artifacts:**
     -   `confirmed_elicitation_results.md`
-    -   `requirements_traceability_matrix.md`
-    -   `requirement_readiness_checklist.md`
-**Follow-up Actions:** Consider during MVP baseline freeze.
+    -   `strategic_context_and_gap_analysis.md`
+**Follow-up Actions:** Close. No further action — confirmed decision.
 
 ### OQ-009 How Much Admin Access Logging Is Required for MVP?
 
 **Date:** 2026-05-13
 **Category:** Security
 **Owner:** BA / Developer
-**Status:** Open
+**Status:** Closed
 **Question:** How much admin access logging is required for MVP?
 **Why It Matters:** Admin can view user and resume data. Access logging improves accountability but adds implementation effort.
 **Options Considered:**
     *   Option A: No admin access logging in MVP.
-    *   Option B: Minimal admin action logging.
+    *   Option B: Minimal — log only critical admin actions.
     *   Option C: Full admin audit log.
-**Answer / Decision:** No admin access logging in MVP.
+**Answer / Decision:** Minimal admin action logging (Option B). Log only critical admin actions: change user role, block/unblock user, forbid/allow generation. Non-critical operations (viewing, searching) are not logged. Standard request logging via Interceptors (NFR-021) covers basic access tracking.
 **Related Artifacts:**
-    *   `confirmed_elicitation_results.md`
-    *   `risk_register.md`
-    *   `security_requirements.md`
-**Follow-up Actions:** Control during admin implementation.
+    *   `decision_log.md` — DEC-059
+    *   `requirements_log.md` — NFR-021
+**Follow-up Actions:** Closed. Decision confirmed.
 
 ### OQ-010 LLM Output Format — JSON vs Direct Profile Data
 
@@ -280,4 +277,7 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
 **Answer / Decision:** [Answer or N/A]
 **Related Artifacts:** [Files, requirements, decisions]
 **Follow-up Actions:** [What should happen next]
-s
+
+***
+
+*This open questions log follows the Information Management Plan structure and conventions for the ResumAIner project.*

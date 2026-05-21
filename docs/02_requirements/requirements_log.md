@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-13  
-**Last Updated:** 2026-05-20  
+**Last Updated:** 2026-05-21  
 **Author:** Anton  
-**Version:** 6.0  
+**Version:** 17.0  
 **Status:** Active  
 **Related BABOK Area:** 5.1 Trace Requirements / 5.3 Prioritize Requirements / 6.2 Specify and Model Requirements  
 
@@ -127,9 +127,40 @@ Note: BABOK defines Solution Requirements as a major requirement class. In this 
 | FR-009  | Functional         | View resume details and PDF actions (superseded) | Governance Decision  | Low        | Post-MVP | Superseded | N/A       |
 | FR-010  | Functional         | Admin manages AI model details                   | Elicitation Results  | Medium     | MVP     | Approved | Ready                   |
 | FR-011  | Functional         | Generate and edit cover letter                   | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
-| FR-012  | Functional         | Include cover letter in generation request       | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
-| FR-013  | Functional         | Delete saved resume from User Home               | Governance Decision  | Medium     | MVP     | Draft    | Needs Clarification     |
+| FR-012  | Functional         | Include cover letter in generation request       | Governance Decision  | Medium     | MVP     | Approved | Ready                   |
+| FR-013  | Functional         | Delete saved resume from User Home               | Governance Decision  | Medium     | MVP     | Approved | Ready                   |
 | NFR-001 | Non-Functional     | Mask and protect saved API keys                  | Security Review      | High       | MVP     | Approved | Ready                   |
+| NFR-002 | Non-Functional     | Define custom exception hierarchy per layer       | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-003 | Non-Functional     | Implement global exception handler                | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-004 | Non-Functional     | Graceful error responses without stack trace      | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-005 | Non-Functional     | Log all errors with structured logging            | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-006 | Non-Functional     | Organize code in standard package structure       | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-007 | Non-Functional     | Follow Java Code Convention                       | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-008 | Non-Functional     | Add Javadoc to all public service methods         | Capstone Constraint  | Medium     | MVP     | Approved | Ready                   |
+| NFR-009 | Non-Functional     | Enable Maven CLI build without IDE                | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-010 | Non-Functional     | Include .gitignore and README.md in repository    | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-011 | Non-Functional     | Keep pom.xml dependencies minimal and stable      | Capstone Constraint  | Medium     | MVP     | Approved | Ready                   |
+| NFR-012 | Non-Functional     | Implement Service-layer transaction management    | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-013 | Non-Functional     | Create SQL scripts for DB initialization          | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-014 | Non-Functional     | Prevent SQL injection via PreparedStatement       | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-015 | Non-Functional     | Use UTF-8 encoding for database and connections   | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-016 | Non-Functional     | Implement custom thread-safe Connection Pool      | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-017 | Non-Functional     | Prevent form resubmission on frontend             | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-018 | Non-Functional     | Sanitize user input against XSS                   | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-019 | Non-Functional     | Implement dual validation (frontend + backend)    | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-020 | Non-Functional     | Use consistent log format across all layers       | Capstone Constraint  | Medium     | MVP     | Approved | Ready                   |
+| NFR-021 | Non-Functional     | Use Spring MVC Interceptors for cross-cutting concerns | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-022 | Non-Functional     | Use AOP for cross-cutting logic                   | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-023 | Non-Functional     | Follow SOLID, DRY principles and ensure reusability | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-024 | Non-Functional     | Achieve 50%+ test coverage in Service and DAO layers | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-025 | Non-Functional     | Cover positive, negative, and boundary test scenarios | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-026 | Non-Functional     | Maintain structured, consistent, and readable tests   | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-027 | Non-Functional     | Apply Test-Driven Development approach               | Capstone Constraint  | Medium     | MVP     | Approved | Ready                   |
+| NFR-028 | Non-Functional     | Externalize configuration in application.yml          | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-029 | Non-Functional     | Implement pagination for all long lists                | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-030 | Non-Functional     | Provide i18n resource files for Thymeleaf and Vue      | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-031 | Non-Functional     | Document REST API with Swagger/OpenAPI                 | Capstone Constraint  | Medium     | MVP     | Approved | Ready                   |
+| NFR-032 | Non-Functional     | Define Docker Compose deployment with 3 containers     | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
 | TRN-001 | Transition         | Prepare initial active AI model configuration    | Technical Constraint | Medium     | MVP     | Draft    | Needs Clarification     |
 | XX-XXX  | [Requirement Type] | [Requirement title]                              | [Source]             | [Priority] | [Scope] | Draft    | [Requirement Readiness] |
 
@@ -160,7 +191,7 @@ This is the core reason for the product. The system should help users generate r
 User Home, My Profile, Generate Resume, Resume Review.
 
 **Affected Data:**  
-Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume, PdfFile.
+Profile data, ResumeGenerationRequest, GeneratedResumeDraft, SavedResume (pdf_file_path).
 
 **Related Artifacts:**  
 Project Vision, Confirmed Elicitation Results, Traceability Matrix.
@@ -225,7 +256,7 @@ This stakeholder requirement is supported by public access and PDF-related funct
 **Priority:** High  
 **Scope:** MVP  
 **Status:** Approved  
-**Readiness:** Needs Clarification  
+**Readiness:** Ready  
 
 **Description:**  
 The system shall generate an AI-assisted resume draft based on user profile data, vacancy information, selected language, adaptation level, and selected AI model.
@@ -237,8 +268,8 @@ This requirement supports the core product value: reducing manual resume adaptat
 - User can submit required generation fields.
 - System validates required fields before generation.
 - System creates a resume generation request.
-- System can generate a draft using a mock AI provider.
-- System can later use real OpenRouter integration if allowed and stable.
+- System generates a draft using a mock AI provider during development and testing.
+- System uses real OpenRouter integration for MVP demo; both implementations coexist behind the same interface (AiClientFactory).
 - System displays the generated draft for user review.
 - System handles empty output, timeout, unavailable provider, and inactive model errors.
 
@@ -483,7 +514,7 @@ Courses section is mandatory for MVP per DEC-018. Page distribution: page 1 show
 **Priority:** Medium  
 **Scope:** MVP  
 **Status:** Approved  
-**Readiness:** Needs Clarification  
+**Readiness:** Ready  
 
 **Description:**  
 The system shall allow a registered user to manage additional profile information and basic settings inside My Profile.
@@ -493,13 +524,13 @@ Additional info provides useful AI context and keeps user settings in one place 
 
 **Acceptance Criteria:**
 - User can enter optional skills, languages, professional aspirations, achievements, and general AI context.
-- User can set default resume language and optional additional resume language.
+- User can set default resume language (English, Russian) and optional additional resume language.
 - User can manage URL-friendly username.
 - User can enter date of birth.
 - User can select Ready for relocation (dropdown: Yes / No / Not specified).
 - User can select Ready for business trips and rotational schedule (dropdown: Yes / No / Not specified).
 - User can select Preferred work format (checkbox group: full-time, part-time, offline, remote, hybrid, on-site project based).
-- Username must be unique and URL-friendly.
+- Username must be unique and URL-friendly: only Latin letters (a-z, A-Z), digits (0-9), and hyphens (-) allowed.
 - Date of birth must be a valid date.
 
 **Affected UI:**  
@@ -551,7 +582,7 @@ Users need quick access to all generated resumes without a separate Resume Histo
 User Home, Resume Details modal.
 
 **Affected Data:**  
-SavedResume, PdfFile, CoverLetter.
+SavedResume (pdf_file_path), CoverLetter.
 
 **Related Artifacts:**  
 Confirmed Elicitation Results, Decision Log (DEC-015, DEC-016), Change Request Log (CR-014), Traceability Matrix.
@@ -691,14 +722,1334 @@ Decision Log, Risk Register, Traceability Matrix.
 **Notes:**  
 This requirement supports DEC-008 and closes the API key exposure risk.
 
+### NFR-002 Define Custom Exception Hierarchy Per Layer
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall define custom exception classes for each architectural layer: `ControllerException`, `ServiceException`, and `DaoException`. Each exception must include the originating layer, error context, and cause. This enables quick failure localization during development, testing, and debugging.
+
+**Business Value:**  
+Per-layer exceptions improve debugging speed and error traceability. The exception class itself identifies the failing layer without inspecting the stack trace.
+
+**Acceptance Criteria:**
+- `ControllerException` is thrown for controller-level errors (validation, binding, unauthorized access).
+- `ServiceException` is thrown for business logic errors.
+- `DaoException` is thrown for data access errors (SQL failures, connection issues).
+- Each exception stores the original cause and a meaningful error message.
+- Each exception stores a reference to the layer that originated it.
+
+**Affected UI:**  
+N/A (cross-cutting infrastructure)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-020), Risk Register.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of the system-wide error handling strategy. Implemented alongside NFR-003, NFR-004, and NFR-005.
+
+### NFR-003 Implement Global Exception Handler
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall implement a global exception handler using Spring's `@ControllerAdvice`. The handler catches exceptions from all controllers, delegates to the logging system, and returns standardized error responses to the Vue frontend.
+
+**Business Value:**  
+A single point of error handling prevents scattered try-catch blocks and ensures consistent error responses across the entire application.
+
+**Acceptance Criteria:**
+- `@ControllerAdvice` class handles all uncaught exceptions from controllers.
+- Handler maps `ControllerException` → HTTP 4xx with user-friendly message.
+- Handler maps `ServiceException` → HTTP 500 with user-friendly message.
+- Handler maps `DaoException` → HTTP 500 with user-friendly message.
+- Handler maps unclassified exceptions → HTTP 500 with generic message.
+- Handler does not expose Java stack traces in the response body.
+
+**Affected UI:**  
+N/A (cross-cutting infrastructure)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-020).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Works together with NFR-002 and NFR-005.
+
+### NFR-004 Graceful Error Responses Without Stack Trace
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall never expose Java stack traces, SQL queries, or internal error details to the Vue frontend. All error responses returned to the client must contain only user-friendly messages. Internal error details must be logged server-side only.
+
+**Business Value:**  
+Prevents information leakage and provides a professional user experience. Stack traces in API responses are a security concern and look unprofessional.
+
+**Acceptance Criteria:**
+- JSON error response contains only: `message` (user-friendly), `errorCode` (optional), `timestamp`.
+- JSON error response does NOT contain: `exception`, `trace`, `path`, `status` (unless mapped to a readable message).
+- HTML error pages (if used) show a generic error message without technical details.
+- All original exception details are logged server-side before returning the response.
+
+**Affected UI:**  
+All screens (global error behavior)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Risk Register, Change Request Log (CR-020).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Complements NFR-003 (global handler) and NFR-005 (logging).
+
+### NFR-005 Log All Errors with Structured Logging
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall log all actions and errors through SLF4J/Logback with consistent format across all layers. ERROR level for system faults (database failures, external API errors). WARN level for validation failures and business rule violations. INFO level for successful operations. Log messages must include enough context to diagnose issues without exposing secrets or stack traces to the client. Validation errors are logged at WARN level to enable detection of suspicious behavior or tampering attempts.
+
+**Business Value:**  
+Structured logging with consistent format enables debugging, monitoring, and audit. Validation-error logging helps detect suspicious user behavior or attempted attacks.
+
+**Acceptance Criteria:**
+- ERROR level logs include: exception type, message, layer, timestamp, request context (user ID, action).
+- WARN level logs include: validation failure details, business rule violations, field name, submitted value pattern.
+- Log entries never contain: plaintext passwords, full API keys, personally identifiable information (PII).
+- Log format is consistent across Controller, Service, and DAO layers (same timestamp format, delimiters, context keys).
+- Validation errors from backend are logged at WARN level with field name and violation type to support security monitoring.
+
+**Affected UI:**  
+N/A (cross-cutting infrastructure)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-020).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Builds on the existing SLF4J + Logback technology stack choice.
+
+### NFR-006 Organize Code in Standard Package Structure
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The project shall follow a standard layered package structure: `controller`, `service`, `dao`, `model`, `config`, `util`. Each layer has a clear responsibility. DAO classes contain only data access logic. Service classes contain only business logic. No business logic is placed in DAO classes.
+
+**Business Value:**  
+Clear package structure improves code readability, maintainability, and team onboarding. Layer separation prevents business logic from leaking into data access code.
+
+**Acceptance Criteria:**
+- Package structure: `com.ainalyst.resumainer.controller`, `com.ainalyst.resumainer.service`, `com.ainalyst.resumainer.dao`, `com.ainalyst.resumainer.model`, `com.ainalyst.resumainer.config`, `com.ainalyst.resumainer.util`.
+- Controller classes handle HTTP requests and responses only.
+- Service classes contain business logic and orchestration.
+- DAO classes contain SQL queries and data access only — no business logic.
+- Each DAO class maps to a single table/entity and implements full CRUD operations for that entity where applicable (create, read, update, delete). If certain CRUD operations are not meaningful for the entity (e.g., read-only lookup tables), they may be omitted with justification.
+
+**Affected UI:**  
+N/A (source code organization)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-021).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: No (code review only)
+
+**Notes:**  
+Part of CR-021. Follows layered architecture best practices.
+
+### NFR-007 Follow Java Code Convention
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+All Java source code shall follow the Java Code Convention (Oracle standard): consistent indentation, meaningful naming (camelCase for variables/methods, PascalCase for classes), brace placement, and single-statement-per-line.
+
+**Business Value:**  
+Consistent code style improves readability and code review quality. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- Class names use PascalCase.
+- Method and variable names use camelCase.
+- Constants use UPPER_SNAKE_CASE.
+- Indentation is consistent (4 spaces per level).
+- No unused imports or variables.
+- No commented-out code.
+
+**Affected UI:**  
+N/A (source code style)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-021).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: No (code review only)
+
+**Notes:**  
+Code review and IDE formatter (e.g., Checkstyle) can enforce this automatically.
+
+### NFR-008 Add Javadoc to All Public Service Methods
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+All public methods in service and DAO interfaces shall include Javadoc comments describing the method purpose, parameters (`@param`), return value (`@return`), and thrown exceptions (`@throws`).
+
+**Business Value:**  
+Javadoc provides in-code documentation for other developers and reviewers. This is explicitly required by the Capstone specification.
+
+**Acceptance Criteria:**
+- Every public interface method has a Javadoc block.
+- Each Javadoc includes: description, @param for each parameter, @return for non-void methods, @throws for declared exceptions.
+- Service implementation methods inherit interface Javadoc where possible.
+
+**Affected UI:**  
+N/A (code documentation)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-021).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: No (code review only)
+
+**Notes:**  
+Part of CR-021. Focus on service and DAO interfaces; internal utility methods may omit Javadoc where the code is self-explanatory. Follow the Oracle How to Write Doc Comments guide and Google Java Style Guide Section 7 as Javadoc style standards.
+
+### NFR-009 Enable Maven CLI Build Without IDE
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The project must build successfully from the command line using `mvn clean package` without requiring any IDE configuration. The build must produce a deployable WAR or JAR file.
+
+**Business Value:**  
+CLI build is required for CI/CD, code review (Capstone repository), and portfolio demonstration. It proves the project is properly configured and environment-independent.
+
+**Acceptance Criteria:**
+- `mvn clean package` completes without errors and runs all tests as part of the build lifecycle.
+- `mvn test` can be run standalone to execute only the test phase without a full build.
+- Build produces a WAR or JAR artifact in the `target/` directory.
+- All unit tests pass during the build.
+- Build works on a clean checkout without IDE-specific files.
+
+**Affected UI:**  
+N/A (build configuration)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-021).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-021. Maven wrapper (`mvnw`) may be included for environment independence.
+
+### NFR-010 Include .gitignore and README.md in Repository
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The repository shall contain a `.gitignore` file excluding IDE files, build output, runtime artifacts, and secrets. It shall also contain a `README.md` describing the project purpose, technology stack, build instructions, and run instructions.
+
+**Business Value:**  
+Required per Capstone specification. A proper `.gitignore` prevents accidental commits of IDE files, build artifacts, and secrets. A README provides essential project context.
+
+**Acceptance Criteria:**
+- `.gitignore` excludes: `target/`, `*.iml`, `.idea/`, `.vscode/`, `*.log`, `.env`, application-local properties with secrets.
+- `README.md` includes: project name, purpose, technology stack, prerequisites, build steps, run instructions.
+- Both files are present in the repository root.
+
+**Affected UI:**  
+N/A (repository root files)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-021).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes (file presence check)
+
+**Notes:**  
+Part of CR-021. README is a portfolio artifact and should be well-written.
+
+### NFR-011 Keep pom.xml Dependencies Minimal and Stable
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The `pom.xml` shall include only directly used dependencies. Unused, deprecated, or unstable libraries must be excluded. Dependency versions should use stable releases.
+
+**Business Value:**  
+Minimal dependencies reduce build time, security surface, and risk of version conflicts. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- Every dependency in `pom.xml` is actually imported or used in the codebase.
+- No snapshot or beta dependencies unless explicitly justified.
+- No duplicate or conflicting transitive dependencies.
+- Dependency tree can be verified with `mvn dependency:tree`.
+
+**Affected UI:**  
+N/A (build configuration)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-021).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes (dependency tree review)
+
+**Notes:**  
+Part of CR-021. Review `pom.xml` periodically as dependencies are added.
+
+### NFR-012 Implement Service-Layer Transaction Management
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall manage database transactions at the Service layer using standard JDBC transaction control: `connection.setAutoCommit(false)`, `connection.commit()`, and `connection.rollback()`. Transactions are required for critical business operations to ensure data integrity. The Transaction Manager is implemented manually — no Spring `@Transactional` or declarative transaction management is used.
+
+**Business Value:**  
+Transaction management ensures data integrity. Manual JDBC transaction control demonstrates deep understanding of database concepts as required by the Capstone.
+
+**Acceptance Criteria:**
+- Each Service method that performs multiple DAO operations wraps them in a single transaction.
+- Transaction starts with `connection.setAutoCommit(false)`.
+- Transaction commits with `connection.commit()`.
+- Transaction rollback on any exception with `connection.rollback()`.
+- Connection is returned to the pool in a finally block regardless of success or failure.
+- Minimum transaction-critical operations: user registration, resume generation request + response save.
+
+**Affected UI:**  
+N/A (cross-cutting infrastructure)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-053), Change Request Log (CR-023).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: Yes
+- Testable: Yes
+
+**Notes:**  
+Part of CR-023. Transactions are managed through the custom Connection Pool, not through frameworks.
+
+### NFR-013 Create SQL Scripts for DB Initialization
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The repository shall include `schema.sql` containing all DDL statements (CREATE TABLE, indexes, constraints, foreign keys) required to recreate the database from scratch, and `data.sql` containing seed data for lookup tables (role, user_status, user_permission, response_status, language, adaptation_level, work_format). Both files must be runnable against PostgreSQL without modifications.
+
+**Business Value:**  
+SQL scripts provide a documented, repeatable way to initialize the database. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- `schema.sql` contains CREATE TABLE statements for all 25+ entities.
+- `schema.sql` includes primary keys, foreign keys, NOT NULL constraints, unique constraints, and indexes.
+- `data.sql` inserts seed data for all lookup tables.
+- Both files can be executed sequentially against an empty PostgreSQL database.
+- Scripts are idempotent where possible.
+
+**Affected UI:**  
+N/A (database setup)
+
+**Affected Data:**  
+All entities
+
+**Related Artifacts:**  
+Decision Log (DEC-053), Change Request Log (CR-023), ERD, Data Dictionary.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: Yes
+- Testable: Yes
+
+**Notes:**  
+Part of CR-023. Flyway migrations may also be used for versioned schema changes; schema.sql and data.sql serve as the canonical DDL source.
+
+### NFR-014 Prevent SQL Injection via PreparedStatement
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+All SQL queries must use `PreparedStatement` with parameterized placeholders (`?`). String concatenation for building SQL queries is strictly forbidden. This applies to all DAO classes across the entire project.
+
+**Business Value:**  
+Prevents SQL injection attacks. Required per Capstone specification and fundamental security best practice.
+
+**Acceptance Criteria:**
+- Every SQL query in every DAO class uses `PreparedStatement`.
+- Parameters are passed via `setString()`, `setInt()`, `setDate()`, etc.
+- No SQL query uses string concatenation or interpolation for parameter values.
+- Dynamic query building (e.g., optional filters) uses `PreparedStatement` with conditional `?` placeholders.
+- Code review enforces this rule across all DAO classes.
+
+**Affected UI:**  
+N/A (data access layer)
+
+**Affected Data:**  
+All entities
+
+**Related Artifacts:**  
+Decision Log (DEC-053), Change Request Log (CR-023).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes (code review + static analysis)
+
+**Notes:**  
+Part of CR-023. Enforced through code review and, optionally, static analysis tools.
+
+### NFR-015 Use UTF-8 Encoding for Database and Connections
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The database, all database connections, and all text columns must use UTF-8 encoding to support Cyrillic characters (Russian, Kazakh) and other Unicode content in resumes, profile data, and vacancy descriptions.
+
+**Business Value:**  
+UTF-8 support is required because the application stores and displays Russian-language resume content and UI text. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- PostgreSQL database is created with UTF-8 encoding (`ENCODING 'UTF8'`).
+- Connection URL includes `?characterEncoding=UTF-8` or equivalent parameter.
+- All VARCHAR and TEXT columns store and retrieve UTF-8 data correctly.
+- Cyrillic characters in profile data, vacancy descriptions, and generated resumes are stored and displayed without corruption.
+- SQL scripts use UTF-8 encoding.
+
+**Affected UI:**  
+All screens that display text data
+
+**Affected Data:**  
+All text columns across all entities
+
+**Related Artifacts:**  
+Decision Log (DEC-053), Change Request Log (CR-023).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: Yes
+- Testable: Yes
+
+**Notes:**  
+Part of CR-023. Configured at database creation and connection pool initialization.
+
+### NFR-016 Implement Custom Thread-Safe Connection Pool
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall implement a custom thread-safe Connection Pool manually. No third-party connection pool libraries (HikariCP, Apache DBCP, C3P0, Tomcat JDBC Pool) are allowed. The implementation must be thoroughly documented so it can be explained and defended during code review. Documentation must include: pool initialization, connection lifecycle, thread-safety mechanism, timeout handling, and connection validation.
+
+**Business Value:**  
+Manual Connection Pool implementation is a mandatory Capstone requirement. It demonstrates deep understanding of JDBC connection management, thread safety, and resource lifecycle.
+
+**Acceptance Criteria:**
+- Custom Connection Pool class with configurable initial size, maximum size, and timeout.
+- Thread-safe connection acquisition and release (e.g., using `BlockingQueue`, `Semaphore`, or synchronized blocks with `wait()/notify()`).
+- Connections are validated before being returned to a caller.
+- Idle connections are periodically validated or evicted.
+- Connections are properly closed and removed from the pool on database errors.
+- Pool blocks or throws when maximum size is reached and no connection is available within timeout.
+- Pool is gracefully shut down on application stop.
+- Internal documentation (Javadoc or design notes) explains: why a custom pool is needed, thread-safety approach, connection lifecycle, timeout handling, and edge cases.
+
+**Affected UI:**  
+N/A (infrastructure layer)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-053), Change Request Log (CR-023), Risk Register.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Partial
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-023. This is a key Capstone differentiator. The pool implementation must be well-documented for code review defense.
+
+### NFR-017 Prevent Form Resubmission on Frontend
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall prevent duplicate form submissions on all user-facing forms. Submit buttons must be disabled immediately after the first click. The browser back button must not re-submit a previously completed form (PRG — Post/Redirect/Get pattern). This applies to registration, login, resume generation, profile editing, and any other user submission forms.
+
+**Business Value:**  
+Prevents duplicate resumes, duplicate account registrations, and user confusion. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- Submit button is disabled after first click; shows loading state.
+- Browser F5 refresh does not re-submit the last form.
+- Browser back button after form submission does not show "Confirm Form Resubmission" dialog.
+- Post/Redirect/Get (PRG) pattern is implemented on the backend for form submissions.
+- User is redirected to a new page (or the same page with GET) after successful submission.
+
+**Affected UI:**  
+Register, Login, My Profile (all sections), Generate Resume, Resume Review (Save & Create), AI Model Details (all admin forms).
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-054), Change Request Log (CR-024).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-024. Backend implements PRG pattern via `RedirectView` or `redirect:` prefix. Frontend disables button via PrimeVue `:disabled` binding.
+
+### NFR-018 Sanitize User Input Against XSS
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall sanitize all user-provided text input to prevent Cross-Site Scripting (XSS) attacks. This applies to all profile fields (skills, experience descriptions, etc.), vacancy description input, generation settings, and any other user-entered text that may be displayed in the UI or stored and later rendered.
+
+**Business Value:**  
+User input fields are a common XSS attack vector. Sanitization prevents injected scripts from executing in other users' browsers or the admin panel.
+
+**Acceptance Criteria:**
+- User input is sanitized on input (server-side before storage).
+- User input is escaped on output (in Vue templates via Vue's built-in escaping).
+- `<script>`, `onerror`, `onclick`, `onload`, `javascript:` and other dangerous patterns are stripped or escaped.
+- Admin panel does not render user input as raw HTML.
+- Backend uses an allowlist-based sanitizer for any user-provided HTML (or strips all HTML from user input).
+- Vue's default template escaping (`{{ }}`) prevents XSS in rendered text.
+
+**Affected UI:**  
+My Profile (all text fields), Generate Resume (vacancy description, company description, additional comments), Admin User Details, Admin AI Model Details.
+
+**Affected Data:**  
+All user-editable text fields across all profile and generation entities.
+
+**Related Artifacts:**  
+Decision Log (DEC-054), Change Request Log (CR-024).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: Yes
+- Testable: Yes
+
+**Notes:**  
+Part of CR-024. AI-generated HTML sanitization is already covered by DEC-037 and DEC-038. This NFR covers user input sanitization separately.
+
+### NFR-019 Implement Dual Validation (Frontend + Backend)
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall implement validation on both frontend and backend layers. Frontend validation provides immediate user feedback. Backend validation is the authoritative check and uses Spring Framework's `@Valid` annotation with Jakarta Bean Validation annotations (`@Email`, `@NotNull`, `@NotEmpty`, `@Size`). Backend validation must check NOT NULL and NOT EMPTY for all required fields across all entities. Backend validation is enforced even if frontend validation is bypassed.
+
+**Business Value:**  
+Dual validation prevents invalid data from reaching the database regardless of frontend state. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- Frontend validation: required fields show inline error messages before submission.
+- Backend validation uses `@Valid` on all POST/PUT controller method parameters.
+- Required fields use `@NotNull` / `@NotEmpty` annotations.
+- Email fields use `@Email` annotation.
+- String length constraints use `@Size` annotation.
+- Backend rejects invalid input with HTTP 400 and field-level error messages.
+- Backend validation covers all entity fields marked as Required in Wireframe Field Requirements.
+
+**Affected UI:**  
+Register, Login, My Profile (all sections), Generate Resume, AI Model Details, Admin User Details.
+
+**Affected Data:**  
+All entities with required fields.
+
+**Related Artifacts:**  
+Decision Log (DEC-054), Change Request Log (CR-024), Wireframe Field Requirements.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: Yes
+- Testable: Yes
+
+**Notes:**  
+Part of CR-024. Wireframe Field Requirements document is the definitive source for field-level validation rules. Frontend validation uses Vuelidate library with native Vue 3 Composition API form handling (DEC-055).
+
+### NFR-020 Use Consistent Log Format Across All Layers
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+All log entries across Controller, Service, and DAO layers must follow a consistent format. The format includes: timestamp (ISO 8601), log level, logger name, thread, message, and contextual data (user ID, action, layer). This ensures log readability and enables effective searching and filtering.
+
+**Business Value:**  
+Consistent log format makes debugging, monitoring, and log analysis predictable across the entire application.
+
+**Acceptance Criteria:**
+- Log pattern is defined once in `logback.xml` and applied application-wide.
+- Timestamp format: ISO 8601 (e.g., `2026-05-21T14:30:00.123+06:00`).
+- Each log entry includes: level, thread, logger/class name, message, and any additional context.
+- Controller, Service, and DAO layers use the same format without per-layer customization.
+- MDC (Mapped Diagnostic Context) is used to inject user ID and request ID into log entries.
+
+**Affected UI:**  
+N/A (cross-cutting)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-051), Change Request Log (CR-025), NFR-005.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-025. Works together with NFR-005 (structured error logging). Consistent format applies to both normal operations and error conditions.
+
+### NFR-021 Use Spring MVC Interceptors for Cross-Cutting Concerns
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall use Spring MVC `HandlerInterceptor` implementations for cross-cutting concerns that execute before or after controller method calls. Minimum interceptors: request logging interceptor (log incoming requests, execution time, and response status) and authentication/authorization interceptor (verify user is authenticated and has required role for the endpoint).
+
+**Business Value:**  
+Interceptors separate cross-cutting logic from controller code, keeping controllers focused on request handling.
+
+**Acceptance Criteria:**
+- `RequestLoggingInterceptor` logs HTTP method, URI, execution time, and response status for each request.
+- `AuthInterceptor` checks authentication before secured endpoints; redirects to login if not authenticated.
+- `AdminInterceptor` checks ADMIN role before admin endpoints; returns 403 if unauthorized.
+- Interceptors are registered in Spring configuration and applied to the appropriate URL patterns.
+- Public endpoints (Landing Page, public resume link, login, register) are excluded from auth interceptor.
+
+**Affected UI:**  
+All pages (cross-cutting)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-056), Change Request Log (CR-026).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-026. Interceptors complement AOP (NFR-022) — interceptors handle web-layer concerns; AOP handles service-layer concerns.
+
+### NFR-022 Use AOP for Cross-Cutting Logic
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall use Spring AOP (Aspect-Oriented Programming) with AspectJ annotations for cross-cutting concerns at the Service and DAO layers. AOP aspects shall be used for logging method entry/exit and execution time, and optionally for security checks and transaction boundary logging.
+
+**Business Value:**  
+AOP keeps cross-cutting logic out of business code, reducing duplication and improving maintainability. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- At least one `@Aspect` class exists in the project.
+- `LoggingAspect` logs method entry, exit, and execution time for all Service methods.
+- Aspects use `@Before`, `@AfterReturning`, or `@Around` pointcuts as appropriate.
+- Pointcut expressions are defined in a reusable manner.
+- Aspect logic can be enabled or disabled via configuration without changing business code.
+
+**Affected UI:**  
+N/A (service layer cross-cutting)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-056), Change Request Log (CR-026).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-026. AOP handles service-layer logging and monitoring; web-layer concerns are handled by Interceptors (NFR-021).
+
+### NFR-023 Follow SOLID, DRY Principles and Ensure Reusability
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system architecture shall follow SOLID and DRY principles. Each class has a single responsibility. Dependencies are inverted (abstractions, not concretions). Duplication is avoided through abstraction and reuse. Key modules (Service layer, DAO layer, UI components) must be designed for reusability across different parts of the application.
+
+**Business Value:**  
+SOLID and DRY produce maintainable, testable, and extensible code. Reusability reduces development time and improves consistency.
+
+**Acceptance Criteria:**
+- Single Responsibility: each class has one clearly defined purpose.
+- Open/Closed: core modules are open for extension but closed for modification.
+- Dependency Inversion: Service layer depends on DAO interfaces, not implementations.
+- DRY: business logic and validation rules are not duplicated across layers.
+- Reusable frontend components: common UI patterns (form fields, tables, modals) are extracted into shared Vue components.
+- Reusable backend components: DAO base class or utility methods reduce repetitive JDBC code.
+
+**Affected UI:**  
+All layers (cross-cutting architecture principle)
+
+**Affected Data:**  
+All entities
+
+**Related Artifacts:**  
+Decision Log (DEC-056), Change Request Log (CR-026).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Partial
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: No (code review only)
+
+**Notes:**  
+Part of CR-026. Enforced through code review and refactoring cycles during development.
+
+### NFR-024 Achieve 50%+ Test Coverage in Service and DAO Layers
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The project must achieve at least 50% line coverage in Service and DAO layers, measured by JaCoCo. Tests use JUnit 5 with Mockito for dependency isolation. Coverage reports are generated during the Maven build and must be reviewable.
+
+**Business Value:**  
+Required per Capstone specification. Ensures business logic and data access code is verified.
+
+**Acceptance Criteria:**
+- JaCoCo plugin is configured in `pom.xml`.
+- `mvn test` generates a JaCoCo coverage report.
+- Service layer achieves at least 50% line coverage.
+- DAO layer achieves at least 50% line coverage.
+- Coverage threshold is checked during build (optional warning, not a hard fail for MVP).
+- Report is accessible at `target/site/jacoco/index.html`.
+
+**Affected UI:**  
+N/A (testing infrastructure)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-057), Change Request Log (CR-027).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes (JaCoCo report)
+
+**Notes:**  
+Part of CR-027. Coverage is measured per layer, not globally. Coverage target applies to MVP-delivered code only.
+
+### NFR-025 Cover Positive, Negative, and Boundary Test Scenarios
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+Tests must cover three scenario types: positive scenarios (expected inputs produce correct results), negative scenarios (invalid inputs produce appropriate errors), and boundary values (edge cases for field lengths, date ranges, numeric limits). Validation logic and business rules must be tested explicitly.
+
+**Business Value:**  
+Comprehensive scenario coverage catches defects before demo. Required per Capstone specification.
+
+**Acceptance Criteria:**
+- Each Service method has at least one positive test and one negative test.
+- Each DAO method has at least one positive test.
+- Boundary value tests exist for fields with length limits (e.g., max 100 chars for `full_name`).
+- Validation logic tests cover: required field missing, invalid email format, invalid date range.
+- Business rule tests cover: sorting rules, profile minimum requirements, page placement logic.
+
+**Affected UI:**  
+N/A (testing)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-057), Change Request Log (CR-027).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-027. Tests should follow the naming pattern: `methodName_scenario_expectedResult`.
+
+### NFR-026 Maintain Structured, Consistent, and Readable Tests
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+Test classes must be placed in `src/test/java/` mirroring the production package structure. Test names must be descriptive and indicate the method or behavior under test. JUnit annotations (@Test, @BeforeEach, @AfterEach) are used consistently. Tests within a class follow a consistent pattern (arrange-act-assert or given-when-then). Test data is consistent and reusable across related tests.
+
+**Business Value:**  
+Consistent and readable tests improve maintainability and make test failures easier to diagnose.
+
+**Acceptance Criteria:**
+- Test class location mirrors production class: `src/test/java/com/ainalyst/resumainer/service/UserServiceTest.java`.
+- Each test method name describes the scenario: `createUser_withValidData_returnsUserId`, `createUser_withDuplicateEmail_throwsException`.
+- `@BeforeEach` sets up common test fixtures.
+- `@AfterEach` cleans up where needed.
+- Tests follow arrange-act-assert pattern with clear section separation.
+- No hardcoded magic values in test assertions — use named constants or test data builders.
+- Test data is consistent: same test user, same test vacancy used across related tests.
+
+**Affected UI:**  
+N/A (testing)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-057), Change Request Log (CR-027).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes (code review)
+
+**Notes:**  
+Part of CR-027. Test consistency is enforced through code review.
+
+### NFR-027 Apply Test-Driven Development Approach
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The project shall follow Test-Driven Development (TDD) where practical: write a failing test first, then implement the minimum code to make it pass, then refactor. TDD is applied to Service and DAO layer development.
+
+**Business Value:**  
+TDD produces testable code by design, catches regressions early, and ensures every piece of business logic has a corresponding test.
+
+**Acceptance Criteria:**
+- Service and DAO classes are developed test-first where feasible.
+- Each new Service method has a corresponding test written before or alongside the implementation.
+- Test coverage trends upward during development, not added retroactively.
+- TDD is documented in development notes or commit messages where applicable.
+
+**Affected UI:**  
+N/A (development process)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-057), Change Request Log (CR-027).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Partial
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: No (process requirement)
+
+**Notes:**  
+Part of CR-027. TDD is recommended but may be relaxed for simple getter/setter or CRUD boilerplate.
+
+### NFR-028 Externalize Configuration in application.yml
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+All configurable application parameters must be externalized into an `application.yml` file. This includes database connection URL, credentials, connection pool settings, localization defaults, AI model defaults (provider base URL, model code, max tokens), and logging configuration. No hardcoded environment-specific values in Java source code. The project shall define separate Spring profiles for development and production via `application-dev.yml` and `application-prod.yml`.
+
+**Business Value:**  
+External configuration enables environment-independent deployment and simplifies setup for reviewers. Profile separation keeps development settings (local DB, debug logging) isolated from production settings.
+
+**Acceptance Criteria:**
+- `application.yml` exists in `src/main/resources/` as the base configuration.
+- `application-dev.yml` contains development-specific overrides.
+- `application-prod.yml` contains production-specific overrides.
+- Database URL, username, password are defined in profile-specific files.
+- Connection pool settings (initial size, max size, timeout) are configurable per profile.
+- Logging level and pattern are configurable per profile.
+- AI provider base URL, model code, and API key are configurable per profile.
+- Secrets (DB password, API keys) are not hardcoded — use `${ENV_VARIABLE}` placeholders.
+- Active profile is set via `SPRING_PROFILES_ACTIVE` environment variable or JVM argument.
+
+**Affected UI:**  
+N/A (configuration infrastructure)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (CR-028).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes (file presence + value loading)
+
+**Notes:**  
+Part of CR-028. Environment-specific secrets (DB passwords, API keys) use `${ENV_VARIABLE}` placeholders in `application.yml` with actual values provided via environment variables or `.env` file.
+
+### NFR-029 Implement Pagination for All Long Lists
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall implement pagination for all data tables displaying multiple records. This includes the User Home resume table, Admin Users table, Admin Resumes table, and Admin AI Models table. Each page must show a configurable number of items, display page navigation controls, and indicate total items and current page.
+
+**Business Value:**  
+Pagination improves page load performance and user experience for long lists. Required for maximum Capstone evaluation score.
+
+**Acceptance Criteria:**
+- User Home resume table displays paginated results (e.g., 10 items per page).
+- Admin Users, Admin Resumes, and Admin AI Models tables display paginated results.
+- Pagination controls include: Previous, page numbers, Next.
+- Current page is visually highlighted.
+- Total number of items and current page range are displayed.
+- Page size is configurable via backend or application.yml default.
+- Pagination works correctly with search and filter applied.
+
+**Affected UI:**  
+User Home, Admin Users, Admin Resumes, Admin AI Models.
+
+**Affected Data:**  
+N/A (pagination is a query/UI concern)
+
+**Related Artifacts:**  
+Change Request Log (CR-029).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: Yes (LIMIT/OFFSET queries)
+- Testable: Yes
+
+**Notes:**  
+Part of CR-029. Pagination is mandatory for all list views — not optional. Backend implements LIMIT/OFFSET pagination; frontend PrimeVue components handle pagination display.
+
+### NFR-030 Provide i18n Resource Files for Thymeleaf and Vue
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall support at least two interface languages (English and Russian) through resource files. For the Thymeleaf Landing Page, messages are loaded via Spring MessageSource from `.properties` files. For the Vue SPA, messages are loaded via a Vue i18n library from corresponding resource files. Both layers must provide consistent translations for all UI strings.
+
+**Business Value:**  
+i18n with resource files is required for maximum Capstone evaluation score. Proper resource file structure ensures translations are maintainable and consistent.
+
+**Acceptance Criteria:**
+- `messages_en.properties` and `messages_ru.properties` exist in `src/main/resources/i18n/`.
+- Thymeleaf Landing Page reads translations via Spring MessageSource (`#{...}` syntax).
+- Vue SPA reads translations from i18n resource files served by the backend or bundled at build time.
+- Language switcher (top-right UI element) switches between EN and RU.
+- All user-facing text is externalized — no hardcoded UI strings in Thymeleaf templates or Vue components.
+- Default language follows browser locale (DEC-023); user override persists in session.
+
+**Affected UI:**  
+All pages (Landing Page, Register, Login, User Home, My Profile, Generate Resume, Resume Review, Admin pages).
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-023), Change Request Log (CR-029).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: Yes
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-029. Thymeleaf uses Spring's built-in i18n. Vue uses a dedicated i18n library (e.g., vue-i18n). Both reference the same message keys for consistency.
+
+### NFR-031 Document REST API with Swagger/OpenAPI
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall provide REST API documentation via Swagger/OpenAPI. All backend controller endpoints must be documented with request parameters, response formats, and HTTP status codes. In the production environment, Swagger UI access must be restricted to users with the ADMIN role via Spring Security.
+
+**Business Value:**  
+Swagger documentation enables reviewers to explore endpoints, simplifies frontend-backend integration, and demonstrates API design quality.
+
+**Acceptance Criteria:**
+- Swagger/OpenAPI dependency (springdoc-openapi) is configured in pom.xml.
+- Swagger UI is accessible at `/swagger-ui.html` or `/api-docs` in dev mode.
+- In production, Swagger UI requires authentication with ADMIN role; non-admin users receive 403.
+- Controller endpoints are annotated with `@Operation` and `@ApiResponse` summaries.
+- API documentation includes request/response schemas.
+- Swagger can be disabled entirely via a configuration flag in prod profile.
+
+**Affected UI:**  
+N/A (API documentation)
+
+**Affected Data:**  
+N/A
+
+**Related Artifacts:**  
+Decision Log (DEC-058), Change Request Log (CR-030).
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-030. Uses springdoc-openapi for Spring MVC. Prod access restriction configured via Spring Security filter chain.
+
+### NFR-032 Define Docker Compose Deployment with 3 Containers
+
+**Type:** Non-Functional Requirement  
+**Source:** Capstone Constraint  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The project shall include a `docker-compose.yml` file defining at least three containers: a Java Spring MVC application running on Tomcat, a Vue frontend served via Nginx or similar, and a PostgreSQL database. The Docker Compose configuration must support starting the entire application stack with a single command.
+
+**Business Value:**  
+Docker Compose provides a reproducible, portable deployment environment required for Capstone review and portfolio demonstration.
+
+**Acceptance Criteria:**
+- `docker-compose.yml` exists in the repository root.
+- Three services defined: `backend` (Java Tomcat), `frontend` (Vue), `database` (PostgreSQL).
+- Backend container builds from a `Dockerfile` in the project root.
+- Frontend container builds from a `Dockerfile` in the Vue project directory.
+- Database container uses the official PostgreSQL image.
+- Database initialization runs schema.sql and data.sql automatically.
+- Containers communicate via an internal Docker network.
+- Environment variables (DB URL, credentials, active profile) are passed to containers.
+- `docker compose up` starts the full stack without manual steps.
+
+**Affected UI:**  
+N/A (deployment infrastructure)
+
+**Affected Data:**  
+All entities
+
+**Related Artifacts:**  
+Decision Log (DEC-058), Change Request Log (CR-030), Strategic Context.
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: N/A
+- Testable: Yes
+
+**Notes:**  
+Part of CR-030. Flyway migrations run inside the backend container on startup. Vue frontend is served via Nginx or similar and proxies API calls to the backend.
+
 ### FR-011 Generate and Edit Cover Letter
 
 **Type:** Functional Requirement  
 **Source:** Governance Decision  
 **Priority:** Medium  
 **Scope:** MVP  
-**Status:** Draft  
-**Readiness:** Needs Clarification
+**Status:** Approved  
+**Readiness:** Ready
 
 **Description:**  
 The system shall generate a cover letter alongside the resume draft and allow the user to review and edit it before saving the final version.
@@ -740,8 +2091,8 @@ Cover letter generation reuses the same AI generation flow as resume draft. The 
 **Source:** Governance Decision  
 **Priority:** Medium  
 **Scope:** MVP  
-**Status:** Draft  
-**Readiness:** Needs Clarification
+**Status:** Approved  
+**Readiness:** Ready
 
 **Description:**  
 The system shall include cover letter generation as part of the resume generation request. The generation request shall instruct the AI to produce a cover letter alongside the adapted resume content.
@@ -783,8 +2134,8 @@ This requirement works together with FR-011. The generation request should inclu
 **Source:** Technical Constraint  
 **Priority:** Medium  
 **Scope:** MVP  
-**Status:** Draft  
-**Readiness:** Needs Clarification  
+**Status:** Approved  
+**Readiness:** Ready  
 
 **Description:**  
 The project shall include initial AI model configuration data required for the MVP to run after deployment.
@@ -824,8 +2175,8 @@ Needs final setup approach for environment variables, seed data, and demo mode.
 **Source:** Governance Decision
 **Priority:** Medium
 **Scope:** MVP
-**Status:** Draft
-**Readiness:** Needs Clarification
+**Status:** Approved
+**Readiness:** Ready
 
 **Description:**
 The system shall allow a registered user to delete a saved resume from User Home. The delete action is initiated from the Resume Details modal on User Home. After soft-delete, the public resume link returns HTTP 410 Gone with the message "Пользователь решил удалить данное резюме. Больше оно не доступно."
@@ -835,7 +2186,7 @@ Users need to remove outdated or unwanted resumes. Soft-delete ensures data is n
 
 **Acceptance Criteria:**
 - User Home's Resume Details modal displays a "Delete this resume" button.
-- Clicking "Delete this resume" changes the button to a confirmation prompt and reveals a "Confirm deletion" button.
+- Clicking "Delete this resume" shows a confirmation prompt: "Are you sure you want to delete this resume?" and reveals a "Confirm deletion" button.
 - Clicking "Confirm deletion" soft-deletes the resume (sets `is_deleted = true` and `deleted_at` timestamp in `saved_resume`).
 - After deletion, the resume row is removed from the User Home table.
 - Accessing a deleted resume's public URL returns HTTP status code 410 Gone.

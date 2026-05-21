@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-20 
+**Last Updated:** 2026-05-21  
 **Author:** Anton  
-**Version:** 6.0  
+**Version:** 15.0  
 **Status:** Active  
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance  
 
@@ -96,6 +96,17 @@ It helps keep the project baseline controlled and explains why meaningful change
 | CR-017 | 2026-05-18 | Add resume delete from User Home and public_url_link field | Requirement   | BA          | Requirements Log, ERD, Data Dictionary, Traceability Matrix, Risk Register, Decision Log | Medium | Approved | Implemented |
 | CR-018 | 2026-05-18 | Add professional_title to resume_generation_response       | Requirement   | BA          | Requirements Log, Decision Log, ERD, Data Dictionary, Traceability Matrix | Low | Approved | Draft       |
 | CR-019 | 2026-05-20 | Move profile picture from MVP to POST-MVP                  | Scope         | BA          | Requirements Log (FR-007), Wireframe Field Requirements, Decision Log | Low | Approved | Draft       |
+| CR-020 | 2026-05-21 | Add error handling, custom exceptions, and logging NFRs    | Requirement   | BA          | Requirements Log, Decision Log, Risk Register, Traceability Matrix    | Medium | Approved | Draft       |
+| CR-021 | 2026-05-21 | Add code quality, package structure, and build NFRs        | Requirement   | BA          | Requirements Log, Decision Log, Strategic Context, Traceability Matrix | Medium | Approved | Draft       |
+| CR-022 | 2026-05-21 | Define frontend stack as Vue 3 + Vite + PrimeVue           | Architecture  | BA          | Decision Log, Strategic Context, Confirmed Elicitation Results, Traceability Matrix | Medium | Approved | Draft       |
+| CR-023 | 2026-05-21 | Add DB layer NFRs: transactions, SQL scripts, connection pool, PreparedStatement, UTF-8 | Requirement | BA | Requirements Log, Decision Log, Strategic Context, Traceability Matrix, Risk Register | Medium | Approved | Draft |
+| CR-024 | 2026-05-21 | Add UI security and dual validation NFRs | Requirement | BA | Requirements Log, Decision Log, Traceability Matrix | Medium | Approved | Draft |
+| CR-025 | 2026-05-21 | Refine logging stack, add consistent logging NFR, add Vuelidate | Requirement | BA | Requirements Log, Decision Log, Strategic Context, Confirmed Elicitation Results | Low | Approved | Draft |
+| CR-026 | 2026-05-21 | Document design patterns, add interceptors, AOP, SOLID NFRs | Requirement | BA | Requirements Log, Decision Log, Strategic Context, Traceability Matrix, Resume Template Details | Medium | Approved | Draft |
+| CR-027 | 2026-05-21 | Add testing NFRs: coverage, scenarios, structure, TDD | Requirement | BA | Requirements Log, Decision Log, Strategic Context, Traceability Matrix | Medium | Approved | Draft |
+| CR-028 | 2026-05-21 | Add external configuration and Javadoc style reference | Requirement | BA | Requirements Log, Decision Log | Low | Approved | Draft |
+| CR-029 | 2026-05-21 | Add pagination NFR and i18n resource file requirements | Requirement | BA | Requirements Log, Decision Log, Confirmed Elicitation Results | Medium | Approved | Draft |
+| CR-030 | 2026-05-21 | Add dev/prod profiles, Swagger, Docker Compose NFRs | Requirement | BA | Requirements Log, Decision Log, Strategic Context | Medium | Approved | Draft |
 
 ## 4. Details
 
@@ -362,20 +373,156 @@ It helps keep the project baseline controlled and explains why meaningful change
 
 **Follow-up Actions:** Update FR-007 acceptance criteria. Remove photo_file_path from MVP scope.
 
-### CR-999 [Change Title Template]
+### CR-020 Add Error Handling, Custom Exceptions, and Logging NFRs
 
-**Date:** YYYY-MM-DD  
-**Type:** [Scope / Requirement / Architecture / Data Model / UI/UX / Deployment / Security / Process / Documentation]  
-**Requester:** [Student / Mentor / Reviewer / Self-review]  
-**Status:** Draft  
-**Description:** [What exactly needs to be changed?]  
-**Reason:** [Why is this change necessary?]  
-**Affected Artifacts:** [List files, requirements, diagrams, or modules]  
-**Impact Assessment:** [Low/Medium/High/Critical and explanation]  
-**Decision:** [Pending / Approved / Rejected / Postponed / Needs More Info]  
-**Resolution Date:** [YYYY-MM-DD or N/A]  
-**Follow-up Actions:** [What should happen next]
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add NFRs for system-wide error handling: global `@ControllerAdvice`, per-layer custom exceptions (`ControllerException`, `ServiceException`, `DaoException`), graceful error responses (no Java stack traces exposed to Vue frontend), and structured logging of all errors via SLF4J/Log4j2.
+**Reason:** Mandatory per Capstone specification: all errors must be handled at controller, service, and DAO layers, logged, and displayed to the user in a readable format.
+**Affected Artifacts:** `requirements_log.md` (new NFR-002–NFR-005), `decision_log.md`, `risk_register.md`, `traceability_matrix.md`
+**Impact Assessment:** Medium. Cross-cutting infrastructure NFRs. MVP scope unchanged.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Create NFR-002, NFR-003, NFR-004, NFR-005. Add DEC-051. Add RISK-013.
 
----
+### CR-021 Add Code Quality, Package Structure, and Build NFRs
 
-*This change request log follows the Information Management Plan structure and conventions for the ResumAIner project.*
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add NFRs for code quality and build automation: package structure (`controller`, `service`, `dao`, `model`, `config`, `util`); clear DAO/Service separation — no business logic in DAO; Java Code Convention; Javadoc on all public interface and service methods; Maven CLI build (`mvn clean package`); `.gitignore` and `README.md` in repository; minimal and stable `pom.xml` dependencies.
+**Reason:** Mandatory per Capstone specification covering package organization, code conventions, Javadoc documentation, build automation, and repository setup.
+**Affected Artifacts:** `requirements_log.md` (new NFR-006–NFR-011), `decision_log.md`, `strategic_context_and_gap_analysis.md`, `traceability_matrix.md`
+**Impact Assessment:** Medium. Quality and process NFRs. MVP scope unchanged.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Create NFR-006 through NFR-011. Add DEC-051. Update technology stack notes.
+
+### CR-022 Define Frontend Stack as Vue 3 + Vite + PrimeVue
+
+**Date:** 2026-05-21
+**Type:** Architecture
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Replace generic "Vue.js" reference with explicit frontend stack: Vue 3 (Composition API) + Vite + PrimeVue. The hybrid approach (Thymeleaf for Landing Page, SPA for authenticated app) is kept. PrimeVue provides Vue-native responsive components with ready themes and responsive/touch-friendly elements, covering the cross-browser and responsive design requirement. Cross-browser support targets Chrome, Firefox, and Edge.
+**Reason:** Cross-browser compatibility and responsive design are mandatory per Capstone. PrimeVue is chosen over Bootstrap because it provides Vue-native components, reducing integration complexity for a developer new to Vue SPA.
+**Affected Artifacts:** `decision_log.md` (DEC-052), `strategic_context_and_gap_analysis.md`, `confirmed_elicitation_results.md`, `traceability_matrix.md`
+**Impact Assessment:** Medium. Defines the frontend stack precisely. Documentation-only — no code written yet.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Add DEC-052. Update technology stack in Strategic Context and Confirmed Elicitation Results.
+
+### CR-023 Add DB Layer NFRs
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add NFRs for the database access layer: Service-layer transaction management via `connection.commit()/rollback()`; custom thread-safe Connection Pool implemented manually (no HikariCP or similar libraries); SQL scripts (schema.sql for DDL, data.sql for seed data) for manual DB initialization; PreparedStatement for all SQL queries with a strict ban on string concatenation; UTF-8 encoding for database, connection, and all text columns to support Cyrillic. Additionally, clarify that each DAO class maps to a single table/entity and implements full CRUD where applicable.
+**Reason:** Mandatory per Capstone specification covering JDBC transaction management, manual Connection Pool implementation, SQL script initialization, SQL injection prevention, and UTF-8 encoding for Cyrillic support.
+**Affected Artifacts:** `requirements_log.md` (NFR-012–NFR-016, NFR-006 update), `decision_log.md` (DEC-053, DEC-001 update), `strategic_context_and_gap_analysis.md`, `traceability_matrix.md`, `risk_register.md`
+**Impact Assessment:** Medium. 5 new NFRs plus NFR-006 clarification. Establishes critical DB access standards. MVP scope unchanged.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Create NFR-012 through NFR-016. Update NFR-006 with DAO-to-entity mapping. Add DEC-053. Update DEC-001 with Connection Pool detail.
+
+### CR-024 Add UI Security and Dual Validation NFRs
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add NFRs for UI/UX security and validation: frontend protection against form resubmission (PRG pattern, button disable on submit); XSS sanitization for user input fields (profile, vacancy, generation settings); dual validation — frontend (PrimeVue form validation) and backend (Spring @Valid with Jakarta Validation annotations @Email, @NotNull, @NotEmpty, @Size).
+**Reason:** Mandatory per Capstone specification covering form resubmission prevention, XSS protection, input validation on both layers, and Spring validation annotations.
+**Affected Artifacts:** requirements_log.md (NFR-017–NFR-019), decision_log.md (DEC-054), traceability_matrix.md
+**Impact Assessment:** Medium. 3 new NFRs. MVP scope unchanged.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Create NFR-017, NFR-018, NFR-019. Add DEC-054. Add trace rows.
+
+### CR-025 Refine Logging Stack, Add Consistent Logging NFR, Add Vuelidate
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Switch logging implementation from Log4j2 to Logback (SLF4J facade kept). Add NFR-020 for consistent log format across all application layers. Add DEC-055 confirming Vuelidate + native Vue validation as the frontend validation approach. Update NFR-005 with acceptance criteria for log consistency and validation-error logging as security events.
+**Reason:** Logback is lighter and simpler than Log4j2 for a Capstone project. Vuelidate pairs naturally with Vue 3 Composition API and avoids jQuery dependency. Validation-error logging helps detect suspicious behavior per Capstone specification.
+**Affected Artifacts:** `requirements_log.md` (NFR-005, NFR-020), `decision_log.md` (DEC-055), `strategic_context_and_gap_analysis.md`, `confirmed_elicitation_results.md`
+**Impact Assessment:** Low. Log stack change is implementation-only. Vuelidate is a documentation update.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Update Strategic Context: SLF4J + Logback. Add DEC-055. Create NFR-020. Update NFR-005 acceptance criteria. Add Vuelidate to Confirmed Elicitation Results frontend section.
+
+### CR-026 Document Design Patterns, Add Interceptors, AOP, SOLID NFRs
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Document 4 applied design patterns with rationale: Singleton (Connection Pool), Builder (AI prompt construction), Factory Method (mock vs real AI client), Strategy (adaptation level / AI model selection). Add NFR-021 (Spring MVC Interceptors for logging and authorization), NFR-022 (AOP for cross-cutting concerns), NFR-023 (SOLID + DRY principles and reusability). Formalize ResumePromptBuilder as a Builder pattern instance in Resume Template Details.
+**Reason:** Mandatory per Capstone specification: minimum 4 design patterns with justification, Spring MVC Interceptors, AOP, SOLID, and DRY principles.
+**Affected Artifacts:** `requirements_log.md` (NFR-021–NFR-023), `decision_log.md` (DEC-056), `strategic_context_and_gap_analysis.md`, `resume_template_details_and_logic.md`, `traceability_matrix.md`
+**Impact Assessment:** Medium. 3 new NFRs and pattern documentation. MVP scope unchanged.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Add DEC-056. Create NFR-021, NFR-022, NFR-023. Update Resume Template Details to formalize Builder pattern. Update tech stack.
+
+### CR-027 Add Testing NFRs
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add testing NFRs: JUnit 5 + Mockito as the test framework; 50%+ coverage in Service and DAO layers measured by JaCoCo; positive, negative, and boundary test scenarios; structured and consistent test practices (src/test/java, descriptive naming, @Test/@BeforeEach/@AfterEach); and Test-Driven Development approach. Also update NFR-009 to explicitly require `mvn test` execution.
+**Reason:** Mandatory per Capstone specification covering JUnit 5, 50%+ coverage, Mockito, JaCoCo reports, test structure, and TDD.
+**Affected Artifacts:** `requirements_log.md` (NFR-009, NFR-024–NFR-027), `decision_log.md` (DEC-057), `strategic_context_and_gap_analysis.md`, `traceability_matrix.md`
+**Impact Assessment:** Medium. 4 new NFRs plus NFR-009 update. Defines testing standards before implementation starts.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Update NFR-009 with mvn test requirement. Create NFR-024, NFR-025, NFR-026, NFR-027. Add DEC-057. Update tech stack testing line. Add BG-008 and trace rows.
+
+### CR-028 Add External Configuration and Javadoc Style Reference
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add NFR-028 requiring all configurable parameters (DB URL, credentials, localization settings, AI model defaults) to be externalized in `application.yml`. Update NFR-008 notes to reference the Oracle How to Write Doc Comments guide and Google Java Style Guide Section 7 as Javadoc style standards.
+**Reason:** External configuration is a quality requirement per Capstone specification. Javadoc style reference provides a clear standard beyond "must have Javadoc."
+**Affected Artifacts:** `requirements_log.md` (NFR-008 notes, new NFR-028)
+**Impact Assessment:** Low. One new NFR and one notes update. No scope change.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Create NFR-028. Update NFR-008 notes.
+
+### CR-029 Add Pagination NFR and i18n Resource File Requirements
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add NFR-029 requiring pagination for all long lists (User Home resume table, Admin Users, Admin Resumes, Admin AI Models). Add NFR-030 requiring i18n resource files (messages_en.properties, messages_ru.properties) for both Thymeleaf (Landing Page) and Vue (authenticated SPA), loaded via Spring MessageSource with a Vue i18n library. Update Confirmed Elicitation Results to remove "if feasible" qualifier from pagination references.
+**Reason:** Required to achieve maximum Capstone evaluation scores for pagination (5 points) and localization (5 points).
+**Affected Artifacts:** requirements_log.md (NFR-029, NFR-030), decision_log.md (DEC-023 update), confirmed_elicitation_results.md
+**Impact Assessment:** Medium. 2 new NFRs. Makes pagination mandatory. Formalizes i18n resource file structure.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Create NFR-029, NFR-030. Update DEC-023. Update Confirmed Elicitation Results pagination references.
+
+### CR-030 Add dev/prod Profiles, Swagger, Docker Compose NFRs
+
+**Date:** 2026-05-21
+**Type:** Requirement
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Add NFR-031 (Swagger/OpenAPI REST API documentation; access restricted to ADMIN role on prod via Spring Security), NFR-032 (Docker Compose deployment with 3 containers: Java Spring MVC Tomcat, Vue frontend, PostgreSQL). Update NFR-028 to require dev and prod profile separation (application-dev.yml, application-prod.yml).
+**Reason:** Swagger documents REST endpoints for reviewers and portfolio. Docker Compose ensures reproducible deployment. Profile separation enables environment-specific configuration without hardcoded values.
+**Affected Artifacts:** requirements_log.md (NFR-028 update, NFR-031, NFR-032), decision_log.md (DEC-058), strategic_context_and_gap_analysis.md
+**Impact Assessment:** Medium. 2 new NFRs, NFR-028 update, tech stack extension. MVP scope unchanged.
+**Decision:** Approved
+**Resolution Date:** N/A
+**Follow-up Actions:** Update NFR-028 with profile requirement. Create NFR-031, NFR-032. Add DEC-058. Update tech stack.

@@ -1,14 +1,14 @@
-# DD-001 — ResumAIner MVP Data Dictionary — All Entities
+# Data Dictionary
 
-| Attribute | Value |
-|---------|----------|
-| Type | Data Dictionary |
-| Project | resumainer |
-| Source | governance_plans/reports/docs/04_domain-and-data-model/dbml_erd.md |
-| Entities | 26 |
-| Status | Approved |
-| Version | 1.0 |
-| Date | 2026-05-17 |
+**Project ID:** `resumainer`
+**Product Name:** ResumAIner
+**Date Created:** 2026-05-17
+**Last Updated:** 2026-05-17
+**Author:** Anton
+**Version:** 1.0
+**Status:** Approved
+**Source:** dbml_erd.md
+**Total Entities:** 26
 
 ---
 

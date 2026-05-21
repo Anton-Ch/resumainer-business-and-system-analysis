@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-20
+**Last Updated:** 2026-05-21
 **Author:** Anton
-**Version:** 5.0
+**Version:** 7.0
 **Status:** Active
 **Related BABOK Area:** 3.1 Plan Business Analysis Approach / 3.3 Plan Business Analysis Governance
 
@@ -103,6 +103,8 @@ The purpose is to make risks visible early and define practical mitigation strat
 | RISK-010 | 2026-05-13 | Wireframe field inconsistencies may create requirement ambiguity | Quality | Medium | Medium | Medium | Mitigate | BA | Mitigated |
 | RISK-011 | 2026-05-18 | Accidental resume deletion may cause user frustration and data loss | UX / Data | Low | High | Medium | Mitigate | BA | Open |
 | RISK-012 | 2026-05-20 | AI-generated HTML may break template layout or introduce XSS | Security / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
+| RISK-013 | 2026-05-21 | Inconsistent error handling may expose stack traces or miss critical failures | Quality / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
+| RISK-014 | 2026-05-21 | Custom Connection Pool may have thread-safety bugs or performance issues | Technical | Medium | High | High | Mitigate | BA / Developer | Open |
 | RISK-999 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
 
 ## 4. Details
@@ -313,6 +315,40 @@ The purpose is to make risks visible early and define practical mitigation strat
 **Mitigation Plan:** Backend sanitizes all AI-provided HTML using an allowlist (DEC-038). Allowlist: `<strong>`, `<b>`, `<i>`, `<em>`, `<ul>`, `<ol>`, `<li>`, `<p>`, `<br>`. All other tags stripped.
 **Trigger / Early Warning:** AI output contains unexpected HTML tags or malformed markup during testing.
 **Contingency Plan:** If sanitization fails, fall back to plain text rendering and strip all HTML.
+
+### RISK-013 Inconsistent Error Handling May Expose Stack Traces or Miss Critical Failures
+
+**Date Identified:** 2026-05-21
+**Category:** Quality / Technical
+**Probability:** Medium
+**Impact:** High
+**Severity:** High
+**Response Strategy:** Mitigate
+**Owner:** BA / Developer
+**Status:** Open
+**Risk Description:** Inconsistent error handling across controller, service, and DAO layers may result in Java stack traces exposed to the frontend, unhandled exceptions causing blank pages, or critical errors being silently swallowed.
+**Cause:** Without a global exception handler, per-layer custom exceptions, and structured logging, each developer may handle errors differently, creating gaps in coverage.
+**Impact if Occurs:** Stack traces in API responses create security and professionalism issues. Silent failures may hide data corruption or generation bugs. Debugging becomes harder without consistent logging.
+**Mitigation Plan:** Implement custom exception hierarchy (ControllerException, ServiceException, DaoException), global `@ControllerAdvice` handler, user-friendly error responses, and structured logging per NFR-002 through NFR-005.
+**Trigger / Early Warning:** Code review reveals try-catch blocks swallowing exceptions without logging, or generic error responses without context.
+**Contingency Plan:** Add error handling audit to code review checklist. Fix gaps identified during review before each demo iteration.
+
+### RISK-014 Custom Connection Pool May Have Thread-Safety Bugs or Performance Issues
+
+**Date Identified:** 2026-05-21
+**Category:** Technical
+**Probability:** Medium
+**Impact:** High
+**Severity:** High
+**Response Strategy:** Mitigate
+**Owner:** BA / Developer
+**Status:** Open
+**Risk Description:** The custom Connection Pool may contain thread-safety bugs, connection leaks, deadlocks, or performance bottlenecks that affect the entire application's database access layer.
+**Cause:** Manual Connection Pool implementation is a Capstone requirement. Thread-safety, timeout handling, connection validation, and graceful shutdown are complex to implement correctly.
+**Impact if Occurs:** Connection leaks may exhaust database connections. Thread-safety bugs may cause data corruption or application crashes. Performance issues may slow all database operations.
+**Mitigation Plan:** Thorough internal documentation of the pool's thread-safety mechanism, connection lifecycle, timeout handling, and edge cases. Unit tests for concurrent connection acquisition/release. Stress testing with multiple concurrent requests.
+**Trigger / Early Warning:** Application hangs during concurrent database operations. Database connection limit is reached unexpectedly.
+**Contingency Plan:** Add connection leak detection (e.g., tracking unreleased connections with stack traces). Increase pool timeout and maximum size temporarily while investigating root cause.
 
 ### RISK-999 [Risk Short Title Template]
 

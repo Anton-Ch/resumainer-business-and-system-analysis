@@ -6,6 +6,7 @@
 **Source Tool:** diagrams.net / draw.io  
 **Date Prepared:** 2026-05-16  
 **Status:** Draft for downstream BA analysis  
+**Related BABOK Area:** 7.1 Specify and Model Requirements  
 
 ---
 

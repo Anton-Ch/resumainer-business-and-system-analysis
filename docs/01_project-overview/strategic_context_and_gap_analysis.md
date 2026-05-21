@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-18
-**Last Updated:** 2026-05-18
+**Last Updated:** 2026-05-21
 **Author:** Anton
-**Version:** 1.0
+**Version:** 7.0
 **Status:** Approved
 **Related BABOK Area:** 6.1 Analyze Current State / 6.2 Define Future State
 
@@ -70,7 +70,7 @@ ResumAIner provides a single, integrated platform where users:
 2. **Generate adapted resumes in minutes** — paste a job, company description, select AI model and adaptation level, choose language (RU/EN/both), and receive an AI-generated draft.
 3. **Review and refine** — edit generated content before saving the final version.
 4. **Track version history** — view, search, filter, and manage all saved resume versions.
-5. **Share professionally** — download print-friendly selectable-text PDF, share via permanent public URL, access ATS-optimized JSON endpoint.
+5. **Share professionally** — download print-friendly selectable-text PDF, share via permanent public URL, access ATS-optimized JSON endpoint (MVP Stretch).
 
 ### 3.2 Target Capabilities
 
@@ -88,16 +88,21 @@ ResumAIner provides a single, integrated platform where users:
 
 | Layer | Target Technology |
 |-------|------------------|
-| Backend | Java, Spring Boot, Spring MVC, Servlets |
+| Backend | Java, Spring MVC, Servlets |
 | Data access | Plain JDBC with custom thread-safe Connection Pool |
 | Database | PostgreSQL (3NF normalized) |
-| Frontend | Vue.js (authenticated), Thymeleaf (landing page) |
+| Frontend | Vue 3 (Composition API) + Vite + PrimeVue (authenticated), Thymeleaf (landing page) |
 | AI integration | OpenRouter API (isolated behind service interface) |
 | PDF generation | Automated (selectable text, A4) |
 | Deployment | Docker Compose (backend + frontend + database) |
 | Migrations | Flyway (versioned SQL scripts) |
-| Logging | SLF4J + Log4j2 |
-| Testing | Unit tests for Service and DAO layers (50%+ coverage) |
+| Logging | SLF4J + Logback |
+| API Documentation | Swagger/OpenAPI (springdoc-openapi), ADMIN-only access on prod |
+| Deployment profiles | dev and prod Spring profiles via application-dev.yml and application-prod.yml |
+| Design patterns | Singleton (Connection Pool), Builder (AI prompt), Factory Method (AI client), Strategy (adaptation level) |
+| AOP | Spring AOP with AspectJ for cross-cutting logging and monitoring |
+| Interceptors | Spring MVC HandlerInterceptors for request logging and authorization |
+| Testing | JUnit 5, Mockito, JaCoCo coverage reports; 50%+ coverage in Service and DAO layers |
 
 ## 4. Constraints
 
@@ -106,6 +111,9 @@ ResumAIner provides a single, integrated platform where users:
 | 1 | Must use Capstone technology stack: Spring MVC, JDBC, PostgreSQL, Maven, Vue.js, Docker Compose | Technology | Confirmed |
 | 2 | Solo developer, scope must be achievable within course timeframe | Resources | Confirmed |
 | 3 | Database must be normalized to 3NF; no ORM frameworks allowed | Technology | Confirmed |
+| 4 | Custom thread-safe Connection Pool must be implemented manually (no HikariCP, DBCP, or similar libraries) | Technology | Confirmed |
+| 5 | Transactions must be managed manually via JDBC commit()/rollback() at Service layer | Technology | Confirmed |
+| 6 | Database, connections, and all text columns must use UTF-8 encoding for Cyrillic support | Technology | Confirmed |
 
 ## 5. Gap Analysis Summary
 

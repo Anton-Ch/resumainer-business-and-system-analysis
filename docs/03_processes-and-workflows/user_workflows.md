@@ -315,8 +315,8 @@ This document defines the key user workflows for the ResumAIner system. Each wor
 | Artifact | Location |
 |----------|----------|
 | Requirements Log | `docs/02_requirements/requirements_log.md` |
-| Strategic Context and Gap Analysis | `docs/00_project-overview/strategic_context_and_gap_analysis.md` |
-| Business Goals and KPIs | `docs/00_project-overview/business_goals_and_kpis.md` |
+| Strategic Context and Gap Analysis | `docs/01_project-overview/strategic_context_and_gap_analysis.md` |
+| Business Goals and KPIs | `docs/01_project-overview/business_goals_and_kpis.md` |
 | Wireframe Descriptions | `docs/05_ui-ux/wireframes_detailed_description.md` |
 | Wireframe Field Requirements | `docs/05_ui-ux/wireframe_field_requirements.md` |
 | Data Dictionary | `docs/04_domain-and-data-model/data_dictionary.md` |

@@ -5,8 +5,8 @@
 **Date Created:** 2026-05-19  
 **Last Updated:** 2026-05-20  
 **Author:** Anton  
-**Version:** 6.0 (Draft)  
-**Status:** Draft  
+**Version:** 6.0  
+**Status:** Approved  
 **Related BABOK Area:** 7.1 Specify Requirements / 7.5 Design Options  
 
 ---
@@ -35,7 +35,7 @@ The final design may use the following Java/Spring service responsibilities.
 | ---------------------------- | ------------------------------------------------------------------------------------------------ |
 | `ResumePageProfileService`   | Calculates raw counts, page scores, density labels, and template mode.                           |
 | `ResumeContentBudgetService` | Converts page profile into AI content limits and section budgets.                                |
-| `ResumePromptBuilder`        | Builds AI prompt using profile data, vacancy data, template mode, and content budget.            |
+| `ResumePromptBuilder`        | Builds AI prompt using profile data, vacancy data, template mode, and content budget. Implements the **Builder** pattern (DEC-056): constructs a complex prompt object step by step (vacancy context, profile data, content budget, language, adaptation level) and returns the complete prompt string. |
 | `ResumeTemplateRenderer`     | Renders final HTML from structured generation response and selected template.                    |
 | `PdfGenerationService`       | Converts HTML to PDF, validates page count, and stores PDF metadata.                             |
 | `ResumeBudgetConfigService`  | Reads external YAML budget configuration and provides current budget values to backend services. |

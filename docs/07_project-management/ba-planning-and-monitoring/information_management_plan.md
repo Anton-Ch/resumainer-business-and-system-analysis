@@ -36,7 +36,7 @@ The information management process has the following objectives:
   
 The BA repository is the main storage location for business analysis and system analysis documentation.  
   
-Planned repository structure:  
+Repository structure:  
 ```text  
 ai-resume-tailor-business-analysis/  
 │  
@@ -48,13 +48,11 @@ ai-resume-tailor-business-analysis/
 │ └── source project materials and initial context  
 │  
 ├── docs/
-│ ├── 00_project-overview/  
-│ ├── 01_stakeholders/  
+│ ├── 01_project-overview/  
 │ ├── 02_requirements/  
 │ ├── 03_processes-and-workflows/  
 │ ├── 04_domain-and-data-model/  
 │ ├── 05_ui-ux/  
-│ ├── 06_system-analysis/  
 │ ├── 07_project-management/  
 │ ├── 08_traceability/  
 │ └── 09_decisions/  
@@ -77,13 +75,11 @@ ai-resume-tailor-business-analysis/
 | Information Category    | Purpose                                                                                 | Repository Location                | Format                        | Owner          |
 | ----------------------- | --------------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------- | -------------- |
 | Source materials        | Initial project ideas, capstone constraints, early notes, and context                   | `drafts/`                          | Markdown, text, PDF if needed | BA             |
-| Project overview        | Vision, business context, scope, MVP definition                                         | `docs/00_project-overview/`        | Markdown                      | BA             |
-| Stakeholder information | Stakeholders, personas, engagement plan                                                 | `docs/01_stakeholders/`            | Markdown                      | BA             |
+| Project overview        | Vision, business context, scope, MVP definition                                         | `docs/01_project-overview/`        | Markdown                      | BA             |
 | Requirements            | BR, FR, NFR, user stories, acceptance criteria                                          | `docs/02_requirements/`            | Markdown, tables              | BA             |
 | Workflows and use cases | User workflows, use cases, process diagrams                                             | `docs/03_processes-and-workflows/` | Markdown, Mermaid             | BA             |
 | Domain and data model   | Domain model, ERD, data dictionary, normalization notes                                 | `docs/04_domain-and-data-model/`   | Markdown, Mermaid, images     | BA             |
 | UI/UX documentation     | UI requirements, information architecture, wireframes, prototype notes                  | `docs/05_ui-ux/`                   | Markdown, images              | BA             |
-| System analysis         | Architecture requirements, technical constraints, integration and security requirements | `docs/06_system-analysis/`         | Markdown, diagrams            | BA / Developer |
 | Project management      | Roadmap, MVP backlog, risk register, open questions, change requests                    | `docs/07_project-management/`      | Markdown, tables              | BA             |
 | Traceability            | Links between goals, requirements, use cases, data entities, UI, tests                  | `docs/08_traceability/`            | Markdown tables               | BA             |
 | Decisions               | Decision log, ADRs, key architectural and scope decisions                               | `docs/09_decisions/`               | Markdown                      | BA / Developer |
@@ -165,9 +161,9 @@ To ensure seamless traceability, the following ID prefixes are mandatory for all
 | **BR** | Business Requirements | `BR-005` |
 | **FR** | Functional Requirements | `FR-012` |
 | **NFR** | Non-Functional Requirements | `NFR-002` |
-| **UC** | Use Cases | `UC-04` |
-| **US** | User Stories | `US-01` |
-| **UI** | UI Screens / Wireframes | `UI-07` |
+| **UC** | Use Cases | `UC-04` (reserved for future use) |
+| **US** | User Stories | `US-01` (reserved for future use) |
+| **UI** | UI Screens / Wireframes | `UI-07` (reserved for future use) |
 | **DEC** | Architectural/Design Decisions | `DEC-003` |
 | **CR** | Change Requests | `CR-001` |
 | **TC** | Test Cases | `TC-010` |

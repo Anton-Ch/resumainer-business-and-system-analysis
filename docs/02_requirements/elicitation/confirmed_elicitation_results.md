@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-12  
-**Last Updated:** 2026-05-15  
+**Last Updated:** 2026-05-21  
 **Author:** Anton  
-**Version:** 3.0  
+**Version:** 6.0  
 **Status:** Approved  
 **Related BABOK Area:** 4.2 Conduct Elicitation / 4.3 Confirm Elicitation Results  
 
@@ -106,11 +106,11 @@ Recruiters do not need an account or separate portal in MVP.
 - AI Model Details
 - Token usage logging when provider data is available
 - Mock AI provider fallback
+- Generate all adaptation variants
+- Cover letter generation
 
 ### 4.2 MVP Stretch
 
-- Generate all adaptation variants
-- Cover letter generation
 - ATS JSON endpoint
 - Google OAuth2 login
 - Language tabs for bilingual resume review
@@ -188,7 +188,7 @@ Recruiters do not need an account or separate portal in MVP.
 - secondary CTA: Generate New Resume;
 - searchable/sortable table of saved resumes;
 - columns: number, vacancy, resume title, language, adaptation level, created date, PDF link/status;
-- filtering and pagination if feasible;
+- filtering and pagination;
 - basic empty states.
 
 **MVP actions:**
@@ -537,8 +537,10 @@ Recruiters do not need an account or separate portal in MVP.
 **Confirmed decision:** Use hybrid frontend approach.
 
 - Thymeleaf only for Landing Page.
-- Vue for the main authenticated application if feasible.
-- Backend exposes endpoints suitable for Vue interaction.
+- Vue 3 (Composition API) + Vite + PrimeVue for the main authenticated application (DEC-052).
+- Backend exposes RESTful endpoints for Vue frontend interaction.
+- PrimeVue provides responsive components, ready themes, and cross-browser compatibility (Chrome, Firefox, Edge).
+- Frontend validation uses Vuelidate library integrated with Vue 3 Composition API (DEC-055).
 
 ## 7.2 Highest Complexity Areas
 

@@ -1,14 +1,11 @@
-# [[Без названия]]
-
-
 # Decision Log
 
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-20
+**Last Updated:** 2026-05-21
 **Author:** Anton
-**Version:** 5.0
+**Version:** 14.0
 **Status:** Active
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance
 
@@ -95,6 +92,15 @@ Each decision includes context, selected option, rejected alternatives, rational
 | DEC-048 | 2026-05-20 | Requirement | Page 2 Additional WE compact at high density | Additional WE uses one short sentence per job at max density | No bullet points when 7+ additional jobs | Approved |
 | DEC-049 | 2026-05-20 | Architecture | Content budgets in external YAML configuration | Sentence counts, bullet limits stored in external config file | Easier tuning without code changes | Approved |
 | DEC-050 | 2026-05-20 | Scope | Profile picture moved from MVP to POST-MVP | Photo field not supported by current templates; removes unnecessary MVP complexity | FR-007 updated; photo_file_path deferred | Approved |
+| DEC-051 | 2026-05-21 | Process | Add error handling, code quality, and build NFRs | Mandatory per Capstone specification; ensures professional codebase quality | New NFRs added to requirements log; affects implementation process | Approved |
+| DEC-052 | 2026-05-21 | Architecture | Use Vue 3 + Vite + PrimeVue for frontend SPA | PrimeVue provides Vue-native responsive components with ready themes and good documentation; best fit for a developer new to Vue SPA | Replaces generic "Vue.js" placeholder; hybrid approach kept for Landing Page | Approved |
+| DEC-053 | 2026-05-21 | Data Model | Add DB layer NFRs: transactions, SQL scripts, PreparedStatement, UTF-8, custom Connection Pool | Mandatory per Capstone specification covering transaction management, SQL injection prevention, Cyrillic support, and manual Connection Pool | NFR-012–NFR-016 added to Requirements Log; Connection Pool documentation required | Approved |
+| DEC-054 | 2026-05-21 | Security | Add UI security and dual validation NFRs | Mandatory per Capstone specification covering form resubmission, XSS sanitization, and dual frontend/backend validation with Spring annotations | NFR-017–NFR-019 added to Requirements Log; validation layer expanded | Approved |
+| DEC-055 | 2026-05-21 | UI/UX | Use Vuelidate + native Vue 3 validation for frontend | Vuelidate pairs naturally with Vue 3 Composition API, avoids jQuery dependency, and is lighter than PrimeVue's built-in validation for complex rules | Frontend validation tool defined; mentioned in NFR-019 and Confirmed Elicitation Results | Approved |
+| DEC-056 | 2026-05-21 | Architecture | Document 4 design patterns with rationale | Mandatory per Capstone: minimum 4 patterns with justification, Interceptors, AOP, SOLID, DRY | NFR-021–NFR-023 added; ResumePromptBuilder formalized as Builder; patterns listed in Strategic Context | Approved |
+| DEC-057 | 2026-05-21 | Process | Establish testing standards: JUnit 5, Mockito, JaCoCo, TDD | Mandatory per Capstone: JUnit 5, 50%+ coverage, Mockito, JaCoCo reports, test structure, TDD | NFR-024–NFR-027 added; JaCoCo in pom.xml; coverage reports generated during build | Approved |
+| DEC-058 | 2026-05-21 | Architecture | Add dev/prod profiles, Swagger, Docker Compose | Swagger for API docs with ADMIN-only prod access; Docker Compose with backend, frontend, PostgreSQL; dev/prod Spring profiles | NFR-031, NFR-032 added; NFR-028 updated; Docker tech stack extended | Approved |
+| DEC-059 | 2026-05-21 | Process | Approve NFR baseline for development handoff | All NFRs reviewed and approved; acceptance criteria confirmed; open questions closed | 32 NFRs set to Approved/Ready; OQ-007 and OQ-009 closed; FR-001/007/011-013 acceptance criteria finalized | Approved |
 
 ## 4. Details
 
@@ -107,8 +113,8 @@ Each decision includes context, selected option, rejected alternatives, rational
 **Selected Option:** Plain JDBC with DAO layer and manual Connection Pool.  
 **Rejected Alternatives:** Hibernate, JPA, Spring Data JPA, MyBatis.  
 **Rationale:** Plain JDBC is required and demonstrates direct database access skills.  
-**Impact:** Requires DAO classes, SQL scripts, ResultSet mapping, and explicit transaction handling.  
-**Follow-up Actions:** Keep architecture and requirements documents free of ORM-based assumptions.
+**Impact:** Requires DAO classes, SQL scripts, ResultSet mapping, explicit transaction handling, and a custom documented Connection Pool.  
+**Follow-up Actions:** Keep architecture and requirements documents free of ORM-based assumptions. The custom Connection Pool must include thorough internal documentation covering thread-safety mechanism, connection lifecycle, timeout handling, and edge cases (DEC-053).
 
 ### DEC-002 Landing Page Is Mandatory for MVP
 
@@ -399,13 +405,14 @@ Each decision includes context, selected option, rejected alternatives, rational
 **Date:** 2026-05-17
 **Type:** Architecture
 **Status:** Approved
-**Context:** Default interface language should be automatic.
-**Selected Option:** Browser locale (Accept-Language header). User overrides via Language Switcher. Session-persisted.
-**Rejected Alternatives:** Default English; manual selection.
-**Rationale:** Seamless first-visit experience. Switcher allows override.
+**Context:** Default interface language should be automatic. Capstone requires i18n with resource files for two languages.
+**Selected Option:** Browser locale (Accept-Language header). User overrides via Language Switcher. Session-persisted. UI strings stored in resource files: `messages_en.properties` and `messages_ru.properties` in `src/main/resources/i18n/`. Thymeleaf uses Spring MessageSource (`#{...}`). Vue SPA uses a dedicated i18n library (e.g., vue-i18n) reading the same resource keys.
+**Rejected Alternatives:** Default English; manual selection; hardcoded strings in templates.
+**Rationale:** Seamless first-visit experience. Resource files provide maintainable translations. Both Thymeleaf and Vue share consistent message keys.
 **Impact:**
-- **Architecture:** LocaleResolver in Spring MVC.
-**Follow-up Actions:** Implement LocaleChangeInterceptor.
+- **Architecture:** LocaleResolver in Spring MVC. i18n resource files required.
+- **Frontend:** Vue i18n library added to package.json. Language switcher in both Thymeleaf and Vue layouts.
+**Follow-up Actions:** Implement LocaleChangeInterceptor. Create resource files for EN and RU. Integrate vue-i18n in SPA.
 
 ### DEC-024 AI Model Visibility and Privileged Users
 
@@ -751,7 +758,117 @@ Each decision includes context, selected option, rejected alternatives, rational
 **Rejected Alternatives:** Keep optional photo in MVP; remove photo entirely.
 **Rationale:** Reduces MVP complexity without losing the feature permanently. Templates can support photos post-MVP.
 **Impact:** FR-007 acceptance criteria updated. photo_file_path removed from MVP scope.
-*This decision log follows the Information Management Plan structure and conventions for the ResumAIner project. Decisions are recorded with full context for auditability and reuse.*
+
+### DEC-051 Add Error Handling, Code Quality, and Build NFRs
+
+**Date:** 2026-05-21
+**Type:** Process
+**Status:** Approved
+**Context:** Capstone specification requires comprehensive error handling across all layers, code quality standards, Javadoc documentation, Maven CLI build, and proper repository setup (.gitignore, README.md).
+**Selected Option:** Add 10 new NFRs covering: custom exception hierarchy (ControllerException, ServiceException, DaoException), global `@ControllerAdvice` handler, graceful error responses without stack trace exposure, structured logging, package structure with clear DAO/Service separation, Java Code Convention, Javadoc on public methods, Maven CLI build, .gitignore and README.md, and minimal pom.xml dependencies.
+**Rejected Alternatives:** Single generic "error handling" NFR; omitting Javadoc requirement; keeping frontend stack as generic "Vue.js".
+**Rationale:** Clear and testable NFRs ensure Capstone compliance. Per-layer custom exceptions enable quick failure localization. Explicit DAO/Service separation follows layered architecture best practices.
+**Impact:** New NFR-002 through NFR-011 in Requirements Log. Implementation scope extends to error infrastructure, code style enforcement, and build automation.
+**Follow-up Actions:** Create NFR-002 through NFR-011. Link related trace rows.
+
+### DEC-052 Use Vue 3 + Vite + PrimeVue for Frontend SPA
+
+**Date:** 2026-05-21
+**Type:** Architecture
+**Status:** Approved
+**Context:** The generic "Vue.js" technology placeholder needed to be resolved to a specific stack. The stack must support responsive design and cross-browser compatibility (Chrome, Firefox, Edge) per Capstone specification.
+**Selected Option:** Vue 3 (Composition API) + Vite + PrimeVue. Hybrid approach maintained: Thymeleaf for Landing Page, SPA for authenticated application.
+**Rejected Alternatives:** Bootstrap (CSS-only, not Vue-native); pure Vue without component library; Quasar Framework (too heavy for MVP).
+**Rationale:** PrimeVue provides Vue-native responsive components with ready themes, responsive/touch-friendly elements, and comprehensive documentation. For a developer new to Vue SPA, this reduces integration overhead and frontend complexity compared to pairing Bootstrap with a separate Vue compatibility layer.
+**Impact:** Technology stack updated in Strategic Context and Confirmed Elicitation Results. Cross-browser and responsive requirements are covered by PrimeVue's built-in capabilities.
+**Follow-up Actions:** Update Strategic Context technology stack table. Update Confirmed Elicitation Results frontend section. Add trace rows.
+
+### DEC-053 Add DB Layer NFRs
+
+**Date:** 2026-05-21
+**Type:** Data Model
+**Status:** Approved
+**Context:** Capstone specification requires: (1) Service-layer JDBC transaction management using manual `commit()/rollback()`; (2) SQL scripts (schema.sql, data.sql) for database initialization; (3) PreparedStatement for all SQL queries to prevent injection; (4) UTF-8 encoding for Cyrillic support; (5) a custom thread-safe Connection Pool with thorough documentation covering thread-safety mechanism, connection lifecycle, timeout handling, and edge cases.
+**Selected Option:** Add NFR-012 (Transaction management), NFR-013 (SQL scripts), NFR-014 (PreparedStatement), NFR-015 (UTF-8), NFR-016 (Custom Connection Pool). Clarify NFR-006 with DAO-to-entity mapping.
+**Rejected Alternatives:** Using Spring `@Transactional` (not allowed — must be manual JDBC); using HikariCP or Apache DBCP (not allowed — must be custom implementation); storing plain-text passwords (explicitly forbidden).
+**Rationale:** These are mandatory Capstone requirements. Manual Connection Pool with thorough documentation is a Capstone differentiator and must be defensible in code review.
+**Impact:** NFR-012–NFR-016 in Requirements Log. NFR-006 updated with DAO-to-entity mapping. Connection Pool requires thorough internal documentation.
+**Follow-up Actions:** Create NFR-012 through NFR-016. Add RISK-014. Add trace rows.
+
+### DEC-054 Add UI Security and Dual Validation NFRs
+
+**Date:** 2026-05-21
+**Type:** Security
+**Status:** Approved
+**Context:** Capstone specification requires: form resubmission prevention (F5, back button), XSS protection for user input fields, and dual validation (frontend + backend with Spring @Valid and Jakarta Validation annotations).
+**Selected Option:** Add NFR-017 (Form resubmission prevention via PRG pattern and button disable), NFR-018 (User input XSS sanitization via backend sanitizer and Vue template escaping), NFR-019 (Dual validation: PrimeVue frontend + Spring @Valid with @Email, @NotNull, @NotEmpty, @Size annotations on backend).
+**Rejected Alternatives:** Single-layer validation (frontend only — can be bypassed; backend only — poor UX).
+**Rationale:** Dual validation provides both immediate UX feedback and authoritative server-side checks. XSS sanitization covers the gap between user input and AI output (already covered by DEC-037/038).
+**Impact:** NFR-017–NFR-019 added to Requirements Log. PRG pattern affects all POST controllers. Validation annotations affect all entity DTOs.
+
+### DEC-055 Use Vuelidate + Native Vue 3 Validation for Frontend
+
+**Date:** 2026-05-21
+**Type:** UI/UX
+**Status:** Approved
+**Context:** Frontend validation approach needed to be defined. PrimeVue form components have basic validation, but complex rules (cross-field validation, conditional required fields) needed a dedicated validation library.
+**Selected Option:** Vuelidate library with native Vue 3 Composition API form validation. PrimeVue components handle basic display; Vuelidate handles validation rules and error states.
+**Rejected Alternatives:** jQuery Validation (adds jQuery dependency to a Vue project); PrimeVue built-in validation only (limited for complex rules); no dedicated validation library.
+**Rationale:** Vuelidate integrates naturally with Vue 3 Composition API (`reactive`, `computed`), avoids pulling jQuery or Bootstrap JS into the Vue SPA, and provides composable validation rules that are easy to test and maintain.
+**Impact:** Frontend validation tool defined. Vuelidate added to `package.json`. NFR-019 notes updated. Confirmed Elicitation Results frontend section updated.
+
+### DEC-056 Document 4 Design Patterns with Rationale
+
+**Date:** 2026-05-21
+**Type:** Architecture
+**Status:** Approved
+**Context:** Capstone requires minimum 4 design patterns with documented rationale. Spring MVC Interceptors, AOP, SOLID, and DRY are also required.
+**Selected Option:** Apply and document 4 GoF patterns:
+- **Singleton** — single instance of the custom Connection Pool, ensuring all DAO classes share one connection pool.
+- **Builder** — `ResumePromptBuilder` constructs complex AI prompts step by step (vacancy context, profile data, content budget, language settings), returning a complete prompt string.
+- **Factory Method** — `AiClientFactory` creates either a `MockAiClient` or `OpenRouterAiClient` depending on configuration/environment, isolating creation logic from the calling service.
+- **Strategy** — each `AdaptationLevel` (Minimal, Balanced, Maximum) is implemented as a separate strategy class that adjusts AI prompt instructions, allowing selection at runtime.
+**Rejected Alternatives:** Formal pattern documentation without code justification; fewer than 4 patterns.
+**Rationale:** Each pattern solves a real architectural problem: Singleton prevents redundant Connection Pool instances; Builder handles parameter-rich prompt creation; Factory Method isolates AI provider choice; Strategy separates adaptation algorithms cleanly.
+**Impact:** DEC-056 documents the pattern catalog. NFR-021 (Interceptors), NFR-022 (AOP), NFR-023 (SOLID/DRY/reusability) added. ResumePromptBuilder formalized as Builder pattern. Technology stack updated.
+
+### DEC-057 Establish Testing Standards
+
+**Date:** 2026-05-21
+**Type:** Process
+**Status:** Approved
+**Context:** Capstone requires: JUnit 5, 50%+ coverage in Service and DAO layers via JaCoCo, Mockito for mocking, structured tests, positive/negative/boundary scenarios, and TDD approach.
+**Selected Option:** Add NFR-024 (50%+ coverage target), NFR-025 (test scenario types), NFR-026 (structure and consistency), NFR-027 (TDD). Update NFR-009 with explicit `mvn test` requirement.
+**Rejected Alternatives:** No coverage target; retroactive testing; less than 50% coverage.
+**Rationale:** JUnit 5 + Mockito is the standard Capstone test stack. JaCoCo provides visual coverage reports. TDD ensures tests exist for all business logic.
+**Impact:** NFR-024–NFR-027 added. JaCoCo plugin required in pom.xml. Test structure and naming standards defined.
+
+### DEC-058 Add dev/prod Profiles, Swagger, Docker Compose
+
+**Date:** 2026-05-21
+**Type:** Architecture
+**Status:** Approved
+**Context:** Capstone project needs Swagger API documentation with restricted prod access, Docker Compose deployment, and separate dev/prod Spring profiles.
+**Selected Option:** Add NFR-031 (Swagger/OpenAPI via springdoc-openapi; ADMIN-only access on prod via Spring Security). Add NFR-032 (Docker Compose with backend Tomcat, Vue Nginx, PostgreSQL). Update NFR-028 with dev/prod profile requirement.
+**Rejected Alternatives:** No API documentation; single deployment without Docker; single application.yml for all environments.
+**Rationale:** Swagger provides essential API documentation for reviewers. Docker Compose guarantees reproducible deployment. Profile separation follows standard Spring practices.
+**Impact:** NFR-031, NFR-032 added. NFR-028 updated with profile requirement. Tech stack extended.
+
+### DEC-059 Approve NFR Baseline for Development Handoff
+
+**Date:** 2026-05-21
+**Type:** Process
+**Status:** Approved
+**Context:** All 32 NFRs have been defined with detailed acceptance criteria. Open questions OQ-007 (OpenRouter demo) and OQ-009 (admin logging) were resolved. FR-001, FR-007, FR-011, FR-012, FR-013 acceptance criteria were finalized. The requirements baseline is ready for development handoff.
+**Selected Option:** Bulk-approve all NFR-002 through NFR-032 as Approved/Ready. Set FR-001, FR-007, FR-011, FR-012, FR-013 to Approved with clarified acceptance criteria. Close OQ-007 and OQ-009.
+**Key decisions confirmed:**
+- Mock AI for dev; real OpenRouter for MVP demo (OQ-007).
+- Admin logging: only critical actions — role change, block/unblock, forbid/allow generation (OQ-009).
+- Languages: English and Russian only. Username: Latin letters, digits, hyphens only (FR-007).
+- Cover letter: plain text field, no formatting rules (FR-011/FR-012).
+- Resume delete: confirmation dialog text "Are you sure you want to delete this resume?" (FR-013).
+**Impact:** All requirements baseline approved and ready for development handoff. Decision Log, Requirements Log, Open Questions Log updated.
 
 ***
+
 *This decision log follows the Information Management Plan structure and conventions for the ResumAIner project. Decisions are recorded with full context for auditability and reuse.*

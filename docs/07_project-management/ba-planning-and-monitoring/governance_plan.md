@@ -1,7 +1,9 @@
 # Governance Plan for ResumAIner
 
 **Project ID:** `resumainer`
-**Date:** 2026-05-10
+**Product Name:** ResumAIner
+**Date Created:** 2026-05-10
+**Last Updated:** 2026-05-21
 **Chapter:** 3.3 Governance
 **Author:** Anton
 **Version:** 1.0
