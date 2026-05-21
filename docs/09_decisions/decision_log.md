@@ -6,9 +6,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-18
+**Last Updated:** 2026-05-20
 **Author:** Anton
-**Version:** 4.0
+**Version:** 5.0
 **Status:** Active
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance
 
@@ -78,6 +78,23 @@ Each decision includes context, selected option, rejected alternatives, rational
 | DEC-019 | 2026-05-16 | Data Model | Two-page default HTML resume template for all resumes | Ensures consistent visual quality and even content spreading | Standard two-page layout; separate technical approach doc needed for content distribution rules | Approved |
 | DEC-032 | 2026-05-18 | UI/UX | Resume delete from User Home with confirmation | Users can delete saved resumes; soft-delete deactivates public link with HTTP 410 | New FR-013; `public_url_link` field in `saved_resume`; HTTP 410 Gone page | Approved |
 | DEC-033 | 2026-05-18 | Data Model | Add professional_title to resume_generation_response | AI generates vacancy-specific professional title distinct from user's contact_detail title | New field `professional_title varchar(250)` in `resume_generation_response` | Approved |
+| DEC-034 | 2026-05-20 | Architecture | Backend controls template rendering | Java backend generates final HTML/PDF from structured data and templates | Vue does not render final PDF templates | Approved |
+| DEC-035 | 2026-05-20 | Architecture | Resume Review: Vue shows editable review form only | During review, Vue shows structured editable fields, not PDF preview | Final PDF preview available only after save/finalize | Approved |
+| DEC-036 | 2026-05-20 | Architecture | AI returns structured JSON (MVP) | AI returns structured JSON matching generation response contract; backend parses and stores in DB | Enables direct entity mapping from AI output; simplifies prompt-to-DB pipeline | Approved |
+| DEC-037 | 2026-05-20 | Data Model | Text fields may contain limited HTML in generated content | AI may use approved HTML tags inside text fields for formatting | Backend must sanitize AI-provided HTML using allowlist | Approved |
+| DEC-038 | 2026-05-20 | Security | Backend sanitizes AI-generated HTML | Backend sanitizes AI-provided HTML using allowlist before storing/rendering | Prevents XSS and template breakage | Approved |
+| DEC-039 | 2026-05-20 | Requirement | Fixed resume section order | Resume sections follow fixed order; AI adjusts content not order | Section order defined in Resume Template Details document | Approved |
+| DEC-040 | 2026-05-20 | Scope | One-page and two-page templates both in MVP | Both template modes included in MVP scope | Backend decides mode programmatically via Page Profile scoring | Approved |
+| DEC-041 | 2026-05-20 | Scope | Page Profile scoring is part of MVP | Density scoring and content budget selection are MVP features | Backend calculates Page Profile before AI generation call | Approved |
+| DEC-042 | 2026-05-20 | Architecture | PDF generated server-side | Final PDF generation on Java backend for stability and consistency | HTML-to-PDF conversion on server | Approved |
+| DEC-043 | 2026-05-20 | Requirement | PDF page count is technically validated | One-page template → exactly 1 PDF page; two-page → exactly 2 pages | Post-generation validation via PDF library | Approved |
+| DEC-044 | 2026-05-20 | Requirement | Date of Birth included in Personal Information | If user provides DOB, it is included in resume Personal Information | Code-determined field display | Approved |
+| DEC-045 | 2026-05-20 | Requirement | Professional Aspirations always expected in AI output | Even without user input, AI must generate Aspirations | Rendered as standard resume section | Approved |
+| DEC-046 | 2026-05-20 | Design | AI may expand Aspirations as space filler | AI expands Aspirations to fill available space on page 2 | User reviews and edits before final save | Approved |
+| DEC-047 | 2026-05-20 | UI/UX | Page navigation notes kept on two-page template | "See the next page" / "See the previous page" notes maintained | Standard UX pattern for multi-page resumes | Approved |
+| DEC-048 | 2026-05-20 | Requirement | Page 2 Additional WE compact at high density | Additional WE uses one short sentence per job at max density | No bullet points when 7+ additional jobs | Approved |
+| DEC-049 | 2026-05-20 | Architecture | Content budgets in external YAML configuration | Sentence counts, bullet limits stored in external config file | Easier tuning without code changes | Approved |
+| DEC-050 | 2026-05-20 | Scope | Profile picture moved from MVP to POST-MVP | Photo field not supported by current templates; removes unnecessary MVP complexity | FR-007 updated; photo_file_path deferred | Approved |
 
 ## 4. Details
 
@@ -334,7 +351,7 @@ Each decision includes context, selected option, rejected alternatives, rational
 - **Implementation:** Requires HTML template with section placeholders and content distribution logic.
 **Follow-up Actions:** Create the Approach for Even Spreading A4 document with page 1 and page 2 section mapping and distribution rules.
 **Follow-up Items:**
-- Page 1: max 7 most relevant courses.
+- Page 1: max 10 most relevant courses (adjusted from 7 to 10 per Resume Template Details v0.1).
 - Page 2: if 5+ work experience records, max 5 courses; if fewer than 5 work experience records, max 8 courses.
 
 ### DEC-020 Generation Response Status Flow (Draft → Finalized)
@@ -547,6 +564,193 @@ Each decision includes context, selected option, rejected alternatives, rational
 - **Requirements:** FR-001 affected data updated.
 
 **Follow-up Actions:** Update FR-001 affected data. Update ERDs and Data Dictionary. Update TR-003 trace notes.
+
+### DEC-034 Backend Controls Template Rendering
+
+**Date:** 2026-05-20
+**Type:** Architecture
+**Status:** Approved
+**Context:** Resume HTML/PDF generation must be server-side to ensure consistent output and ATS-friendly formatting.
+**Selected Option:** Java backend generates final HTML from structured response data and HTML templates, then converts to PDF. Vue does not render final PDF templates.
+**Rejected Alternatives:** Client-side PDF generation in Vue.
+**Rationale:** Server-side generation ensures consistent layout, selectable text, and ATS-friendly output regardless of browser.
+**Impact:** Template rendering responsibility assigned to backend. Vue handles only structured editable forms.
+
+### DEC-035 Resume Review: Vue Shows Editable Review Form Only
+
+**Date:** 2026-05-20
+**Type:** Architecture
+**Status:** Approved
+**Context:** During Resume Review the user needs to edit generated content before final save.
+**Selected Option:** Vue shows structured editable fields (text areas, inputs). Final PDF preview is available only after save/finalize.
+**Rejected Alternatives:** Live PDF preview during editing; client-side HTML rendering.
+**Rationale:** Reduces frontend complexity and keeps PDF generation centralized on backend.
+**Impact:** Resume Review in Vue displays editable form, not PDF preview.
+
+### DEC-036 AI Returns Structured JSON
+
+**Date:** 2026-05-20
+**Type:** Architecture
+**Status:** Approved
+**Context:** AI output needs to be parseable into database entities for structured storage and template rendering.
+**Selected Option:** AI returns structured JSON matching the generation response contract. Backend parses the JSON and populates `resume_generation_response` and `generation_response_*` tables directly.
+**Rejected Alternatives:** Free-form AI text parsed by backend; no structured output contract.
+**Rationale:** Structured JSON enables direct entity mapping from AI output, simplifies prompt-to-DB pipeline, and eliminates parsing errors from free-form text.
+**Impact:** AI prompt includes JSON schema requirements. Backend validates JSON structure before storage. JSON contract is part of the AI prompt instructions.
+
+### DEC-037 Text Fields May Contain Limited HTML in Generated Content
+
+**Date:** 2026-05-20
+**Type:** Data Model
+**Status:** Approved
+**Context:** AI-generated resume content needs basic formatting (bold, bullets, emphasis) for professional appearance.
+**Selected Option:** AI may use approved HTML tags inside JSON text fields. Backend sanitizes using allowlist.
+**Rejected Alternatives:** Plain text only; full HTML with no restrictions.
+**Rationale:** Limited HTML enables professional formatting without security risk.
+**Impact:** Allowlist defined: `<strong>`, `<b>`, `<i>`, `<em>`, `<ul>`, `<ol>`, `<li>`, `<p>`, `<br>`.
+
+### DEC-038 Backend Sanitizes AI-Generated HTML
+
+**Date:** 2026-05-20
+**Type:** Security
+**Status:** Approved
+**Context:** AI-generated HTML may contain unsafe tags, closing tag errors, or unexpected markup.
+**Selected Option:** Backend sanitizes all AI-provided HTML using an allowlist before storing or rendering.
+**Rejected Alternatives:** Storing raw AI output; client-side sanitization.
+**Rationale:** Prevents XSS and template breakage. Centralized control.
+**Impact:** Sanitization step added to generation pipeline.
+
+### DEC-039 Fixed Resume Section Order
+
+**Date:** 2026-05-20
+**Type:** Requirement
+**Status:** Approved
+**Context:** Resume sections need consistent ordering for professional appearance and ATS parsing.
+**Selected Option:** Resume sections follow fixed order defined in Resume Template Details. AI adjusts content, not section order.
+**Rejected Alternatives:** AI determines section order dynamically.
+**Rationale:** Consistent ordering improves professional appearance and simplifies template rendering.
+**Impact:** Section order enforced by template, not AI.
+
+### DEC-040 One-Page and Two-Page Templates Both in MVP
+
+**Date:** 2026-05-20
+**Type:** Scope
+**Status:** Approved
+**Context:** Different user profiles have different content volumes requiring different page counts.
+**Selected Option:** Both template modes included in MVP. Backend decides mode programmatically via Page Profile scoring.
+**Rejected Alternatives:** Only one template mode; user chooses mode manually.
+**Rationale:** Automatic mode selection provides optimal presentation without user confusion.
+**Impact:** Both HTML templates are MVP. Backend selection logic is MVP.
+
+### DEC-041 Page Profile Scoring Is Part of MVP
+
+**Date:** 2026-05-20
+**Type:** Scope
+**Status:** Approved
+**Context:** Content budget and template mode selection depend on Page Profile scoring.
+**Selected Option:** Density scoring and content budget selection are MVP features.
+**Rejected Alternatives:** Manual content budget; no scoring system.
+**Rationale:** Enables automatic content distribution without user intervention.
+**Impact:** Page Profile calculation service is MVP.
+
+### DEC-042 PDF Generated Server-Side
+
+**Date:** 2026-05-20
+**Type:** Architecture
+**Status:** Approved
+**Context:** Final PDF must be generated reliably with consistent formatting.
+**Selected Option:** HTML-to-PDF conversion on Java backend.
+**Rejected Alternatives:** Client-side PDF generation; external PDF service.
+**Rationale:** Centralized, stable, and independent of browser capabilities.
+**Impact:** PDF generation library required on backend.
+
+### DEC-043 PDF Page Count Is Technically Validated
+
+**Date:** 2026-05-20
+**Type:** Requirement
+**Status:** Approved
+**Context:** Generated PDF must match expected page count (1 or 2).
+**Selected Option:** One-page template must produce exactly 1 PDF page; two-page template must produce exactly 2 pages. Validated via PDF library.
+**Rejected Alternatives:** No validation; visual inspection only.
+**Rationale:** Automated validation catches content overflow bugs before user sees the PDF.
+**Impact:** PDF post-generation validation step added.
+
+### DEC-044 Date of Birth Included in Personal Information
+
+**Date:** 2026-05-20
+**Type:** Requirement
+**Status:** Approved
+**Context:** If user provides Date of Birth, it should appear in resume Personal Information.
+**Selected Option:** DOB included if provided by user. Code-determined display (no AI involvement).
+**Rejected Alternatives:** Always include DOB; never include DOB.
+**Rationale:** User-provided data is shown; follows same pattern as other Personal Information fields.
+**Impact:** DOB added to Personal Information section fields list.
+
+### DEC-045 Professional Aspirations Always Expected in AI Output
+
+**Date:** 2026-05-20
+**Type:** Requirement
+**Status:** Approved
+**Context:** Aspirations section provides career context for recruiters. Even without user input, it should appear.
+**Selected Option:** AI must generate Professional Aspirations even if user input is empty.
+**Rejected Alternatives:** Omit Aspirations if user left field empty.
+**Rationale:** Aspirations add professional context and fill page 2 space.
+**Impact:** AI prompt always requests Aspirations generation.
+
+### DEC-046 AI May Expand Aspirations as Space Filler
+
+**Date:** 2026-05-20
+**Type:** Design
+**Status:** Approved
+**Context:** Page 2 may have empty space if projects and additional WE are minimal.
+**Selected Option:** AI may expand Aspirations to fill available space. User reviews and edits before final save.
+**Rejected Alternatives:** Fixed-length Aspirations regardless of page density.
+**Rationale:** Aspirations act as a content buffer for visual balance.
+**Impact:** Aspirations length varies by Page 2 Density per content budget rules.
+
+### DEC-047 Page Navigation Notes on Two-Page Template
+
+**Date:** 2026-05-20
+**Type:** UI/UX
+**Status:** Approved
+**Context:** Multi-page resumes need navigation cues for readers.
+**Selected Option:** "See the next page" at bottom of page 1; "See the previous page" at top of page 2.
+**Rejected Alternatives:** No navigation notes; watermark-style notes.
+**Rationale:** Standard professional resume pattern; low implementation cost.
+**Impact:** Notes included in HTML template markup.
+
+### DEC-048 Page 2 Additional WE Compact at High Density
+
+**Date:** 2026-05-20
+**Type:** Requirement
+**Status:** Approved
+**Context:** When page 2 has many additional work experiences, bullet points make it overcrowded.
+**Selected Option:** At max density (7+ additional jobs), Additional WE uses one short sentence per job without bullet points.
+**Rejected Alternatives:** Always use same format regardless of count.
+**Rationale:** Maintains visual balance and readability.
+**Impact:** Content budget rule: 6+ jobs → title, company, dates, location only.
+
+### DEC-049 Content Budgets in External YAML Configuration
+
+**Date:** 2026-05-20
+**Type:** Architecture
+**Status:** Approved
+**Context:** Content budgets (sentence counts, bullet limits, skill limits) need to be adjustable without code changes.
+**Selected Option:** Sentence counts, bullet limits, skill limits stored in external YAML config file.
+**Rejected Alternatives:** Hardcoded values in Java code; database-stored configuration.
+**Rationale:** YAML is simple to edit, version-controllable, and independent of database schema.
+**Impact:** External config file created; service reads budget values at startup.
+
+### DEC-050 Profile Picture Moved from MVP to POST-MVP
+
+**Date:** 2026-05-20
+**Type:** Scope
+**Status:** Approved
+**Context:** Profile picture is not supported by current HTML templates and adds unnecessary MVP complexity.
+**Selected Option:** Move profile picture field from MVP to POST-MVP scope. FR-007 updated; photo_file_path deferred.
+**Rejected Alternatives:** Keep optional photo in MVP; remove photo entirely.
+**Rationale:** Reduces MVP complexity without losing the feature permanently. Templates can support photos post-MVP.
+**Impact:** FR-007 acceptance criteria updated. photo_file_path removed from MVP scope.
 *This decision log follows the Information Management Plan structure and conventions for the ResumAIner project. Decisions are recorded with full context for auditability and reuse.*
 
 ***

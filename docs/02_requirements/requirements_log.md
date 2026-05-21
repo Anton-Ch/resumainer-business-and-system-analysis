@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-13  
-**Last Updated:** 2026-05-18  
+**Last Updated:** 2026-05-20  
 **Author:** Anton  
-**Version:** 5.0  
+**Version:** 6.0  
 **Status:** Active  
 **Related BABOK Area:** 5.1 Trace Requirements / 5.3 Prioritize Requirements / 6.2 Specify and Model Requirements  
 
@@ -499,7 +499,6 @@ Additional info provides useful AI context and keeps user settings in one place 
 - User can select Ready for relocation (dropdown: Yes / No / Not specified).
 - User can select Ready for business trips and rotational schedule (dropdown: Yes / No / Not specified).
 - User can select Preferred work format (checkbox group: full-time, part-time, offline, remote, hybrid, on-site project based).
-- Profile picture is optional.
 - Username must be unique and URL-friendly.
 - Date of birth must be a valid date.
 
@@ -510,7 +509,7 @@ My Profile / Additional Info.
 AdditionalProfileInfo, User.
 
 **Related Artifacts:**  
-Wireframe Field Requirements, Decision Log, Traceability Matrix.
+Wireframe Field Requirements, Decision Log (DEC-044, DEC-050), Traceability Matrix.
 
 **Readiness Check:**
 - Business value clear: Yes

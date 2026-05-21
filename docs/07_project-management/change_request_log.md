@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-18 
+**Last Updated:** 2026-05-20 
 **Author:** Anton  
-**Version:** 5.0  
+**Version:** 6.0  
 **Status:** Active  
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance  
 
@@ -95,6 +95,7 @@ It helps keep the project baseline controlled and explains why meaningful change
 | CR-016 | 2026-05-16 | Expand Additional Info fields in My Profile                | Requirement   | BA          | My Profile, FR-007, Wireframe Field Requirements | Low                  | Approved | Draft       |
 | CR-017 | 2026-05-18 | Add resume delete from User Home and public_url_link field | Requirement   | BA          | Requirements Log, ERD, Data Dictionary, Traceability Matrix, Risk Register, Decision Log | Medium | Approved | Implemented |
 | CR-018 | 2026-05-18 | Add professional_title to resume_generation_response       | Requirement   | BA          | Requirements Log, Decision Log, ERD, Data Dictionary, Traceability Matrix | Low | Approved | Draft       |
+| CR-019 | 2026-05-20 | Move profile picture from MVP to POST-MVP                  | Scope         | BA          | Requirements Log (FR-007), Wireframe Field Requirements, Decision Log | Low | Approved | Draft       |
 
 ## 4. Details
 
@@ -340,6 +341,26 @@ It helps keep the project baseline controlled and explains why meaningful change
 **Resolution Date:** N/A
 
 **Follow-up Actions:** Update FR-001 affected data. Add DEC-033. Update ERDs and Data Dictionary. Update TR-003 trace notes.
+
+### CR-019 Move Profile Picture from MVP to POST-MVP
+
+**Date:** 2026-05-20
+**Type:** Scope
+**Requester:** Business Analyst
+**Status:** Draft
+**Description:** Move profile picture (photo_file_path) from MVP scope to POST-MVP. Profile picture is not supported by current HTML templates and is not required for resume generation.
+
+**Reason:** The profile picture field (optional in FR-007) is not used by current one-page or two-page HTML templates. Keeping it in MVP creates unnecessary UI and data handling complexity without delivering resume output value. Deferred to POST-MVP when templates may support photos.
+
+**Affected Artifacts:** `requirements_log.md` (FR-007), `wireframe_field_requirements.md`, `decision_log.md` (DEC-050)
+
+**Impact Assessment:** Low. Removes optional field from MVP scope.
+
+**Decision:** Approved
+
+**Resolution Date:** N/A
+
+**Follow-up Actions:** Update FR-007 acceptance criteria. Remove photo_file_path from MVP scope.
 
 ### CR-999 [Change Title Template]
 

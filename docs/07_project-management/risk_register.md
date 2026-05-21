@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-18
+**Last Updated:** 2026-05-20
 **Author:** Anton
-**Version:** 4.0
+**Version:** 5.0
 **Status:** Active
 **Related BABOK Area:** 3.1 Plan Business Analysis Approach / 3.3 Plan Business Analysis Governance
 
@@ -102,6 +102,7 @@ The purpose is to make risks visible early and define practical mitigation strat
 | RISK-009 | 2026-05-13 | Resume Review page may become complex due to editing, variants, and languages | UX / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
 | RISK-010 | 2026-05-13 | Wireframe field inconsistencies may create requirement ambiguity | Quality | Medium | Medium | Medium | Mitigate | BA | Mitigated |
 | RISK-011 | 2026-05-18 | Accidental resume deletion may cause user frustration and data loss | UX / Data | Low | High | Medium | Mitigate | BA | Open |
+| RISK-012 | 2026-05-20 | AI-generated HTML may break template layout or introduce XSS | Security / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
 | RISK-999 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
 
 ## 4. Details
@@ -295,6 +296,23 @@ The purpose is to make risks visible early and define practical mitigation strat
 **Mitigation Plan:** Implement confirmation dialog with two-step process: first click shows confirmation prompt, second click confirms. Consider undo option within a short time window.
 **Trigger / Early Warning:** User reports accidentally deleting a resume or requests data restoration.
 **Contingency Plan:** Provide admin ability to restore soft-deleted resumes by setting `is_deleted` back to `false`.
+
+### RISK-012 AI-Generated HTML May Break Template Layout or Introduce XSS
+
+**Date Identified:** 2026-05-20
+**Category:** Security / Technical
+**Probability:** Medium
+**Impact:** High
+**Severity:** High
+**Response Strategy:** Mitigate
+**Owner:** BA / Developer
+**Status:** Open
+**Risk Description:** AI may generate HTML with unsafe tags, malformed markup, or unintended content that breaks the resume layout or introduces XSS vulnerabilities.
+**Cause:** AI text fields may contain limited HTML for formatting (DEC-037). Without strict sanitization, unsafe tags or broken markup could be rendered in the final HTML/PDF.
+**Impact if Occurs:** Resume PDF may have broken layout, missing content, or — in worst case — XSS vulnerability if HTML is rendered in a web context.
+**Mitigation Plan:** Backend sanitizes all AI-provided HTML using an allowlist (DEC-038). Allowlist: `<strong>`, `<b>`, `<i>`, `<em>`, `<ul>`, `<ol>`, `<li>`, `<p>`, `<br>`. All other tags stripped.
+**Trigger / Early Warning:** AI output contains unexpected HTML tags or malformed markup during testing.
+**Contingency Plan:** If sanitization fails, fall back to plain text rendering and strip all HTML.
 
 ### RISK-999 [Risk Short Title Template]
 

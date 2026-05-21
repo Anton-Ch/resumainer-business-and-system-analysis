@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-18  
+**Last Updated:** 2026-05-20  
 **Author:** Anton  
-**Version:** 5.0  
+**Version:** 6.0  
 **Status:** Active  
 **Related BABOK Area:** 3.4 Plan Business Analysis Information Management  
 
@@ -123,7 +123,7 @@ The goal is to ensure that project scope remains controlled and that each import
 **Service / Component:** ResumeGenerationService, AiClient, AiUsageLogService  
 **Test Case:** TC-003  
 **Status:** Draft  
-**Traceability Notes:** This trace connects the core resume generation feature with vacancy input, model selection, draft generation, and review flow. The AI generates a `professional_title` specific to the target vacancy, distinct from the user's `professional_title` in `contact_detail`.  
+**Traceability Notes:** This trace connects the core resume generation feature with vacancy input, model selection, draft generation, and review flow. The AI returns structured JSON (DEC-036) matching the generation response contract — backend parses JSON and populates entities directly. The AI generates a `professional_title` specific to the target vacancy, distinct from the user's `professional_title` in `contact_detail`. Text fields may contain limited HTML (`<strong>`, `<b>`, `<i>`, etc.) for formatting — backend sanitizes via allowlist (DEC-037, DEC-038). Resume sections follow fixed order defined in Resume Template Details (DEC-039).  
 **Gaps / Follow-up:** Define final acceptance criteria for mock AI generation, real OpenRouter integration, timeout handling, and empty response handling.
 
 ### TR-004 Contact Details
@@ -207,7 +207,7 @@ The goal is to ensure that project scope remains controlled and that each import
 **Service / Component:** ProfileService, AdditionalInfoDao  
 **Test Case:** TC-009  
 **Status:** Draft  
-**Traceability Notes:** Additional Info stores simplified profile context and user preferences for MVP, including skills, languages, aspirations, achievements, resume language settings, general AI context, optional profile picture, and username.  
+**Traceability Notes:** Additional Info stores simplified profile context and user preferences for MVP, including skills, languages, aspirations, achievements, resume language settings, general AI context, and username. Profile picture moved to POST-MVP per DEC-050/CR-019.  
 **Gaps / Follow-up:** Confirm language dropdown values, username uniqueness rules, and final field length limits.
 
 ### TR-010 User Home Resume Listing

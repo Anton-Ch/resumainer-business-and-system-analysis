@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-13  
+**Last Updated:** 2026-05-20  
 **Author:** Anton  
-**Version:** 2.0  
+**Version:** 3.0  
 **Status:** Active  
 **Related BABOK Area:** 3.2 Plan Stakeholder Engagement / 3.3 Plan Business Analysis Governance  
  
@@ -254,18 +254,19 @@ The goal is to prevent hidden assumptions and make uncertainty visible until a d
 **Date:** 2026-05-16
 **Category:** Architecture
 **Owner:** BA / Developer
-**Status:** Open
+**Status:** Closed
 **Question:** What information does the LLM return as structured JSON (generated fields) vs what is taken directly from user profile data and inserted into the resume without AI processing?
 **Why It Matters:** This affects prompt design, generation request format, resume review screen behavior, and how much of the profile data is editable in the generated output vs hardcoded.
 **Options Considered:**
 - Option A: LLM returns only generated fields (summary, adaptation of experience, cover letter); profile data (name, contact, education, courses) is inserted directly from user profile.
 - Option B: LLM returns all resume content including profile data; user reviews everything.
 - Option C: Hybrid — LLM returns generated content and a transformed version of profile sections with adaptation applied.
-**Answer / Decision:** N/A
+**Answer / Decision:** AI returns structured JSON matching the generation response contract. Backend parses JSON and populates `resume_generation_response` and `generation_response_*` tables directly (DEC-036). Profile data (name, contact, education, courses) is taken from user profile; AI generates adapted content (summary, experience descriptions, skills, aspirations) in JSON format.
 **Related Artifacts:**
-- `decision_log.md` (DEC-016, DEC-017)
+- `decision_log.md` (DEC-016, DEC-017, DEC-036)
 - `requirements_log.md` (FR-001, FR-011)
-**Follow-up Actions:** Resolve before AI prompt design and generation implementation.
+**Follow-up Actions:** Monitor complexity; revisit for structured JSON contract after MVP baseline.
+**Status:** Closed
 
 ### OQ-999 [Question Short Title Template]
 
