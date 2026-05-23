@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-21  
+**Last Updated:** 2026-05-23  
 **Author:** Anton  
-**Version:** 15.0  
+**Version:** 16.0  
 **Status:** Active  
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance  
 
@@ -107,6 +107,7 @@ It helps keep the project baseline controlled and explains why meaningful change
 | CR-028 | 2026-05-21 | Add external configuration and Javadoc style reference | Requirement | BA | Requirements Log, Decision Log | Low | Approved | Draft |
 | CR-029 | 2026-05-21 | Add pagination NFR and i18n resource file requirements | Requirement | BA | Requirements Log, Decision Log, Confirmed Elicitation Results | Medium | Approved | Draft |
 | CR-030 | 2026-05-21 | Add dev/prod profiles, Swagger, Docker Compose NFRs | Requirement | BA | Requirements Log, Decision Log, Strategic Context | Medium | Approved | Draft |
+| CR-031 | 2026-05-23 | Replace YAML budget configuration with DB-backed config | Architecture | Project Owner | Resume Template Details, DBML ERD, Data Dictionary, Mermaid ERD, PlantUML ERD, Requirements Log, Decision Log, Traceability Matrix, Risk Register | Medium | Approved | Implemented |
 
 ## 4. Details
 
@@ -526,3 +527,17 @@ It helps keep the project baseline controlled and explains why meaningful change
 **Decision:** Approved
 **Resolution Date:** N/A
 **Follow-up Actions:** Update NFR-028 with profile requirement. Create NFR-031, NFR-032. Add DEC-058. Update tech stack.
+
+### CR-031 Replace YAML Budget Configuration with DB-Backed Config
+
+**Date:** 2026-05-23
+**Type:** Architecture
+**Requester:** Project Owner
+**Status:** Implemented
+**Description:** Replace the previously approved YAML-based resume budget configuration with DB-backed configuration stored in PostgreSQL. This affects the Resume Template Details document (Section 11), data model (4 new tables + fields in resume_generation_request), and related artifacts.
+**Reason:** YAML is developer-oriented, not admin/data-oriented. The project already uses PostgreSQL and has admin-side concepts. DB-backed configuration is easier to inspect, test, and demonstrate in a portfolio.
+**Affected Artifacts:** `resume_template_details_and_logic.md`, `dbml_erd.md`, `mermaid_erd.md`, `plantuml_erd.puml`, `data_dictionary.md`, `requirements_log.md`, `decision_log.md`, `change_request_log.md`, `traceability_matrix.md`, `risk_register.md`
+**Impact Assessment:** Medium. Replaces existing YAML approach with DB-backed approach. New tables and fields required. Existing YAML-specific requirements are superseded.
+**Decision:** Approved
+**Resolution Date:** 2026-05-23
+**Follow-up Actions:** Create DEC-060, DEC-061, DEC-062. Add NFR-033, NFR-034. Update all ERDs and Data Dictionary. Update section 11 in Resume Template Details. Add RISK-015.

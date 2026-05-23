@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-21
+**Last Updated:** 2026-05-23
 **Author:** Anton
-**Version:** 7.0
+**Version:** 8.0
 **Status:** Active
 **Related BABOK Area:** 3.1 Plan Business Analysis Approach / 3.3 Plan Business Analysis Governance
 
@@ -105,6 +105,7 @@ The purpose is to make risks visible early and define practical mitigation strat
 | RISK-012 | 2026-05-20 | AI-generated HTML may break template layout or introduce XSS | Security / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
 | RISK-013 | 2026-05-21 | Inconsistent error handling may expose stack traces or miss critical failures | Quality / Technical | Medium | High | High | Mitigate | BA / Developer | Open |
 | RISK-014 | 2026-05-21 | Custom Connection Pool may have thread-safety bugs or performance issues | Technical | Medium | High | High | Mitigate | BA / Developer | Open |
+| RISK-015 | 2026-05-23 | Misconfigured budget settings may cause bad PDF layout or generation errors | Data | Low | High | Medium | Monitor | BA / Developer | Monitoring |
 | RISK-999 | YYYY-MM-DD | [Risk description] | [Category] | [Low/Medium/High] | [Low/Medium/High/Critical] | [Low/Medium/High/Critical] | [Avoid/Mitigate/Transfer/Accept/Monitor] | [Owner] | Open |
 
 ## 4. Details
@@ -349,6 +350,23 @@ The purpose is to make risks visible early and define practical mitigation strat
 **Mitigation Plan:** Thorough internal documentation of the pool's thread-safety mechanism, connection lifecycle, timeout handling, and edge cases. Unit tests for concurrent connection acquisition/release. Stress testing with multiple concurrent requests.
 **Trigger / Early Warning:** Application hangs during concurrent database operations. Database connection limit is reached unexpectedly.
 **Contingency Plan:** Add connection leak detection (e.g., tracking unreleased connections with stack traces). Increase pool timeout and maximum size temporarily while investigating root cause.
+
+### RISK-015 Misconfigured Budget Settings May Cause Bad PDF Layout or Generation Errors
+
+**Date Identified:** 2026-05-23
+**Category:** Data
+**Probability:** Low
+**Impact:** High
+**Severity:** Medium
+**Response Strategy:** Monitor
+**Owner:** BA / Developer
+**Status:** Monitoring
+**Risk Description:** Incorrect or inconsistent budget configuration values in PostgreSQL may cause AI to generate content that does not fit the selected template, resulting in PDF overflow, overcrowded layout, or poor visual balance.
+**Cause:** Budget configuration values (sentence counts, bullet limits, job distribution rules) are stored in PostgreSQL and manually editable. Data entry errors, conflicting rules, or missing rule rows may produce unexpected content budgets.
+**Impact if Occurs:** Generated resume PDF may have overflow, missing sections, or visually unbalanced layout requiring regeneration.
+**Mitigation Plan:** Active config fallback logic (NFR-034) prevents generation failure when config is misconfigured. Partial unique index prevents multiple active configs. Config version is stored with generation request for traceability. Backend validation should check basic budget consistency before generation.
+**Trigger / Early Warning:** Generation produces content that overflows the template or produces unexpected section lengths.
+**Contingency Plan:** Fix budget values in PostgreSQL and regenerate. Maintain a known-good default seed config.
 
 ### RISK-999 [Risk Short Title Template]
 

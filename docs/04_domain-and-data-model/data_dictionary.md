@@ -3,12 +3,12 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-17
-**Last Updated:** 2026-05-17
+**Last Updated:** 2026-05-23
 **Author:** Anton
-**Version:** 1.0
+**Version:** 2.0
 **Status:** Approved
 **Source:** dbml_erd.md
-**Total Entities:** 26
+**Total Entities:** 30
 
 ---
 
@@ -383,6 +383,8 @@
 | `language_id`          | Integer     | Yes      | FK → language.id, NOT NULL         | Target resume language                                    |
 | `adaptation_level_id`  | Integer     | Yes      | FK → adaptation_level.id, NOT NULL | Adaptation intensity                                      |
 | `language_mode`        | Varchar(20) | Yes      | NOT NULL, DEFAULT 'default'        | Language mode: 'default', 'additional', 'both'            |
+| `budget_config_id`        | BigInt | No       | FK → resume_budget_configs.id                  | Budget config used for this generation (DB-backed) |
+| `budget_config_version_used` | Int    | No       |                                              | Version of config at generation time |
 | `status`               | Varchar(30) | Yes      | NOT NULL, DEFAULT 'pending'        | Processing status: pending, processing, completed, failed |
 | `error_message`        | Text        | No       |                                    | Error details if generation failed                        |
 | `created_at`           | Timestamp   | Yes      | NOT NULL, DEFAULT now()            | Request creation timestamp                                |
@@ -586,8 +588,104 @@
 
 ---
 
+## Entity: resume_budget_configs
+
+**Description:** DB-backed budget configuration for resume template budgets. Stores config identity and version metadata. Replaces YAML-based external configuration.
+
+| Attribute | Data type | Required | Constraints | Description |
+|---------|-----------|--------------|-------------|----------|
+| `id` | BigInt | Yes | PK, AUTO_INCREMENT | Unique identifier |
+| `name` | Varchar(100) | Yes | NOT NULL | Config display name |
+| `version_no` | Int | Yes | NOT NULL, DEFAULT 1 | Incremented on settings change |
+| `is_active` | Boolean | Yes | NOT NULL, DEFAULT false | Active flag; only one active config allowed |
+| `description` | Text | No |  | Config description |
+| `created_at` | Timestamp | Yes | NOT NULL | Record creation timestamp |
+| `updated_at` | Timestamp | Yes | NOT NULL | Last update timestamp |
+
+**Business rules:**
+- Only one active config should exist — PostgreSQL partial unique index enforces this
+- `version_no` is incremented when config settings are changed
+- If multiple configs have `is_active = true`, backend selects newest by `updated_at DESC, id DESC`
+- If no active config exists, backend falls back to newest config by `updated_at DESC, id DESC`
+- If no config exists at all, backend must throw a clear configuration error
+
+
+## Entity: resume_template_selection_rules
+
+**Description:** General scalar configuration values for resume budget (key-value pattern). Uses typed columns (`int_value`, `boolean_value`, `text_value`) controlled by `value_type`.
+
+| Attribute | Data type | Required | Constraints | Description |
+|---------|-----------|--------------|-------------|----------|
+| `id` | BigInt | Yes | PK, AUTO_INCREMENT | Unique identifier |
+| `config_id` | BigInt | Yes | FK → resume_budget_configs.id, NOT NULL | Parent config |
+| `rule_key` | Varchar(100) | Yes | NOT NULL | Rule identifier |
+| `value_type` | Varchar(20) | Yes | NOT NULL | Value type: int, boolean, text |
+| `int_value` | Int | No |  | Integer value (used when value_type = 'int') |
+| `boolean_value` | Boolean | No |  | Boolean value (used when value_type = 'boolean') |
+| `text_value` | Varchar(255) | No |  | Text value (used when value_type = 'text') |
+| `description` | Text | No |  | Rule description |
+| `created_at` | Timestamp | Yes | NOT NULL | Record creation timestamp |
+| `updated_at` | Timestamp | Yes | NOT NULL | Last update timestamp |
+
+**Business rules:**
+- Unique index on (`config_id`, `rule_key`)
+- Only one value column should be non-null per row, based on `value_type`
+- PostgreSQL check constraint recommended to enforce value type consistency
+
+
+## Entity: resume_work_experience_distribution_rules
+
+**Description:** Work experience distribution rules per edge case. Each rule maps a job/project/course profile to a template mode and page distribution.
+
+| Attribute | Data type | Required | Constraints | Description |
+|---------|-----------|--------------|-------------|----------|
+| `id` | BigInt | Yes | PK, AUTO_INCREMENT | Unique identifier |
+| `config_id` | BigInt | Yes | FK → resume_budget_configs.id, NOT NULL | Parent config |
+| `case_key` | Varchar(20) | Yes | NOT NULL | Edge case key: EC-001, EC-003, EC-010, etc. |
+| `min_total_jobs` | Int | Yes | NOT NULL | Minimum total jobs for this rule |
+| `max_total_jobs` | Int | Yes | NOT NULL | Maximum total jobs for this rule |
+| `min_projects` | Int | Yes | NOT NULL, DEFAULT 0 | Minimum projects for this rule |
+| `max_projects` | Int | No |  | Maximum projects; NULL = unlimited |
+| `require_no_courses` | Boolean | Yes | NOT NULL, DEFAULT false | Whether no-courses condition is required |
+| `template_mode` | Varchar(20) | Yes | NOT NULL | one_page or two_page |
+| `page1_jobs` | Int | Yes | NOT NULL | Number of jobs on Page 1 |
+| `page2_jobs` | Int | Yes | NOT NULL, DEFAULT 0 | Number of jobs on Page 2 |
+| `page2_max_additional_jobs` | Int | No |  | Max additional jobs on Page 2 |
+| `priority` | Int | Yes | NOT NULL, DEFAULT 100 | Lower value = higher priority |
+| `notes` | Text | No |  | Rule notes |
+| `created_at` | Timestamp | Yes | NOT NULL | Record creation timestamp |
+| `updated_at` | Timestamp | Yes | NOT NULL | Last update timestamp |
+
+**Business rules:**
+- Unique index on (`config_id`, `case_key`)
+- Lower `priority` value means higher priority
+- Special cases (e.g., EC-017) should be evaluated before generic rules
+
+
+## Entity: resume_section_budget_rules
+
+**Description:** Section-level budget rules defining min/max values for content metrics. Each row defines a budget for one section/profile/metric combination.
+
+| Attribute | Data type | Required | Constraints | Description |
+|---------|-----------|--------------|-------------|----------|
+| `id` | BigInt | Yes | PK, AUTO_INCREMENT | Unique identifier |
+| `config_id` | BigInt | Yes | FK → resume_budget_configs.id, NOT NULL | Parent config |
+| `section_key` | Varchar(100) | Yes | NOT NULL | Section: professional_summary, skills, courses, projects |
+| `profile_key` | Varchar(100) | Yes | NOT NULL | Profile: light, medium, dense, one_page_light, etc. |
+| `metric_key` | Varchar(100) | Yes | NOT NULL | Metric: sentences, bullet_points, max_courses, words_per_skill |
+| `min_value` | Int | No |  | Minimum value for this metric |
+| `max_value` | Int | No |  | Maximum value for this metric |
+| `notes` | Text | No |  | Rule notes |
+| `created_at` | Timestamp | Yes | NOT NULL | Record creation timestamp |
+| `updated_at` | Timestamp | Yes | NOT NULL | Last update timestamp |
+
+**Business rules:**
+- Unique index on (`config_id`, `section_key`, `profile_key`, `metric_key`)
+- Controls section-specific content budgets for each density profile
+
+
 ## Traceability
 
 | Connection | Artifact |
 |-------|----------|
-| Source (4.3) | governance_plans/reports/docs/04_domain-and-data-model/dbml_erd.md |
+| Source (4.3) | governance_plans/reports/docs/04_domain-and-data-model/dbml_erd.md (v2.0) |

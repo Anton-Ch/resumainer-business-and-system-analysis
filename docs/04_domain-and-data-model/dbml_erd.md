@@ -1,8 +1,8 @@
 // ResumAIner — Entity-Relationship Data Model
 // Format: DBML for dbdiagram.io
 // Project ID: resumainer
-// File: dbml_erd.md (v1.1)
-// Date: 2026-05-18
+// File: dbml_erd.md (v2.0)
+// Date: 2026-05-23
 // Author: Anton
 // Status: Approved — MVP Baseline
 
@@ -288,6 +288,95 @@ Table ai_model {
   updated_at timestamp
 }
 
+// ----- Section: Resume Budget Configuration -----
+
+// DB-backed configuration for resume template budgets.
+// Replaces YAML-based external configuration.
+// Only one active config should exist — enforce with partial unique index in PostgreSQL migration.
+Table resume_budget_configs {
+  id bigint [pk, increment]
+  name varchar(100) [not null]
+  version_no int [not null, default: 1]
+  is_active boolean [not null, default: false]
+  description text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  Note: 'Only one active config should exist. Enforce with partial unique index in PostgreSQL migration.'
+}
+
+// General scalar configuration values (key-value pattern with typed columns).
+// value_type: int, boolean, text. Only one value column used per row based on value_type.
+Table resume_template_selection_rules {
+  id bigint [pk, increment]
+  config_id bigint [not null, ref: > resume_budget_configs.id]
+
+  rule_key varchar(100) [not null]
+  value_type varchar(20) [not null] // int, boolean, text
+
+  int_value int
+  boolean_value boolean
+  text_value varchar(255)
+
+  description text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (config_id, rule_key) [unique]
+  }
+}
+
+// Work experience distribution rules per edge case.
+// Each rule maps a job/project/course profile to a template mode and page distribution.
+Table resume_work_experience_distribution_rules {
+  id bigint [pk, increment]
+  config_id bigint [not null, ref: > resume_budget_configs.id]
+
+  case_key varchar(20) [not null] // EC-001, EC-003, EC-010, etc.
+  min_total_jobs int [not null]
+  max_total_jobs int [not null]
+  min_projects int [not null, default: 0]
+  max_projects int // null means unlimited
+  require_no_courses boolean [not null, default: false]
+
+  template_mode varchar(20) [not null] // one_page, two_page
+  page1_jobs int [not null]
+  page2_jobs int [not null, default: 0]
+  page2_max_additional_jobs int
+
+  priority int [not null, default: 100]
+  notes text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (config_id, case_key) [unique]
+  }
+}
+
+// Section-level budget rules defining min/max values for content metrics.
+// Each row defines a budget for one section/profile/metric combination.
+Table resume_section_budget_rules {
+  id bigint [pk, increment]
+  config_id bigint [not null, ref: > resume_budget_configs.id]
+
+  section_key varchar(100) [not null] // professional_summary, skills, courses, projects
+  profile_key varchar(100) [not null] // light, medium, dense, one_page_light, etc.
+  metric_key varchar(100) [not null] // sentences, bullet_points, max_courses, words_per_skill
+
+  min_value int
+  max_value int
+
+  notes text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (config_id, section_key, profile_key, metric_key) [unique]
+  }
+}
+
 // ----- Section: Generation Pipeline -----
 // Flow: request → AI response (DRAFT) → user review/edit → FINALIZED → saved_resume PDF
 
@@ -310,6 +399,10 @@ Table resume_generation_request {
   adaptation_level_id integer [not null, ref: > adaptation_level.id]
   language_mode varchar(20) [not null, default: 'default']
   // Values: 'default' (Default English), 'additional' (Additional Russian), 'both'
+
+  // Budget config used for generation (DB-backed budget configuration)
+  budget_config_id bigint [ref: > resume_budget_configs.id]
+  budget_config_version_used int
 
   // Processing state
   status varchar(30) [not null, default: 'pending']
@@ -528,6 +621,11 @@ Table ai_usage_log {
 // resume_generation_response → generation_response_project: one-to-many
 // resume_generation_response → generation_response_skill: one-to-many
 
+// === BUDGET CONFIG ===
+// resume_budget_configs → resume_template_selection_rules: one-to-many
+// resume_budget_configs → resume_work_experience_distribution_rules: one-to-many
+// resume_budget_configs → resume_section_budget_rules: one-to-many
+
 // === SAVED ===
 // users → saved_resume:              one-to-many
 // resume_generation_request → saved_resume: one-to-one
@@ -541,7 +639,7 @@ Table ai_usage_log {
 // resume_generation_response → ai_usage_log: one-to-many
 
 // ============================================================
-// TOTAL TABLE COUNT: 25 tables
+// TOTAL TABLE COUNT: 30 tables
 // ============================================================
 // Reference Data (8):     role, user_status, user_permission, response_status,
 //                          language, adaptation_level, work_format, resume_template
@@ -553,6 +651,8 @@ Table ai_usage_log {
 //                          generation_response_experience, generation_response_education,
 //                          generation_response_course, generation_response_project,
 //                          generation_response_skill
+// Budget Config (4):     resume_budget_configs, resume_template_selection_rules,
+//                        resume_work_experience_distribution_rules, resume_section_budget_rules
 // Saved (1):              saved_resume
 // Monitoring (1):         ai_usage_log
 
@@ -607,3 +707,15 @@ Table ai_usage_log {
 // ============================================================
 //
 // 1. saved_resume: added public_url_link varchar(200) for storing ready-made public resume URL (DEC-032)
+
+// ============================================================
+// KEY CHANGES FROM v1.1 TO v2.0
+// ============================================================
+//
+// 1. YAML-based budget configuration replaced with DB-backed budget configuration.
+// 2. New table: resume_budget_configs — config identity and version metadata.
+// 3. New table: resume_template_selection_rules — general scalar config values.
+// 4. New table: resume_work_experience_distribution_rules — edge case distribution rules.
+// 5. New table: resume_section_budget_rules — section-level min/max budget rules.
+// 6. resume_generation_request: added budget_config_id, budget_config_version_used.
+// 7. Total table count: 25 → 30.

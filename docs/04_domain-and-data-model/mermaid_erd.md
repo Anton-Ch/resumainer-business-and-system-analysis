@@ -1,12 +1,12 @@
 # ResumAIner — Entity-Relationship Diagram (Mermaid)
 
 > **Project ID:** `resumainer`  
-> **Version:** 1.1  
-> **Date:** 2026-05-18  
+> **Version:** 2.0  
+> **Date:** 2026-05-23  
 > **Status:** Approved — MVP Baseline  
 > **Normalization:** 3NF (Third Normal Form)  
-> **Total Entities:** 26  
-> **Total Relationships:** 32  
+> **Total Entities:** 30  
+> **Total Relationships:** 36  
 
 ---
 
@@ -18,7 +18,7 @@ This ERD covers the complete ResumAIner MVP data model across four groups:
 |-------|----------|---------|
 | **Reference Data** | 8 | Lookup tables for 3NF compliance |
 | **Core (User & Profile)** | 8 | User accounts and structured profile data |
-| **Generation Pipeline** | 8 | AI generation request → response → saved resume |
+| **Generation Pipeline** | 13 | AI generation request → response → saved resume + budget configuration |
 | **Monitoring** | 1 | Token usage tracking |
 
 ---
@@ -236,6 +236,65 @@ erDiagram
     }
     
     %% ================================================================
+    %% GROUP 3: GENERATION — Section: Budget Configuration
+    %% ================================================================
+    
+    resume_budget_configs {
+        bigint id PK
+        varchar name "not null"
+        int version_no "default: 1"
+        boolean is_active "default: false"
+        text description
+        timestamp created_at "not null"
+        timestamp updated_at "not null"
+    }
+    
+    resume_template_selection_rules {
+        bigint id PK
+        bigint config_id FK "not null"
+        varchar rule_key "not null"
+        varchar value_type "int | boolean | text"
+        int int_value
+        boolean boolean_value
+        varchar text_value
+        text description
+        timestamp created_at "not null"
+        timestamp updated_at "not null"
+    }
+    
+    resume_work_experience_distribution_rules {
+        bigint id PK
+        bigint config_id FK "not null"
+        varchar case_key "not null"
+        int min_total_jobs "not null"
+        int max_total_jobs "not null"
+        int min_projects "default: 0"
+        int max_projects "NULL = unlimited"
+        boolean require_no_courses "default: false"
+        varchar template_mode "one_page | two_page"
+        int page1_jobs "not null"
+        int page2_jobs "default: 0"
+        int page2_max_additional_jobs
+        int priority "default: 100"
+        text notes
+        timestamp created_at "not null"
+        timestamp updated_at "not null"
+    }
+    
+    resume_section_budget_rules {
+        bigint id PK
+        bigint config_id FK "not null"
+        varchar section_key "not null"
+        varchar profile_key "not null"
+        varchar metric_key "not null"
+        int min_value
+        int max_value
+        text notes
+        timestamp created_at "not null"
+        timestamp updated_at "not null"
+    }
+    
+    %% ================================================================
     %% GROUP 3: GENERATION — Section: Generation Pipeline
     %% ================================================================
     
@@ -250,6 +309,8 @@ erDiagram
         int language_id FK
         int adaptation_level_id FK
         varchar language_mode
+        bigint budget_config_id FK "DB-backed budget config"
+        int budget_config_version_used
         varchar status "pending | processing | completed | failed"
         text error_message
         timestamp created_at
@@ -408,6 +469,12 @@ erDiagram
     resume_generation_response ||--o{ generation_response_project : "contains projects"
     resume_generation_response ||--o{ generation_response_skill : "contains skills"
     
+    %% --- BUDGET CONFIG RELATIONSHIPS ---
+    resume_budget_configs ||--o{ resume_template_selection_rules : "has selection rules"
+    resume_budget_configs ||--o{ resume_work_experience_distribution_rules : "has distribution rules"
+    resume_budget_configs ||--o{ resume_section_budget_rules : "has section budget rules"
+    resume_budget_configs ||--o{ resume_generation_request : "used by generation"
+    
     %% --- GENERATION → SAVED ---
     resume_generation_request ||--|| saved_resume : "results in (1:1)"
     resume_generation_response ||--|| saved_resume : "finalized as (1:1)"
@@ -462,13 +529,22 @@ erDiagram
 |--------|-------------|
 | `ai_model` | AI provider configurations. Includes `is_active`, `is_paid`, `is_hidden` for visibility control (DEC-024). API key encrypted. |
 
+### Generation — Budget Configuration (4 entities)
+
+| Entity | Description |
+|--------|-------------|
+| `resume_budget_configs` | DB-backed budget configuration identity and version metadata. Replaces YAML-based external config. One active config enforced via partial unique index. |
+| `resume_template_selection_rules` | General scalar configuration values (key-value pattern with typed columns: int, boolean, text). |
+| `resume_work_experience_distribution_rules` | Work experience distribution rules per edge case (EC-001..EC-017). Each rule maps job/project/course profile to template mode and page distribution. |
+| `resume_section_budget_rules` | Section-level min/max budget rules defining content limits per section, profile, and metric combination. |
+
 ### Generation Pipeline (7 entities)
 
 The pipeline follows: **Request → Response (DRAFT) → User Review → FINALIZED → Saved Resume**
 
 | Entity | Description |
 |--------|-------------|
-| `resume_generation_request` | User input: vacancy description, AI model, language, adaptation level, settings |
+| `resume_generation_request` | User input: vacancy description, AI model, language, adaptation level, settings, budget config ID and version used |
 | `resume_generation_response` | AI-generated output with status (DRAFT/FINALIZED). Stores `professional_summary`, `professional_aspirations`, `cover_letter` |
 | `generation_response_experience` | Reviewed/edited work experience with `is_first_page` (DEC-030) |
 | `generation_response_education` | Reviewed/edited education — compact format (no `description`) |
@@ -515,6 +591,9 @@ The pipeline follows: **Request → Response (DRAFT) → User Review → FINALIZ
 | Page Placement | `is_first_page` flag for two-page template content distribution | DEC-030 |
 | Future-Proof Schema | Post-MVP columns included in DDL (company_url, template_id, resume_template) | DEC-025, DEC-027 |
 | Model Visibility | `is_hidden` + `is_privileged` for controlled model access | DEC-024 |
+| DB-Backed Budget Config | YAML-based budget configuration replaced with PostgreSQL-backed configuration | DEC-060 |
+| Budget Config Versioning | `version_no` incremented on settings change; generation request stores config ID and version | DEC-060 |
+| Partial Unique Index | PostgreSQL partial unique index prevents multiple active budget configs | DEC-062 |
 
 ---
 

@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-18
-**Last Updated:** 2026-05-21
+**Last Updated:** 2026-05-23
 **Author:** Anton
-**Version:** 9.0
+**Version:** 10.0
 **Status:** Approved
 **Related BABOK Area:** 6.2 Define Future State (SMART Goals)
 
@@ -29,6 +29,7 @@ This document defines the measurable business goals for the ResumAIner project. 
 | BG-008 | Ensure testing quality and coverage                                     | Capstone Constraint  |
 | BG-009 | Deliver complete UI and localization readiness                          | Capstone Constraint  |
 | BG-010 | Ensure deployment and documentation readiness                           | Capstone Constraint  |
+| BG-011 | Ensure configurable resume budget constraints                           | Governance Decision  |
 
 ## 3. SMART Goal Details
 
@@ -273,6 +274,29 @@ The project must include Swagger/OpenAPI REST documentation with ADMIN-only acce
 |---|---|---|---|---|---|
 | 1 | Docker Compose readiness | Containers defined | 0 | 3 (backend, frontend, database) | 2026-06-30 |
 | 2 | Swagger availability | API documented endpoints | 0 | All controllers | 2026-06-30 |
+
+### BG-011: Ensure Configurable Resume Budget Constraints
+
+#### Description
+
+Resume budget configuration (sentence counts, bullet limits, skill limits, job distribution rules) must be stored in PostgreSQL and configurable without Java code changes or application restart. The backend reads the active configuration before every resume generation.
+
+#### SMART Verification
+
+| Criteria | Assessment |
+|---|---|
+| **S**pecific | Store budget configuration in PostgreSQL; backend reads before each generation |
+| **M**easurable | Config changes take effect on next generation without code/restart change |
+| **A**chievable | DB-backed configuration with active config fallback and versioning |
+| **R**elevant | Enables runtime budget tuning without developer intervention |
+| **T**ime-bound | Verified before final Capstone submission |
+
+#### KPIs
+
+| # | KPI | Metric | Baseline (Current) | Target (Goal) | Deadline |
+|---|---|---|---|---|---|
+| 1 | Budget config tables created | Tables | 0 | 4 | 2026-06-30 |
+| 2 | Config readiness delay | Generations without config | Unlimited | None (error returned) | 2026-06-30 |
 
 ## 4. Dependencies and Assumptions
 

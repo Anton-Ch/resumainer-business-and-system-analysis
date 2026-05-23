@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-10  
-**Last Updated:** 2026-05-21  
+**Last Updated:** 2026-05-23  
 **Author:** Anton  
-**Version:** 15.0  
+**Version:** 16.0  
 **Status:** Active  
 **Related BABOK Area:** 3.4 Plan Business Analysis Information Management  
 
@@ -110,6 +110,8 @@ The goal is to ensure that project scope remains controlled and that each import
 | TR-045 | BO-013 | NFR-030 | NFR | i18n resource files | All pages | N/A | Spring MessageSource, vue-i18n | TC-045 | Not Started | Draft |
 | TR-046 | BO-014 | NFR-031 | NFR | Swagger/OpenAPI documentation | N/A (API docs) | N/A | springdoc-openapi, Spring Security | TC-046 | Not Started | Draft |
 | TR-047 | BO-014 | NFR-032 | NFR | Docker Compose deployment | N/A (infra) | All entities | docker-compose.yml, Dockerfiles | TC-047 | Not Started | Draft |
+| TR-048 | BO-015 | NFR-033 | NFR | DB-backed budget configuration | N/A (backend) | resume_budget_configs, resume_template_selection_rules, resume_work_experience_distribution_rules, resume_section_budget_rules | ResumeBudgetConfigService | TC-048 | Not Started | Approved |
+| TR-049 | BO-015 | NFR-034 | NFR | Active config fallback and versioning | N/A (backend) | resume_generation_request (budget_config_id), resume_budget_configs | ResumeBudgetConfigService | TC-049 | Not Started | Approved |
 | TR-999 | BO-XXX | FR-XXX | FR | [Use case] | [Screen] | [Entity] | [Component] | TC-XXX | Not Started | Draft |
 
 ## 4. Details
@@ -771,6 +773,34 @@ The goal is to ensure that project scope remains controlled and that each import
 **Status:** Draft  
 **Traceability Notes:** 3 containers: backend (Tomcat), frontend (Vue/Nginx), database (PostgreSQL). Flyway runs on startup. Single command deployment.  
 **Gaps / Follow-up:** Create Dockerfiles during implementation.
+
+### TR-048 DB-Backed Budget Configuration
+
+**Business Objective:** BO-015 Ensure configurable resume budget constraints  
+**Requirement ID:** NFR-033  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** DB-backed budget configuration  
+**UI Screen:** N/A (backend infrastructure)  
+**Data Entity:** resume_budget_configs, resume_template_selection_rules, resume_work_experience_distribution_rules, resume_section_budget_rules  
+**Service / Component:** ResumeBudgetConfigService  
+**Test Case:** TC-048  
+**Status:** Approved  
+**Traceability Notes:** Resume budget configuration is stored in PostgreSQL instead of YAML. Four new tables store config identity, template selection rules, work experience distribution rules, and section budget rules. Backend reads active/newest config before every generation.  
+**Gaps / Follow-up:** Define initial seed data for MVP budget configuration.
+
+### TR-049 Active Config Fallback and Versioning
+
+**Business Objective:** BO-015 Ensure configurable resume budget constraints  
+**Requirement ID:** NFR-034  
+**Requirement Type:** NFR  
+**Use Case / Workflow:** Active config fallback and versioning  
+**UI Screen:** N/A (backend infrastructure)  
+**Data Entity:** resume_generation_request (budget_config_id, budget_config_version_used), resume_budget_configs  
+**Service / Component:** ResumeBudgetConfigService  
+**Test Case:** TC-049  
+**Status:** Approved  
+**Traceability Notes:** Backend implements multi-level fallback: prefer active config → newest active → newest any → configuration error. Generation request stores config ID and version for traceability.  
+**Gaps / Follow-up:** Define error handling for missing required rule rows.
 
 ### TR-999 [Trace Item Title Template]
 

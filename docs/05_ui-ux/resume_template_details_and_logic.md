@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-19  
-**Last Updated:** 2026-05-20  
+**Last Updated:** 2026-05-23  
 **Author:** Anton  
-**Version:** 6.0  
+**Version:** 7.0  
 **Status:** Approved  
 **Related BABOK Area:** 7.1 Specify Requirements / 7.5 Design Options  
 
@@ -21,7 +21,7 @@ This document adds:
 - Professional Summary budget rules;
 - explicit HTML-in-JSON formatting rules;
 - more precise edge-case handling for one-page and two-page templates;
-- configurable content budget parameters stored in an external YAML file;
+- configurable content budget parameters stored in PostgreSQL (DB-backed configuration);
 - clearer limits for skills, courses, projects, work experience, and aspirations;
 - backend-owned HTML/PDF rendering assumptions.
 
@@ -38,7 +38,7 @@ The final design may use the following Java/Spring service responsibilities.
 | `ResumePromptBuilder`        | Builds AI prompt using profile data, vacancy data, template mode, and content budget. Implements the **Builder** pattern (DEC-056): constructs a complex prompt object step by step (vacancy context, profile data, content budget, language, adaptation level) and returns the complete prompt string. |
 | `ResumeTemplateRenderer`     | Renders final HTML from structured generation response and selected template.                    |
 | `PdfGenerationService`       | Converts HTML to PDF, validates page count, and stores PDF metadata.                             |
-| `ResumeBudgetConfigService`  | Reads external YAML budget configuration and provides current budget values to backend services. |
+| `ResumeBudgetConfigService`  | Reads DB-backed budget configuration from PostgreSQL and provides current budget values to backend services. |
 
 ## 2.2 Generation Pipeline
 
@@ -48,7 +48,7 @@ The final design may use the following Java/Spring service responsibilities.
 3. Calculate raw counts: jobs, education, courses, projects, optional fields.
 4. Calculate Page 1 Score, Page 2 Score, and density labels.
 5. Select template mode: one-page or two-page.
-6. Build content budget rules from external YAML configuration.
+6. Build content budget rules from DB-backed configuration.
 7. Build AI prompt with exact section limits.
 8. AI returns structured JSON with limited HTML inside text fields.
 9. Backend validates JSON structure.
@@ -251,11 +251,11 @@ Course-free expansion rule:
 
 | Condition                                                          | Rule                                                                                                        |
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| `total_courses = 0` AND `total_projects = 0` AND `total_jobs <= 3` | Backend may allow up to 3 jobs on Page 1 if enabled by YAML configuration and PDF validation passes.        |
+| `total_courses = 0` AND `total_projects = 0` AND `total_jobs <= 3` | Backend may allow up to 3 jobs on Page 1 if enabled by DB-backed budget configuration and PDF validation passes.        |
 | `total_jobs > 5`                                                   | Two-page mode is required. Page 1 normally shows max 3 jobs; Page 2 shows max 7 additional jobs.            |
 | `total_projects > 0`                                               | Projects create Page 2 driver. Course-free Page 1 expansion does not override project-driven two-page mode. |
 
-This rule is intentionally configurable because it directly affects page density and PDF overflow risk.
+This rule is intentionally configurable through DB-backed budget settings because it directly affects page density and PDF overflow risk.
 
 ## 4.3 Page 1 Score
 
@@ -595,7 +595,7 @@ Missing optional fields are omitted without leaving empty labels or visual gaps.
 | Education                       | Block generation. At least 1 education record is required.                     |
 | Contact Details required fields | Block generation until fixed.                                                  |
 | Skills                          | Warn user; generation may be not efficient if skills are skipped.              |
-| Courses                         | Omit Courses section. Allow Page 1 capacity expansion according to YAML rules. |
+| Courses                         | Omit Courses section. Allow Page 1 capacity expansion according to DB-backed budget rules. |
 | Projects                        | Omit Projects section.                                                         |
 | Aspirations input               | AI still generates Professional Aspirations.                                   |
 | LinkedIn                        | Omit from contact line.                                                        |
@@ -765,7 +765,7 @@ Additional comments for AI
 
 ## 10.2 Content Budget Rules
 
-PromptBuilder must include explicit limits. Maybe include this parameters if possible into YAML configuration files without need to restart the java app to change 
+PromptBuilder must include explicit limits. These limits are controlled through DB-backed budget configuration and can be changed without restarting the Java application.
 
 ~~~text
 Professional Summary:
@@ -800,201 +800,258 @@ Overflow:
 - Do not reduce font size or ask renderer to change CSS.
 ~~~
 
-## 11. External YAML Budget Configuration
+## 11. DB-Backed Resume Budget Configuration
 
 ## 11.1 Purpose
 
-All key content budget parameters should be stored in an external YAML configuration file.
+All key content budget parameters are stored in PostgreSQL and read before every resume generation.
 
 Purpose:
 - adjust sentence counts, bullet limits, skill limits, and density thresholds quickly;
-- avoid hardcoding template budgets in Java code;
+- avoid hardcoding budget parameters in Java code;
 - allow tuning after HTML/PDF testing;
-- reduce need for full application redeployment when budget rules change.
+- allow runtime configuration changes without Java code changes and without application restart.
 
-Recommended file name:
-~~~text
-config/resume-template-budget.yml
+Budget settings are stored in PostgreSQL and read by the Java backend before each resume generation.
+
+## 11.2 Configuration Scope
+
+The DB-backed configuration controls:
+
+- one-page/two-page threshold;
+- course-free Page 1 expansion;
+- max Page 1 jobs;
+- max Page 2 additional jobs;
+- Professional Summary sentence counts;
+- work experience description/bullet limits;
+- skills groups and skill length;
+- course count and focus length;
+- project count, sentences, and bullets;
+- aspirations length.
+
+## 11.3 Active Config Selection
+
+Backend uses the following logic before each resume generation:
+
+1. Query `resume_budget_configs`.
+2. Prefer configs where `is_active = true`.
+3. If one active config exists, use it.
+4. If multiple active configs exist, use the newest one by `updated_at DESC, id DESC`.
+5. If no active config exists, use the newest config by `updated_at DESC, id DESC` as fallback.
+6. If no config exists at all, stop generation and return a clear internal configuration error.
+
+Recommended SQL query:
+
+~~~sql
+SELECT *
+FROM resume_budget_configs
+ORDER BY
+    is_active DESC,
+    updated_at DESC,
+    id DESC
+LIMIT 1;
 ~~~
 
-Recommended loading approach:
-- Java backend reads this file through a dedicated configuration service;
-- config can be cached for a short TTL, for example 30-90 seconds;
-- config can be reloaded without full application restart;
-- invalid config should fall back to last valid config and log a safe error.
+This query is intentionally simple and MVP-friendly.
 
-## 11.2 Example YAML Configuration
+## 11.4 Versioning Rule
 
-~~~yaml
-# Resume template content budget configuration.
-# This file controls how much content AI should generate for each resume section.
-# The backend reads these values before building the AI prompt.
+MVP versioning rules:
 
-version: 1
+- There is one general active configuration for MVP.
+- `version_no` is incremented when config settings are changed.
+- The generation request stores `budget_config_id` and `budget_config_version_used`.
+- No full config history/version tables are required for MVP.
+- It is acceptable to update the same active config row and increment `version_no`.
 
-reload:
-  # Cache lifetime in seconds. After this time backend may re-read the file.
-  cacheTtlSeconds: 60
-  # If true, invalid new config does not break generation; backend keeps last valid config.
-  keepLastValidOnError: true
+## 11.5 Data Model
 
-templateSelection:
-  # Standard one-page candidate: no projects and up to 3 jobs.
-  standardOnePageMaxJobs: 3
-  # Optional expansion: when there are no courses and no projects, Page 1 may accept more jobs.
-  allowCourseFreePage1Expansion: true
-  courseFreePage1MaxJobs: 3
-  # Default two-page threshold when expansion is disabled or fails validation.
-  defaultTwoPageMinJobs: 4
+### resume_budget_configs
 
-workExperience:
-  page1:
-    maxDefaultJobs: 3
-    maxCourseFreeJobs: 3
-    budgets:
-      oneJob:
-        minDescriptionSentences: 5
-        maxDescriptionSentences: 5
-        minBulletPoints: 3
-        maxBulletPoints: 9
-      twoJobs:
-        minDescriptionSentences: 5
-        maxDescriptionSentences: 5
-        minBulletPoints: 3
-        maxBulletPoints: 7
-      threeJobs:
-        minDescriptionSentences: 3
-        maxDescriptionSentences: 3
-        minBulletPoints: 2
-        maxBulletPoints: 5
-      dense:
-        minDescriptionSentences: 1
-        maxDescriptionSentences: 2
-        minBulletPoints: 2
-        maxBulletPoints: 3
-  page2:
-    maxAdditionalJobs: 7
-    # Page 2 additional work experience must stay compact.
-    minSummarySentencesPerJob: 1
-    maxSummarySentencesPerJob: 1
-    minBulletPointsPerJob: 0
-    maxBulletPointsPerJob: 1
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | bigint | PK, AUTO_INCREMENT | Unique identifier |
+| `name` | varchar(100) | NOT NULL | Config display name |
+| `version_no` | int | NOT NULL, DEFAULT 1 | Incremented on settings change |
+| `is_active` | boolean | NOT NULL, DEFAULT false | Active flag; only one active config allowed |
+| `description` | text | | Config description |
+| `created_at` | timestamp | NOT NULL | Record creation timestamp |
+| `updated_at` | timestamp | NOT NULL | Last update timestamp |
 
-professionalSummary:
-  # Professional Summary works as a layout buffer.
-  onePageLight:
-    minSentences: 5
-    maxSentences: 5
-  onePageDense:
-    minSentences: 2
-    maxSentences: 3
-  twoPageLight:
-    minSentences: 4
-    maxSentences: 5
-  twoPageMedium:
-    minSentences: 3
-    maxSentences: 4
-  twoPageDense:
-    minSentences: 2
-    maxSentences: 3
+PostgreSQL partial unique index to enforce one active config:
 
-skills:
-  light:
-    minGroups: 4
-    maxGroups: 5
-    minSkillsPerGroup: 5
-    maxSkillsPerGroup: 7
-    minWordsPerSkill: 1
-    maxWordsPerSkill: 3
-  medium:
-    minGroups: 3
-    maxGroups: 4
-    minSkillsPerGroup: 4
-    maxSkillsPerGroup: 6
-    minWordsPerSkill: 1
-    maxWordsPerSkill: 3
-  dense:
-    minGroups: 2
-    maxGroups: 3
-    minSkillsPerGroup: 3
-    maxSkillsPerGroup: 5
-    minWordsPerSkill: 1
-    maxWordsPerSkill: 3
-
-courses:
-  light:
-    maxCourses: 10
-    minFocusWordsPerCourse: 3
-    maxFocusWordsPerCourse: 5
-  medium:
-    maxCourses: 7
-    minFocusWordsPerCourse: 1
-    maxFocusWordsPerCourse: 3
-  dense:
-    maxCourses: 5
-    minFocusWordsPerCourse: 1
-    maxFocusWordsPerCourse: 2
-  overflow:
-    maxCourses: 3
-    minFocusWordsPerCourse: 0
-    maxFocusWordsPerCourse: 0
-
-projects:
-  light:
-    maxProjects: 2
-    minSentencesPerProject: 4
-    maxSentencesPerProject: 5
-    minBulletPoints: 2
-    maxBulletPoints: 4
-  medium:
-    maxProjects: 2
-    minSentencesPerProject: 2
-    maxSentencesPerProject: 3
-    minBulletPoints: 2
-    maxBulletPoints: 3
-  dense:
-    maxProjects: 2
-    minSentencesPerProject: 1
-    maxSentencesPerProject: 2
-    minBulletPoints: 1
-    maxBulletPoints: 2
-  overflow:
-    maxProjects: 2
-    minSentencesPerProject: 1
-    maxSentencesPerProject: 1
-    minBulletPoints: 0
-    maxBulletPoints: 1
-
-aspirations:
-  onePage:
-    minSentences: 3
-    maxSentences: 5
-  onePageDense:
-    minSentences: 1
-    maxSentences: 3
-  lightPage2:
-    minSentences: 5
-    maxSentences: 9
-  mediumPage2:
-    minSentences: 3
-    maxSentences: 5
-  densePage2:
-    minSentences: 1
-    maxSentences: 3
-
-pdfValidation:
-  onePageRequiredPages: 1
-  twoPageRequiredPages: 2
-  maxRetryAttempts: 1
+~~~sql
+CREATE UNIQUE INDEX uq_one_active_resume_budget_config
+ON resume_budget_configs (is_active)
+WHERE is_active = true;
 ~~~
 
-## 11.3 YAML Usage Rules
+### resume_template_selection_rules
 
-- YAML values are authoritative for AI content budgets.
-- Java defaults may exist, but external YAML should override them.
-- If a YAML value is missing, backend should use safe defaults.
-- If the file is invalid, backend should keep the last valid configuration or hardcoded fallback.
-- Major YAML rule changes should be documented in Decision Log or Change Request Log because they affect MVP behavior.
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | bigint | PK, AUTO_INCREMENT | Unique identifier |
+| `config_id` | bigint | FK → resume_budget_configs.id, NOT NULL | Parent config |
+| `rule_key` | varchar(100) | NOT NULL | Rule identifier |
+| `value_type` | varchar(20) | NOT NULL | Value type: int, boolean, text |
+| `int_value` | int | | Integer value |
+| `boolean_value` | boolean | | Boolean value |
+| `text_value` | varchar(255) | | Text value |
+| `description` | text | | Rule description |
+| `created_at` | timestamp | NOT NULL | Record creation timestamp |
+| `updated_at` | timestamp | NOT NULL | Last update timestamp |
+
+Indexes: unique on (`config_id`, `rule_key`).
+
+Check constraint:
+
+~~~sql
+ALTER TABLE resume_template_selection_rules
+ADD CONSTRAINT chk_template_rule_value_type
+CHECK (
+    (value_type = 'int' AND int_value IS NOT NULL AND boolean_value IS NULL AND text_value IS NULL)
+ OR (value_type = 'boolean' AND boolean_value IS NOT NULL AND int_value IS NULL AND text_value IS NULL)
+ OR (value_type = 'text' AND text_value IS NOT NULL AND int_value IS NULL AND boolean_value IS NULL)
+);
+~~~
+
+### resume_work_experience_distribution_rules
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | bigint | PK, AUTO_INCREMENT | Unique identifier |
+| `config_id` | bigint | FK → resume_budget_configs.id, NOT NULL | Parent config |
+| `case_key` | varchar(20) | NOT NULL | Edge case key: EC-001, EC-003, EC-010, etc. |
+| `min_total_jobs` | int | NOT NULL | Minimum total jobs for this rule |
+| `max_total_jobs` | int | NOT NULL | Maximum total jobs for this rule |
+| `min_projects` | int | NOT NULL, DEFAULT 0 | Minimum projects for this rule |
+| `max_projects` | int | | Maximum projects; NULL = unlimited |
+| `require_no_courses` | boolean | NOT NULL, DEFAULT false | Whether no-courses condition is required |
+| `template_mode` | varchar(20) | NOT NULL | one_page or two_page |
+| `page1_jobs` | int | NOT NULL | Number of jobs on Page 1 |
+| `page2_jobs` | int | NOT NULL, DEFAULT 0 | Number of jobs on Page 2 |
+| `page2_max_additional_jobs` | int | | Max additional jobs on Page 2 |
+| `priority` | int | NOT NULL, DEFAULT 100 | Lower value = higher priority |
+| `notes` | text | | Rule notes |
+| `created_at` | timestamp | NOT NULL | Record creation timestamp |
+| `updated_at` | timestamp | NOT NULL | Last update timestamp |
+
+Indexes: unique on (`config_id`, `case_key`).
+
+### resume_section_budget_rules
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | bigint | PK, AUTO_INCREMENT | Unique identifier |
+| `config_id` | bigint | FK → resume_budget_configs.id, NOT NULL | Parent config |
+| `section_key` | varchar(100) | NOT NULL | Section: professional_summary, skills, courses, projects, etc. |
+| `profile_key` | varchar(100) | NOT NULL | Profile: light, medium, dense, one_page_light, etc. |
+| `metric_key` | varchar(100) | NOT NULL | Metric: sentences, bullet_points, max_courses, words_per_skill, etc. |
+| `min_value` | int | | Minimum value for this metric |
+| `max_value` | int | | Maximum value for this metric |
+| `notes` | text | | Rule notes |
+| `created_at` | timestamp | NOT NULL | Record creation timestamp |
+| `updated_at` | timestamp | NOT NULL | Last update timestamp |
+
+Indexes: unique on (`config_id`, `section_key`, `profile_key`, `metric_key`).
+
+### Updated resume_generation_requests
+
+Add these columns to `resume_generation_request`:
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `budget_config_id` | bigint | FK → resume_budget_configs.id | Budget config used for generation |
+| `budget_config_version_used` | int | | Version of config at generation time |
+
+## 11.6 Example Records
+
+### resume_budget_configs
+
+| id | name | version_no | is_active | description |
+|---:|---|---:|---|---|
+| 1 | Default MVP Resume Budget | 1 | true | Main budget configuration for one-page and two-page resume templates |
+
+### resume_template_selection_rules
+
+| config_id | rule_key | value_type | int_value | boolean_value | text_value | description |
+|---:|---|---|---:|---|---|---|
+| 1 | standard_one_page_max_jobs | int | 3 | null | null | Normal one-page candidate if no projects |
+| 1 | allow_course_free_page1_expansion | boolean | null | true | null | Allow Page 1 expansion when no courses and no projects |
+| 1 | course_free_page1_max_jobs | int | 5 | null | null | Max jobs on Page 1 when no courses and no projects |
+| 1 | default_two_page_min_jobs | int | 4 | null | null | Default threshold for two-page template |
+| 1 | page2_max_additional_jobs | int | 7 | null | null | Max additional Work Experience entries on Page 2 |
+
+### resume_work_experience_distribution_rules
+
+| case_key | min_total_jobs | max_total_jobs | min_projects | max_projects | require_no_courses | template_mode | page1_jobs | page2_jobs | page2_max_additional_jobs | priority |
+|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|
+| EC-001 | 1 | 1 | 0 | 0 | false | one_page | 1 | 0 | 0 | 10 |
+| EC-003 | 3 | 3 | 0 | 0 | false | one_page | 3 | 0 | 0 | 10 |
+| EC-010 | 4 | 4 | 0 | 0 | false | two_page | 2 | 2 | 2 | 20 |
+| EC-012 | 5 | 5 | 0 | 0 | false | two_page | 3 | 2 | 2 | 20 |
+| EC-016 | 7 | 99 | 0 | null | false | two_page | 3 | 7 | 7 | 30 |
+| EC-017 | 4 | 5 | 0 | 0 | true | one_page | 5 | 0 | 0 | 5 |
+
+Lower `priority` value means higher priority. Special cases such as `EC-017` should be evaluated before generic rules.
+
+### resume_section_budget_rules
+
+| section_key | profile_key | metric_key | min_value | max_value |
+|---|---|---|---|---:|---:|
+| professional_summary | one_page_light | sentences | 5 | 5 |
+| professional_summary | one_page_dense | sentences | 2 | 3 |
+| work_experience_page1 | one_job | description_sentences | 5 | 5 |
+| work_experience_page1 | one_job | bullet_points | 3 | 9 |
+| work_experience_page1 | three_jobs | description_sentences | 3 | 3 |
+| work_experience_page1 | three_jobs | bullet_points | 2 | 5 |
+| work_experience_page2 | default | summary_sentences_per_job | 1 | 1 |
+| work_experience_page2 | default | bullet_points_per_job | 0 | 0 |
+| skills | light | groups | 4 | 5 |
+| skills | light | skills_per_group | 5 | 7 |
+| skills | light | words_per_skill | 1 | 3 |
+| courses | medium | max_courses | 0 | 7 |
+| courses | medium | focus_words_per_course | 1 | 3 |
+| projects | light | max_projects | 0 | 4 |
+| projects | light | sentences_per_project | 2 | 3 |
+| projects | light | bullet_points_per_project | 2 | 4 |
+| aspirations | light_page2 | sentences | 5 | 9 |
+
+## 11.7 Fixed Section Order
+
+Do not store resume section order in DB for MVP.
+
+Reason:
+
+- Section order is fixed.
+- There is no requirement to configure section order through admin panel.
+- Storing section order in DB adds unnecessary complexity.
+- Section order belongs to template rendering logic, not runtime budget configuration.
+
+Fixed resume section order is implemented in backend rendering code and is not configurable through DB in MVP.
+
+## 11.8 Runtime Flow
+
+Before each resume generation:
+
+1. Backend reads active/newest resume budget config from DB.
+2. Backend reads template selection rules.
+3. Backend reads work experience distribution rules.
+4. Backend reads section budget rules.
+5. Backend calculates raw profile counts.
+6. Backend selects template mode and distribution rule.
+7. Backend builds prompt budget.
+8. AI receives exact section limits.
+9. AI returns structured JSON.
+10. Backend stores config ID and version used with generation request.
+
+No cache is used in MVP.
+
+This means:
+
+- changing DB values affects future generations immediately;
+- already generated PDFs remain unchanged;
+- new resume generation requests use the latest selected config.
 
 ## 12. PDF Rendering and Validation
 
@@ -1087,7 +1144,7 @@ Given optional fields or sections are missing, when the final PDF is rendered, t
 
 ## AC-008 Configurable Budget Rules
 
-Given the external YAML budget file is updated, when the backend reloads the configuration, then new content budget values are used without requiring full application redeployment.
+Given the DB-backed budget configuration is updated in PostgreSQL, when a new resume generation request is processed, then the updated content budget values are used without requiring Java code changes or application restart.
 
 ## 15. Related Artifacts
 

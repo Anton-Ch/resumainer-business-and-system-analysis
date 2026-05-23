@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`  
 **Product Name:** ResumAIner  
 **Date Created:** 2026-05-13  
-**Last Updated:** 2026-05-21  
+**Last Updated:** 2026-05-23  
 **Author:** Anton  
-**Version:** 17.0  
+**Version:** 18.0  
 **Status:** Active  
 **Related BABOK Area:** 5.1 Trace Requirements / 5.3 Prioritize Requirements / 6.2 Specify and Model Requirements  
 
@@ -161,6 +161,8 @@ Note: BABOK defines Solution Requirements as a major requirement class. In this 
 | NFR-030 | Non-Functional     | Provide i18n resource files for Thymeleaf and Vue      | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
 | NFR-031 | Non-Functional     | Document REST API with Swagger/OpenAPI                 | Capstone Constraint  | Medium     | MVP     | Approved | Ready                   |
 | NFR-032 | Non-Functional     | Define Docker Compose deployment with 3 containers     | Capstone Constraint  | High       | MVP     | Approved | Ready                   |
+| NFR-033 | Non-Functional     | DB-backed resume budget configuration                  | Governance Decision  | High       | MVP     | Approved | Ready                   |
+| NFR-034 | Non-Functional     | Active config fallback and versioning                  | Governance Decision  | Medium     | MVP     | Approved | Ready                   |
 | TRN-001 | Transition         | Prepare initial active AI model configuration    | Technical Constraint | Medium     | MVP     | Draft    | Needs Clarification     |
 | XX-XXX  | [Requirement Type] | [Requirement title]                              | [Source]             | [Priority] | [Scope] | Draft    | [Requirement Readiness] |
 
@@ -2041,6 +2043,92 @@ Decision Log (DEC-058), Change Request Log (CR-030), Strategic Context.
 
 **Notes:**  
 Part of CR-030. Flyway migrations run inside the backend container on startup. Vue frontend is served via Nginx or similar and proxies API calls to the backend.
+
+### NFR-033 DB-Backed Resume Budget Configuration
+
+**Type:** Non-Functional Requirement  
+**Source:** Governance Decision  
+**Priority:** High  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall store resume budget configuration in PostgreSQL instead of YAML files. Budget settings must be readable before every resume generation without requiring Java code changes or application restart.
+
+**Business Value:**  
+DB-backed configuration is easier to inspect, test, and demonstrate in a portfolio. It avoids hardcoding budget parameters in Java and allows runtime configuration changes.
+
+**Acceptance Criteria:**
+- Resume budget configuration is stored in PostgreSQL tables: `resume_budget_configs`, `resume_template_selection_rules`, `resume_work_experience_distribution_rules`, `resume_section_budget_rules`.
+- Backend reads the active/newest config from DB before each generation.
+- PostgreSQL partial unique index prevents more than one active config.
+- Config values control: template selection, work experience distribution, section budgets, sentence counts, bullet limits, skill limits, project limits, and course limits.
+
+**Affected UI:**  
+N/A (backend infrastructure)
+
+**Affected Data:**  
+resume_budget_configs, resume_template_selection_rules, resume_work_experience_distribution_rules, resume_section_budget_rules
+
+**Related Artifacts:**  
+Decision Log, Change Request Log, DBML ERD, Data Dictionary, Resume Template Details
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: Yes
+- Testable: Yes
+
+**Notes:**  
+Replaces the previously planned YAML-based configuration approach (DEC-049). YAML-based configuration is no longer used.
+
+### NFR-034 Active Config Fallback and Versioning
+
+**Type:** Non-Functional Requirement  
+**Source:** Governance Decision  
+**Priority:** Medium  
+**Scope:** MVP  
+**Status:** Approved  
+**Readiness:** Ready
+
+**Description:**  
+The system shall implement safe fallback behavior for budget configuration selection and version tracking.
+
+**Business Value:**  
+Fallback logic prevents generation failures when configuration is misconfigured. Version tracking enables traceability of which config version was used for each generation.
+
+**Acceptance Criteria:**
+- If one active config exists, use it.
+- If multiple active configs exist, use the newest by `updated_at DESC, id DESC`.
+- If no active config exists, use the newest config as fallback.
+- If no config exists at all, backend throws a clear configuration error.
+- `version_no` is incremented when config settings change.
+- Generation request stores `budget_config_id` and `budget_config_version_used`.
+- No cache is used for MVP — changes affect future generations immediately.
+- No full config history/version tables required for MVP.
+
+**Affected UI:**  
+N/A (backend infrastructure)
+
+**Affected Data:**  
+resume_generation_request (budget_config_id, budget_config_version_used), resume_budget_configs
+
+**Related Artifacts:**  
+Decision Log, Change Request Log, Resume Template Details
+
+**Readiness Check:**
+- Business value clear: Yes
+- Acceptance criteria clear: Yes
+- Technically feasible: Yes
+- UI/workflow identified: N/A
+- Data impact identified: Yes
+- Testable: Yes
+
+**Notes:**  
+Active config fallback applies to the config selection query, not to individual missing values. If a required rule row is missing from the active config, the backend should handle it gracefully.
 
 ### FR-011 Generate and Edit Cover Letter
 

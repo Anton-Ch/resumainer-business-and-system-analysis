@@ -3,9 +3,9 @@
 **Project ID:** `resumainer`
 **Product Name:** ResumAIner
 **Date Created:** 2026-05-10
-**Last Updated:** 2026-05-21
+**Last Updated:** 2026-05-23
 **Author:** Anton
-**Version:** 14.0
+**Version:** 16.0
 **Status:** Active
 **Related BABOK Area:** 3.3 Plan Business Analysis Governance
 
@@ -90,7 +90,7 @@ Each decision includes context, selected option, rejected alternatives, rational
 | DEC-046 | 2026-05-20 | Design | AI may expand Aspirations as space filler | AI expands Aspirations to fill available space on page 2 | User reviews and edits before final save | Approved |
 | DEC-047 | 2026-05-20 | UI/UX | Page navigation notes kept on two-page template | "See the next page" / "See the previous page" notes maintained | Standard UX pattern for multi-page resumes | Approved |
 | DEC-048 | 2026-05-20 | Requirement | Page 2 Additional WE compact at high density | Additional WE uses one short sentence per job at max density | No bullet points when 7+ additional jobs | Approved |
-| DEC-049 | 2026-05-20 | Architecture | Content budgets in external YAML configuration | Sentence counts, bullet limits stored in external config file | Easier tuning without code changes | Approved |
+| DEC-049 | 2026-05-20 | Architecture | Content budgets in external YAML configuration | Sentence counts, bullet limits stored in external config file | Easier tuning without code changes | Superseded |
 | DEC-050 | 2026-05-20 | Scope | Profile picture moved from MVP to POST-MVP | Photo field not supported by current templates; removes unnecessary MVP complexity | FR-007 updated; photo_file_path deferred | Approved |
 | DEC-051 | 2026-05-21 | Process | Add error handling, code quality, and build NFRs | Mandatory per Capstone specification; ensures professional codebase quality | New NFRs added to requirements log; affects implementation process | Approved |
 | DEC-052 | 2026-05-21 | Architecture | Use Vue 3 + Vite + PrimeVue for frontend SPA | PrimeVue provides Vue-native responsive components with ready themes and good documentation; best fit for a developer new to Vue SPA | Replaces generic "Vue.js" placeholder; hybrid approach kept for Landing Page | Approved |
@@ -101,6 +101,9 @@ Each decision includes context, selected option, rejected alternatives, rational
 | DEC-057 | 2026-05-21 | Process | Establish testing standards: JUnit 5, Mockito, JaCoCo, TDD | Mandatory per Capstone: JUnit 5, 50%+ coverage, Mockito, JaCoCo reports, test structure, TDD | NFR-024–NFR-027 added; JaCoCo in pom.xml; coverage reports generated during build | Approved |
 | DEC-058 | 2026-05-21 | Architecture | Add dev/prod profiles, Swagger, Docker Compose | Swagger for API docs with ADMIN-only prod access; Docker Compose with backend, frontend, PostgreSQL; dev/prod Spring profiles | NFR-031, NFR-032 added; NFR-028 updated; Docker tech stack extended | Approved |
 | DEC-059 | 2026-05-21 | Process | Approve NFR baseline for development handoff | All NFRs reviewed and approved; acceptance criteria confirmed; open questions closed | 32 NFRs set to Approved/Ready; OQ-007 and OQ-009 closed; FR-001/007/011-013 acceptance criteria finalized | Approved |
+| DEC-060 | 2026-05-23 | Architecture | Replace YAML budget config with DB-backed config | YAML is developer-oriented, not admin/data-oriented; DB-backed config is easier to inspect, test, and demonstrate | YAML config section replaced with DB-backed approach; new DB tables added; Decision Log, Requirements Log, Change Request Log, ERDs updated | Approved |
+| DEC-061 | 2026-05-23 | Requirement | Fixed resume section order stays in backend code | Section order is fixed and not configurable through DB admin panel | Section order belongs to template rendering logic, not runtime budget configuration | Approved |
+| DEC-062 | 2026-05-23 | Data Model | PostgreSQL partial unique index for one active budget config | Protects data integrity even though backend has fallback logic | Partial unique index in Flyway migration; DBML notes added | Approved |
 
 ## 4. Details
 
@@ -741,12 +744,53 @@ Each decision includes context, selected option, rejected alternatives, rational
 
 **Date:** 2026-05-20
 **Type:** Architecture
-**Status:** Approved
+**Status:** Superseded
+**Superseded By:** DEC-060 (2026-05-23)
 **Context:** Content budgets (sentence counts, bullet limits, skill limits) need to be adjustable without code changes.
 **Selected Option:** Sentence counts, bullet limits, skill limits stored in external YAML config file.
 **Rejected Alternatives:** Hardcoded values in Java code; database-stored configuration.
 **Rationale:** YAML is simple to edit, version-controllable, and independent of database schema.
 **Impact:** External config file created; service reads budget values at startup.
+
+### DEC-060 Use DB-Backed Resume Budget Configuration Instead of YAML
+
+**Date:** 2026-05-23
+**Type:** Architecture
+**Status:** Approved
+**Supersedes:** DEC-049
+**Context:** The previously approved YAML-based configuration approach is less suitable for this project because YAML is developer-oriented, not admin/data-oriented; runtime changes are less convenient with YAML; the project already uses PostgreSQL and has admin-side concepts for AI models and runtime settings.
+**Selected Option:** Resume budget settings stored in PostgreSQL tables. Backend reads DB config before every generation. No cache in MVP. One active config with version_no. PostgreSQL partial unique index prevents multiple active configs.
+**Rejected Alternatives:** YAML-based configuration (previous approach); caching for MVP; configurable section order in DB.
+**Rationale:** DB-backed configuration is easier to inspect, test, and demonstrate in a portfolio. It avoids hardcoding budget parameters in Java and allows runtime configuration changes without application restart.
+**Impact:**
+- **Data Model:** 4 new tables: resume_budget_configs, resume_template_selection_rules, resume_work_experience_distribution_rules, resume_section_budget_rules.
+- **Resume Template Details:** Section 11 replaced, YAML examples removed, DB-backed config behavior added.
+- **Requirements:** NFR-033, NFR-034 added. DEC-049 superseded.
+- **ERD/Data Dictionary:** Updated with new entities and fields.
+- **Governance:** Change request CR-031 created.
+- **Risks:** RISK-015 added for misconfigured budget settings.
+
+### DEC-061 Fixed Resume Section Order Stays in Backend Code
+
+**Date:** 2026-05-23
+**Type:** Requirement
+**Status:** Approved
+**Context:** The decision to move budget configuration to DB raised the question whether section order should also be configurable through DB.
+**Selected Option:** Fixed resume section order is implemented in backend rendering code and is not configurable through DB in MVP.
+**Rejected Alternatives:** Storing section order in DB; admin panel for section order configuration.
+**Rationale:** Section order is fixed and not configurable. There is no requirement to configure section order through admin panel. Storing it in DB adds unnecessary complexity. Section order belongs to template rendering logic, not runtime budget configuration.
+**Impact:** Section order explicitly excluded from DB-backed budget configuration scope. Documented in Resume Template Details.
+
+### DEC-062 Use PostgreSQL Partial Unique Index to Protect One Active Config
+
+**Date:** 2026-05-23
+**Type:** Data Model
+**Status:** Approved
+**Context:** Even though backend has fallback logic for multiple active configs, database-level protection is recommended to prevent data integrity issues.
+**Selected Option:** Add PostgreSQL partial unique index in Flyway migration: `CREATE UNIQUE INDEX uq_one_active_resume_budget_config ON resume_budget_configs (is_active) WHERE is_active = true;`
+**Rejected Alternatives:** Application-level enforcement only; no enforcement.
+**Rationale:** Database-level constraint prevents multiple active configs regardless of how data is modified (direct SQL, application, future admin tools). Partial unique index is PostgreSQL-specific and cannot be fully expressed in DBML.
+**Impact:** Migration SQL includes partial unique index. DBML notes document the constraint. Data Dictionary mentions it as migration-level constraint.
 
 ### DEC-050 Profile Picture Moved from MVP to POST-MVP
 
